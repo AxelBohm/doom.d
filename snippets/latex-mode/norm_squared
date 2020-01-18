@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: norm_squared
+# key: norms
+# --
+\Vert $0 \Vert^2
