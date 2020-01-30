@@ -377,6 +377,7 @@ Tell emacs where I store my org stuff.
 
   ;; (setq org-inbox-file "~/org/inbox.org")
   (setq org-index-file (org-file-path "index.org"))
+  (setq org-inbox-file "~/Dropbox/GTD/inbox.org")
   (setq org-archive-location
         (concat (org-file-path "archive.org") "::* From %s")))
 #+END_SRC
@@ -469,14 +470,28 @@ Use ~o~ instead of ~RET~ for new headings/list-items.
 
 *** index file
 
+#+BEGIN_SRC emacs-lisp
+;; (defun ab/copy-tasks-from-mobile
+;;   "Copy tasks I added from Orgzly"
+;;   (interactive)
+;;   (when (file-exists-p org-inbox-file)
+;;     (save-excursion
+;;       (find-file org-inbox-file)
+;;       (org-refile org-index-file)))
+;;     )
+#+END_SRC
+
+
 Quickly access the org index file.
 
 #+BEGIN_SRC emacs-lisp
 (defun ab/open-index-file ()
   "Open the master org TODO list."
   (interactive)
+  (find-file org-inbox-file)
+  (split-window-horizontally)
   (find-file org-index-file)
-  (end-of-buffer))
+  )
 
 (map! :leader "i" #'ab/open-index-file)
 #+END_SRC
