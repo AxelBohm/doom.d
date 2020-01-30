@@ -83,6 +83,9 @@ currently still using mutt. This tells Emacs to use mail mode when editing email
 #+BEGIN_SRC emacs-lisp
 (add-to-list 'auto-mode-alist '("/mutt" . mail-mode))
 (add-to-list 'auto-mode-alist '("/neomutt" . mail-mode))
+(add-hook 'mail-mode-hook
+          (lambda ()
+            (set-fill-column 72)))
 #+END_SRC
 
 This is copied from [[https://github.com/NicolasPetton/emacs.d/blob/3945786c31a17ac9caa8894109c231234956102f/hosts/blueberry/init-notmuch.el][github]] who took it from [[http://blog.binchen.org/posts/how-to-use-yasnippets-to-produce-email-templates-in-emacs.html][this blog]].
