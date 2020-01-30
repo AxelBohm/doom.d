@@ -76,6 +76,13 @@ When splitting windows, put split on a reasonable side.
       evil-vsplit-window-right t)
 #+END_SRC
 
+I don't want aut-fill on by DEFAULT
+
+#+BEGIN_SRC emacs-lisp
+(remove-hook 'text-mode-hook #'auto-fill-mode)
+#+END_SRC
+
+
 ** email
 
 currently still using mutt. This tells Emacs to use mail mode when editing emails through mutt.
@@ -83,6 +90,12 @@ currently still using mutt. This tells Emacs to use mail mode when editing email
 #+BEGIN_SRC emacs-lisp
 (add-to-list 'auto-mode-alist '("/mutt" . mail-mode))
 (add-to-list 'auto-mode-alist '("/neomutt" . mail-mode))
+#+END_SRC
+
+Turn on auto fill and break after specified number of chars
+
+#+BEGIN_SRC emacs-lisp
+(add-hook 'mail-mode-hook #'auto-fill-mode)
 (add-hook 'mail-mode-hook
           (lambda ()
             (set-fill-column 72)))
