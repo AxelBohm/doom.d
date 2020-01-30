@@ -966,3 +966,11 @@ finally I found a config using offlineimap.
 #+END_SRC
 
 still to do
+* dired
+
+I'm so used to my ranger keybindings. Imitate those:
+
+#+BEGIN_SRC emacs-lisp
+(map! :map dired-mode
+      "h" 'dired-up-directory)
+#+END_SRC
