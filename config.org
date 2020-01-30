@@ -340,6 +340,7 @@ Load orgmode plus some standard keybindings.
 (after! org
   (setq org-hide-emphasis-markers nil
         org-return-follows-link t
+        org-reverse-note-order t            ;; add new headings on top
         org-tags-column 0                   ;; position of tags
         org-todo-keywords '((sequence "TODO(t)" "WAITING(w)" "|" "DONE(d)")
                             (sequence "TODO(t)" "DIDN'T SUCCEED(s)" "|" "DOESN'T WORK(x)"
