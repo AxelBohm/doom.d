@@ -1005,3 +1005,13 @@ I'm so used to my ranger keybindings. Imitate those:
 (map! :map dired-mode
       "h" 'dired-up-directory)
 #+END_SRC
+* pdf
+
+#+BEGIN_SRC emacs-lisp
+;; Use the usual C-u/C-d keybindings to navigate pdfs.
+(map!
+ :map pdf-view-mode-map
+ :m "C-u" 'pdf-view-scroll-down-or-previous-page
+ :m "C-d" 'pdf-view-scroll-up-or-next-page)
+
+#+END_SRC
