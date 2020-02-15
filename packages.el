@@ -7,5 +7,6 @@
 ;; (package! builtin-package :disable t)
 
 (package! org-wild-notifier)
-
 (package! evil-matchit)
+
+(package! doom-quit :disable t)
