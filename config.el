@@ -15,11 +15,33 @@
 (set-frame-parameter (selected-frame) 'alpha '(90 . 90))
 (add-to-list 'default-frame-alist '(alpha . (90 . 90)))
 
+(after! doom-modeline
+  ;; Disable unwanted modeline details.
+  (size-indication-mode 0)
+
+  ;; ;; Define a new default modeline.
+  ;; (doom-modeline-def-modeline 'myline
+  ;;   '(bar workspace-name window-number buffer-info remote-host)
+  ;;   '(matches debug checker))
+
+  ;; ;; Actually use the new settings.
+  ;; (add-hook 'doom-modeline-mode-hook
+  ;;   (lambda ()
+  ;;     (doom-modeline-set-modeline 'myline 'default)))
+  )
+
 (setq evil-split-window-below t
       evil-vsplit-window-right t)
 
+(remove-hook 'text-mode-hook #'auto-fill-mode)
+
 (add-to-list 'auto-mode-alist '("/mutt" . mail-mode))
 (add-to-list 'auto-mode-alist '("/neomutt" . mail-mode))
+
+(add-hook 'mail-mode-hook #'auto-fill-mode)
+(add-hook 'mail-mode-hook
+          (lambda ()
+            (set-fill-column 72)))
 
 ;; Function to return first name of email recipient
 ;; Used by yasnippet
@@ -171,6 +193,7 @@
 (after! org
   (setq org-hide-emphasis-markers nil
         org-return-follows-link t
+        org-reverse-note-order t            ;; add new headings on top
         org-tags-column 0                   ;; position of tags
         org-todo-keywords '((sequence "TODO(t)" "WAITING(w)" "|" "DONE(d)")
                             (sequence "TODO(t)" "DIDN'T SUCCEED(s)" "|" "DOESN'T WORK(x)"
@@ -197,6 +220,7 @@
 
   ;; (setq org-inbox-file "~/org/inbox.org")
   (setq org-index-file (org-file-path "index.org"))
+  (setq org-inbox-file "~/Dropbox/GTD/inbox.org")
   (setq org-archive-location
         (concat (org-file-path "archive.org") "::* From %s")))
 
@@ -253,11 +277,22 @@
       "M-o" '+org/insert-item-below
       "M-S-o" '+org/insert-item-above)
 
+;; (defun ab/copy-tasks-from-mobile
+;;   "Copy tasks I added from Orgzly"
+;;   (interactive)
+;;   (when (file-exists-p org-inbox-file)
+;;     (save-excursion
+;;       (find-file org-inbox-file)
+;;       (org-refile org-index-file)))
+;;     )
+
 (defun ab/open-index-file ()
   "Open the master org TODO list."
   (interactive)
+  (find-file org-inbox-file)
+  (split-window-horizontally)
   (find-file org-index-file)
-  (end-of-buffer))
+  )
 
 (map! :leader "i" #'ab/open-index-file)
 
@@ -550,3 +585,12 @@
   ;; allow for updating mail using 'U' in the main view:
   ;; (setq mu4e-get-mail-command "offlineimap") )
   )
+
+(map! :map dired-mode
+      "h" 'dired-up-directory)
+
+;; Use the usual C-u/C-d keybindings to navigate pdfs.
+(map!
+ :map pdf-view-mode-map
+ :m "C-u" 'pdf-view-scroll-down-or-previous-page
+ :m "C-d" 'pdf-view-scroll-up-or-next-page)
