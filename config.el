@@ -375,6 +375,10 @@
   (setq TeX-view-program-selection '((output-pdf "Zathura"))
         TeX-source-correlate-start-server t))
 
+;; Ensure that synctex works and the pdf is updated.
+(after! latex
+  (add-hook! 'TeX-after-compilation-finished-functions #'TeX-revert-document-buffer))
+
 (map! :map LaTeX-mode-map
       :leader
       "m l" 'TeX-command-run-all
@@ -408,6 +412,10 @@
 ;; (use-package ess-smart-underscore
 ;;   :after ess)
 
+(after! conda
+  (conda-env-initialize-eshell)
+  (conda-env-autoactivate-mode))
+
 (after! company
   :init
   (setq company-dabbrev-ignore-case t
@@ -436,22 +444,22 @@
         :i "C-n"      #'+company/complete
         :i "C-SPC"    #'+company/complete))
 
-;; (set-company-backend! '(c-mode
-;;                         ess-mode
-;;                         haskell-mode
-;;                         ;;emacs-lisp-mode
-;;                         latex-mode
-;;                         LaTeX
-;;                         tex-mode
-;;                         lisp-mode
-;;                         sh-mode
-;;                         python-mode
-;;                         )
-;;   '(:separate  company-tabnine
-;;                company-files
-;;                company-yasnippet))
+(set-company-backend! '(c-mode
+                        ess-mode
+                        emacs-lisp-mode
+                        elisp-mode
+                        latex-mode
+                        tex-mode
+                        lisp-mode
+                        sh-mode
+                        python-mode
+                        )
+  '(:separate  company-tabnine
+               company-files
+               company-capf
+               company-yasnippet))
 
-;; (setq +lsp-company-backend '(company-lsp :with company-tabnine :separate))
+(setq +lsp-company-backend '(company-lsp :with company-tabnine :separate))
 
 (after! flyspell
   :config
