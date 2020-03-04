@@ -362,34 +362,7 @@
 (server-start)
 
 (after! org
-  (custom-set-faces
-   '(org-level-1 ((t (:inherit outline-1 :height 1.5))))
-   '(org-level-2 ((t (:inherit outline-2 :height 1.3))))
-   '(org-level-3 ((t (:inherit outline-3 :height 1.2))))
-   '(org-level-4 ((t (:inherit outline-4 :height 1.0))))
-   '(org-level-5 ((t (:inherit outline-5 :height 1.0))))
-   ))
-
-(after! org
-  (setq org-ellipsis " ..."))
-
-(after! org
-  (setq org-pretty-entities 1))
-
-(after! org
-  (add-hook 'org-mode-hook
-            '(lambda ()
-               (delete '("\\.pdf\\'" . default) org-file-apps)
-               (add-to-list 'org-file-apps '("\\.pdf\\'" . "zathura %s")))))
-
-(use-package! org-wild-notifier
-  :defer t
-  :init
-  (add-hook 'doom-after-init-modules-hook #'org-wild-notifier-mode t)
-  :config
-  (setq org-wild-notifier-alert-time 15
-        ;; use dunst for system wide notifications
-        alert-default-style 'libnotify))
+  (advice-add 'counsel-org-capture :override #'org-capture))
 
 (after! latex
   (setq tex-fontify-script t
