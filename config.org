@@ -738,6 +738,11 @@ multiple notifications per TODO.
   ;; use Zathura as pdf viewer
   (setq TeX-view-program-selection '((output-pdf "Zathura"))
         TeX-source-correlate-start-server t))
+
+;; Ensure that synctex works and the pdf is updated.
+(after! latex
+  (add-hook! 'TeX-after-compilation-finished-functions #'TeX-revert-document-buffer))
+
 #+END_SRC
 
 ** keybindings
