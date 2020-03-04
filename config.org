@@ -48,6 +48,7 @@ Emacs ships default with =prettify-symbols mode=.
 (global-prettify-symbols-mode 1)
 #+END_SRC
 doesn't seem to do anything in doom
+
 *** hl-line
 
 Highlighting the current line is all nice and stuff but it looks off in org mode due to different sizes of headings.
@@ -57,7 +58,6 @@ Similarly in LaTeX due to sub/super -scripts.
 (remove-hook 'text-mode-hook #'hl-line-mode)
 #+END_SRC
 
-doesn't work...
 *** opacity
 
 Make emacs opaque (when running compton).
@@ -798,6 +798,16 @@ Fixing would be nice too, but apparently this is open, cf. [[https://github.com/
 ;; (after! ess)
 ;; (use-package ess-smart-underscore
 ;;   :after ess)
+#+END_SRC
+* python
+
+I automatically want the right conda environment activated when editing a python file.
+How does emacs know which one is the right environment? I don't know..
+
+#+BEGIN_SRC emacs-lisp
+(after! conda
+  (conda-env-initialize-eshell)
+  (conda-env-autoactivate-mode))
 #+END_SRC
 
 * auto completion
