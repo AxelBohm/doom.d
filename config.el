@@ -1,3 +1,5 @@
+(setq doom-localleader-key ",")
+
 (setq doom-theme 'doom-nord)
 
 (set-cursor-color "#ffb6c1")
@@ -375,12 +377,28 @@
   (setq TeX-view-program-selection '((output-pdf "Zathura"))
         TeX-source-correlate-start-server t))
 
-(map! :map LaTeX-mode-map
-      :leader
-      "m l" 'TeX-command-run-all
-      "m v" 'Tex-view
-      "m f" 'Tex-fold-env
-      "m n" 'LaTeX-narrow-to-environment)
+;; Ensure that synctex works and the pdf is updated.
+(after! latex
+  (add-hook! 'TeX-after-compilation-finished-functions #'TeX-revert-document-buffer))
+
+;; (defun my-delayed-prettify ()
+;;   (require 'tex-mode)
+;;   (setq prettify-symbols-alist
+;;         (append tex--prettify-symbols-alist prettify-symbols-alist))
+;;   (prettify-symbols-mode 1))
+;; (add-hook 'TeX-mode-hook #'my-delayed-prettify)
+;; (after! latex (add-hook 'TeX-mode-hook #'my-delayed-prettify))
+
+;; (defun my-delayed-prettify ()
+;;   (run-with-idle-timer 2 nil (lambda () (prettify-symbols-mode 1))))
+;; (add-hook 'TeX-mode-hook 'my-delayed-prettify)
+
+;; (map! :map LaTeX-mode-map
+;;       :localleader
+;;       "m l" 'TeX-command-run-all
+;;       "m v" 'Tex-view
+;;       "m f" 'Tex-fold-env
+;;       "m n" 'LaTeX-narrow-to-environment)
 
 (use-package! yasnippet
   :config
@@ -395,6 +413,8 @@
 ;;   (global-flycheck-mode)
 ;;   ;; (flycheck-display-errors-delay .3)
 ;;   (setq-default flycheck-disabled-checkers '(tex-chktex)))
+;; (after! syntax
+;;   (map! :localleader "n e" 'flycheck-next-error))
 
 (after! magit
   :config
@@ -407,6 +427,22 @@
 ;; (after! ess)
 ;; (use-package ess-smart-underscore
 ;;   :after ess)
+
+(after! python
+  (map! :map python-mode-map
+        :localleader "r p" 'run-python
+                     "s s" 'python-shell-switch-to-shell
+                     "s r" 'python-shell-send-region
+                     ","   'python-shell-send-buffer     ; replace C-c C-c
+                     "c a" 'conda-env-activate
+        ))
+
+(after! python
+  (setq python-shell-completion-native-enable nil))
+
+(after! conda
+  (conda-env-initialize-eshell)
+  (conda-env-autoactivate-mode))
 
 (after! company
   :init
@@ -436,22 +472,22 @@
         :i "C-n"      #'+company/complete
         :i "C-SPC"    #'+company/complete))
 
-;; (set-company-backend! '(c-mode
-;;                         ess-mode
-;;                         haskell-mode
-;;                         ;;emacs-lisp-mode
-;;                         latex-mode
-;;                         LaTeX
-;;                         tex-mode
-;;                         lisp-mode
-;;                         sh-mode
-;;                         python-mode
-;;                         )
-;;   '(:separate  company-tabnine
-;;                company-files
-;;                company-yasnippet))
+(set-company-backend! '(c-mode
+                        ess-mode
+                        emacs-lisp-mode
+                        elisp-mode
+                        latex-mode
+                        tex-mode
+                        lisp-mode
+                        sh-mode
+                        python-mode
+                        )
+  '(:separate  company-tabnine
+               company-files
+               company-capf
+               company-yasnippet))
 
-;; (setq +lsp-company-backend '(company-lsp :with company-tabnine :separate))
+(setq +lsp-company-backend '(company-lsp :with company-tabnine :separate))
 
 (after! flyspell
   :config

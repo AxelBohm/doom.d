@@ -54,6 +54,7 @@ Emacs ships default with =prettify-symbols mode=.
 (global-prettify-symbols-mode 1)
 #+END_SRC
 doesn't seem to do anything in doom
+
 *** hl-line
 
 Highlighting the current line is all nice and stuff but it looks off in org mode due to different sizes of headings.
@@ -63,7 +64,6 @@ Similarly in LaTeX due to sub/super -scripts.
 (remove-hook 'text-mode-hook #'hl-line-mode)
 #+END_SRC
 
-doesn't work...
 *** opacity
 
 Make emacs opaque (when running compton).
@@ -683,6 +683,11 @@ When calling org capture from outside emacs it uses ~counsel-org-capture~ which 
   ;; use Zathura as pdf viewer
   (setq TeX-view-program-selection '((output-pdf "Zathura"))
         TeX-source-correlate-start-server t))
+
+;; Ensure that synctex works and the pdf is updated.
+(after! latex
+  (add-hook! 'TeX-after-compilation-finished-functions #'TeX-revert-document-buffer))
+
 #+END_SRC
 ** make pretty-code
 #+BEGIN_SRC emacs-lisp
@@ -783,6 +788,16 @@ Warning.
 (after! python
   (setq python-shell-completion-native-enable nil))
 #+END_SRC
+** conda
+
+I automatically want the right conda environment activated when editing a python file.
+How does emacs know which one is the right environment? I don't know..
+#+BEGIN_SRC emacs-lisp
+(after! conda
+  (conda-env-initialize-eshell)
+  (conda-env-autoactivate-mode))
+#+END_SRC
+
 
 * auto completion
 
