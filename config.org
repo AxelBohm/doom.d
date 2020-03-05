@@ -1,6 +1,12 @@
 #+TITLE: config
 
 * general config
+** localleader
+
+#+BEGIN_SRC emacs-lisp
+(setq doom-localleader-key ",")
+#+END_SRC
+
 ** ui
 *** theme
 
