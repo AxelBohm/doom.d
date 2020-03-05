@@ -798,7 +798,6 @@ How does emacs know which one is the right environment? I don't know..
   (conda-env-autoactivate-mode))
 #+END_SRC
 
-
 * auto completion
 
 I used to think =company= is slow, but I just had to turn the ~idle-delay~ down...
