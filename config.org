@@ -90,7 +90,6 @@ Make emacs opaque (when running compton).
   ;;     (doom-modeline-set-modeline 'myline 'default)))
   )
 #+END_SRC
-
 ** general behavior
 
 When splitting windows, put split on a reasonable side.
@@ -105,7 +104,6 @@ I don't want aut-fill on by DEFAULT
 #+BEGIN_SRC emacs-lisp
 (remove-hook 'text-mode-hook #'auto-fill-mode)
 #+END_SRC
-
 
 ** email
 
@@ -195,6 +193,8 @@ visual lines
 #+BEGIN_SRC emacs-lisp
 (setq evil-respect-visual-line-mode nil)
 #+END_SRC
+
+If I don't set this, long lines are just cut off and the remainder is not displayed. Makes it impossible to edit such lines.
 
 ** leader
 
@@ -684,16 +684,32 @@ When calling org capture from outside emacs it uses ~counsel-org-capture~ which 
   (setq TeX-view-program-selection '((output-pdf "Zathura"))
         TeX-source-correlate-start-server t))
 #+END_SRC
+** make pretty-code
+#+BEGIN_SRC emacs-lisp
+;; (defun my-delayed-prettify ()
+;;   (require 'tex-mode)
+;;   (setq prettify-symbols-alist
+;;         (append tex--prettify-symbols-alist prettify-symbols-alist))
+;;   (prettify-symbols-mode 1))
+;; (add-hook 'TeX-mode-hook #'my-delayed-prettify)
+;; (after! latex (add-hook 'TeX-mode-hook #'my-delayed-prettify))
+
+;; (defun my-delayed-prettify ()
+;;   (run-with-idle-timer 2 nil (lambda () (prettify-symbols-mode 1))))
+;; (add-hook 'TeX-mode-hook 'my-delayed-prettify)
+
+#+END_SRC
+
 
 ** keybindings
 
 #+BEGIN_SRC emacs-lisp
-(map! :map LaTeX-mode-map
-      :leader
-      "m l" 'TeX-command-run-all
-      "m v" 'Tex-view
-      "m f" 'Tex-fold-env
-      "m n" 'LaTeX-narrow-to-environment)
+;; (map! :map LaTeX-mode-map
+;;       :localleader
+;;       "m l" 'TeX-command-run-all
+;;       "m v" 'Tex-view
+;;       "m f" 'Tex-fold-env
+;;       "m n" 'LaTeX-narrow-to-environment)
 #+END_SRC
 
 * snippets
@@ -719,6 +735,8 @@ see [[https://stackoverflow.com/questions/14066526/unset-tab-binding-for-yasnipp
 ;;   (global-flycheck-mode)
 ;;   ;; (flycheck-display-errors-delay .3)
 ;;   (setq-default flycheck-disabled-checkers '(tex-chktex)))
+;; (after! syntax
+;;   (map! :localleader "n e" 'flycheck-next-error))
 #+END_SRC
 
 There is a bug in ~chk-tex~, see [[https://github.com/flycheck/flycheck/issues/1214][issue]]. They also describe possible workarounds.
@@ -743,6 +761,27 @@ Fixing would be nice too, but apparently this is open, cf. [[https://github.com/
 ;; (after! ess)
 ;; (use-package ess-smart-underscore
 ;;   :after ess)
+#+END_SRC
+* python
+** config
+#+BEGIN_SRC emacs-lisp
+(after! python
+  (map! :map python-mode-map
+        :localleader "r p" 'run-python
+                     "s s" 'python-shell-switch-to-shell
+                     "s r" 'python-shell-send-region
+                     ","   'python-shell-send-buffer     ; replace C-c C-c
+                     "c a" 'conda-env-activate
+        ))
+#+END_SRC
+
+** fixes
+Supposed to fix the
+~Warning (python): Your ‘python-shell-interpreter’ doesn’t seem to support readline, yet ‘python-shell-completion-native-enable’ was t and "python3" is not part of the ‘python-shell-completion-native-disabled-interpreters’ list.  Native completions have been disabled locally.~
+Warning.
+#+BEGIN_SRC emacs-lisp
+(after! python
+  (setq python-shell-completion-native-enable nil))
 #+END_SRC
 
 * auto completion

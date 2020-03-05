@@ -100,8 +100,7 @@
        ;;javascript        ; all(hope(abandon(ye(who(enter(here))))))
        ;;julia             ; a better, faster MATLAB
        (latex             ; writing papers in Emacs has never been so fun
-        +latexmk
-        +latex--company-backends)
+        +latexmk)
        markdown          ; writing docs for people to ignore
        (org              ; organize your plain life in plain text
         +dragndrop       ; drag & drop files/images into org buffers
