@@ -419,6 +419,8 @@
 (after! magit
   :config
   (use-package evil-magit)
+
+
   ;; This library makes it possible to reliably use the Emacsclient as the $EDITOR of child processes.
   (use-package with-editor))
 

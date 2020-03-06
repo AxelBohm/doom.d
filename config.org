@@ -46,6 +46,8 @@ soft wrapped.
 (setq-default truncate-lines nil)
 #+END_SRC
 
+I have still no idea how this relates to ~visual-line-mode~. Seems to do the same...
+
 *** pretty symbols
 
 Emacs ships default with =prettify-symbols mode=.
@@ -754,6 +756,8 @@ Fixing would be nice too, but apparently this is open, cf. [[https://github.com/
 (after! magit
   :config
   (use-package evil-magit)
+
+
   ;; This library makes it possible to reliably use the Emacsclient as the $EDITOR of child processes.
   (use-package with-editor))
 
