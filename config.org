@@ -351,10 +351,10 @@ custom mappings.
 
 #+BEGIN_SRC emacs-lisp
 (after! evil
-  (map! :n "H" #'evil-first-non-blank
-        :n "I" #'evil-end-of-line
-        :n "E" #'+lookup/definition
-        :n "S" #'evil-avy-goto-char
+  (map! :mnv "H" #'evil-first-non-blank
+        :mnv "I" #'evil-end-of-line
+        :mnv "E" #'+lookup/definition
+        :mnv "S" #'evil-avy-goto-char
         :leader "l" 'avy-goto-line)
   )
 #+END_SRC
@@ -365,8 +365,8 @@ I need to figure out how to make ~avy~ use other letters than the querty home ro
 #+BEGIN_SRC emacs-lisp
 (after! evil-org
   (map! :map evil-org-mode-map
-        :mnv "i" #'evil-forward-char
-        :mnv "I" #'evil-org-end-of-line))
+        :mnvo "i" #'evil-forward-char
+        :mnvo "I" #'evil-org-end-of-line))
 #+END_SRC
 
 
