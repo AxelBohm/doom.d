@@ -347,11 +347,28 @@ want them. Got this from [[https://emacs.stackexchange.com/questions/38596/make-
 #+END_SRC
 ** custom
 
+custom mappings.
+
 #+BEGIN_SRC emacs-lisp
-(map! :n "H" #'evil-first-non-blank)
-(map! :n "I" #'evil-end-of-line)
-(map! :n "E" #'+lookup/definition)
+(after! evil
+  (map! :n "H" #'evil-first-non-blank
+        :n "I" #'evil-end-of-line
+        :n "E" #'+lookup/definition
+        :n "S" #'evil-avy-goto-char
+        :leader "l" 'avy-goto-line)
+  )
 #+END_SRC
+
+I need to figure out how to make ~avy~ use other letters than the querty home row..
+
+~evil-org-mode~ overrides some of my colemak settings. Override them again afterwards.
+#+BEGIN_SRC emacs-lisp
+(after! evil-org
+  (map! :map evil-org-mode-map
+        :mnv "i" #'evil-forward-char
+        :mnv "I" #'evil-org-end-of-line))
+#+END_SRC
+
 
 * buffer handling
 
@@ -393,7 +410,6 @@ Load orgmode plus some standard keybindings.
 #+END_SRC
 
 Line numbers in org mode are useless
-
 #+BEGIN_SRC emacs-lisp
 (defun ab/disable-line-numbers ()
   (interactive)
@@ -401,6 +417,13 @@ Line numbers in org mode are useless
 
 (add-hook 'org-mode-hook #'ab/disable-line-numbers)
 #+END_SRC
+
+configure the symbol for stuff hidden after heading.
+#+BEGIN_SRC emacs-lisp
+(after! org
+  (setq org-ellipsis " ..."))
+#+END_SRC
+
 
 ** structure and files
 
@@ -465,15 +488,14 @@ By default org-agenda only shows one week starting last monday. I want two weeks
 ** keybindings
 *** structure editing
 
-Org structure editing made easy/mnemonic with leader.
+Org structure editing made easy/mnemonic.
 
 #+BEGIN_SRC emacs-lisp
 (after! org
   (map! :map org-mode-map
-        :leader
-        "o t" 'org-toggle-heading      ;; toogle wheter heading or not
-        "o w" 'widen                   ;; show everythig
-        "o n" 'org-narrow-to-subtree)  ;; show only what's within heading
+        :localleader
+        "w" 'widen                   ;; show everythig
+        "n" 'org-narrow-to-subtree)  ;; show only what's within heading
 )
 #+END_SRC
 
@@ -489,7 +511,7 @@ But this also shows all heading of level 1 and all headings of the same level as
   (org-show-subtree))
 
 (map! :map org-mode-map
-      :leader "o r" 'ab/org-show-just-me)            ;; Mnemonic: restrict
+      :leader "N" 'ab/org-show-just-me)            ;; Mnemonic: narrow
 #+END_SRC
 
 Use vim instead of arrows.
@@ -502,9 +524,10 @@ Use vim instead of arrows.
 
 Use ~o~ instead of ~RET~ for new headings/list-items.
 #+BEGIN_SRC emacs-lisp
-(map! :map org-mode-map
-      "M-o" '+org/insert-item-below
-      "M-S-o" '+org/insert-item-above)
+(after! org
+  (map! :map org-mode-map
+        "M-o" '+org/insert-item-below
+        "M-O" '+org/insert-item-above))
 #+END_SRC
 
 *** index file
@@ -743,7 +766,8 @@ see [[https://stackoverflow.com/questions/14066526/unset-tab-binding-for-yasnipp
 ;;   ;; (flycheck-display-errors-delay .3)
 ;;   (setq-default flycheck-disabled-checkers '(tex-chktex)))
 ;; (after! syntax
-;;   (map! :localleader "n e" 'flycheck-next-error))
+(after! flycheck
+  (map! :leader "a" 'flycheck-next-error))
 #+END_SRC
 
 There is a bug in ~chk-tex~, see [[https://github.com/flycheck/flycheck/issues/1214][issue]]. They also describe possible workarounds.
