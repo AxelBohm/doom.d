@@ -751,20 +751,33 @@ When calling org capture from outside emacs it uses ~counsel-org-capture~ which 
 ;; (defun my-delayed-prettify ()
 ;;   (run-with-idle-timer 2 nil (lambda () (prettify-symbols-mode 1))))
 ;; (add-hook 'TeX-mode-hook 'my-delayed-prettify)
-
 #+END_SRC
-
 
 ** keybindings
 
 #+BEGIN_SRC emacs-lisp
-;; (map! :map LaTeX-mode-map
-;;       :localleader
-;;       "m l" 'TeX-command-run-all
-;;       "m v" 'Tex-view
-;;       "m f" 'Tex-fold-env
-;;       "m n" 'LaTeX-narrow-to-environment)
+(map! :map LaTeX-mode-map
+      :localleader
+      :desc "Compile" "," #'TeX-command-run-all
+      :desc "Fold"    "z" #'TeX-fold-buffer
+      :desc "ToC"     "t" #'reftex-toc
+      :desc "View"    "v" #'TeX-view
+)
 #+END_SRC
+** company
+
+#+BEGIN_SRC emacs-lisp
+;; (set-company-backend! 'company-reftex-labels  'company-reftex-citations
+;;   'company-ispell 'company-capf 'company-files
+;;   'company-files 'company-tide 'company-yasnippet)
+
+;; (set-company-backend! 'company-reftex-labels  'company-reftex-citations
+;;   'company-ispell 'company-capf 'company-files
+;;   'company-files 'company-tide 'company-yasnippet)
+;; (after! latex
+;;   (set-company-backend! 'latex-mode '(company-latex-commands :with company-yasnippet)))
+#+END_SRC
+
 
 * snippets
 
