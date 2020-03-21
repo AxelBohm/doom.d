@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: yk_plus
+# key: ykp
+# --
+y_{k+1}

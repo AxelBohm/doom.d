@@ -2,7 +2,7 @@
 # name: lemma
 # key: lem
 # --
-\begin{lemma}
+\begin{lemma}%
   \label{lem:$1}
   $0
 \end{lemma}
