@@ -33,7 +33,8 @@ Show line numbers to the left for better jumping.
 (consider the ace jump package which shows a letter for every line for more efficient jumping)
 
 #+BEGIN_SRC emacs-lisp
-(setq display-line-numbers-type 'relative)
+;; (setq display-line-numbers-type 'relative)
+(setq display-line-numbers-type nil)
 #+END_SRC
 
 *** line truncation
@@ -230,7 +231,6 @@ Set the leader key and some very basic keybindings.
 
 #+BEGIN_SRC emacs-lisp
 (map! :leader
-      "b" #'switch-to-buffer
       "q" #'kill-buffer
       "s h" #'evil-window-split
       "s v" #'evil-window-vsplit
@@ -392,7 +392,6 @@ I need to figure out how to make ~avy~ use other letters than the querty home ro
         :mnvo "i" #'evil-forward-char
         :mnvo "I" #'evil-org-end-of-line))
 #+END_SRC
-
 
 * buffer handling
 
@@ -905,22 +904,22 @@ For some reason it is super hard to get ~company-backends~ right...
 This is copied from [[https://www.gtrun.org/post/init/#org-mode][here]].
 
 #+BEGIN_SRC emacs-lisp
-(set-company-backend! '(c-mode
-                        ess-mode
-                        emacs-lisp-mode
-                        elisp-mode
-                        latex-mode
-                        tex-mode
-                        lisp-mode
-                        sh-mode
-                        python-mode
-                        )
-  '(:separate  company-tabnine
-               company-files
-               company-capf
-               company-yasnippet))
+;; (set-company-backend! '(c-mode
+;;                         ess-mode
+;;                         emacs-lisp-mode
+;;                         elisp-mode
+;;                         latex-mode
+;;                         tex-mode
+;;                         lisp-mode
+;;                         sh-mode
+;;                         python-mode
+;;                         )
+;;   '(:separate  company-tabnine
+;;                company-files
+;;                company-capf
+;;                company-yasnippet))
 
-(setq +lsp-company-backend '(company-lsp :with company-tabnine :separate))
+;; (setq +lsp-company-backend '(company-lsp :with company-tabnine :separate))
 #+END_SRC
 
 * spell checking

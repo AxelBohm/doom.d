@@ -6,7 +6,8 @@
 
 (show-paren-mode 1)
 
-(setq display-line-numbers-type 'relative)
+;; (setq display-line-numbers-type 'relative)
+(setq display-line-numbers-type nil)
 
 (setq-default truncate-lines nil)
 
@@ -57,6 +58,20 @@
 
 (map! "M-w" 'other-window)
 
+(defun ivy-ffow-done ()
+  "Exit the minibuffer, opening candidate in other window."
+  (interactive)
+  (ivy-set-action #'find-file-other-window)
+  (ivy-done))
+
+(map! :after counsel
+      :map counsel-find-file-map
+      "M-RET" #'ivy-ffow-done)
+
+(setq abbrev-file-name
+      "~/.doom.d/abbrev-defs")
+(setq abbrev-mode t)
+
 (defun ab/visit-emacs-config ()
   "go to emacs config file"
   (interactive)
@@ -74,7 +89,6 @@
 (setq evil-respect-visual-line-mode nil)
 
 (map! :leader
-      "b" #'switch-to-buffer
       "q" #'kill-buffer
       "s h" #'evil-window-split
       "s v" #'evil-window-vsplit
@@ -182,9 +196,18 @@
           (paragraph-separate (default-value 'paragraph-separate)))
       ad-do-it)))
 
-(map! :n "H" #'evil-first-non-blank)
-(map! :n "I" #'evil-end-of-line)
-(map! :n "E" #'+lookup/definition)
+(after! evil
+  (map! :mnv "H" #'evil-first-non-blank
+        :mnv "I" #'evil-end-of-line
+        :mnv "E" #'+lookup/definition
+        :mnv "S" #'evil-avy-goto-char
+        :leader "l" 'avy-goto-line)
+  )
+
+(after! evil-org
+  (map! :map evil-org-mode-map
+        :mnvo "i" #'evil-forward-char
+        :mnvo "I" #'evil-org-end-of-line))
 
 (defun ab/switch-to-previous-buffer ()
   (interactive)
@@ -212,6 +235,9 @@
   (display-line-numbers-mode -1))
 
 (add-hook 'org-mode-hook #'ab/disable-line-numbers)
+
+(after! org
+  (setq org-ellipsis " ..."))
 
 (after! org
   (setq org-directory "~/org")
@@ -254,10 +280,9 @@
 
 (after! org
   (map! :map org-mode-map
-        :leader
-        "o t" 'org-toggle-heading      ;; toogle wheter heading or not
-        "o w" 'widen                   ;; show everythig
-        "o n" 'org-narrow-to-subtree)  ;; show only what's within heading
+        :localleader
+        "w" 'widen                   ;; show everythig
+        "n" 'org-narrow-to-subtree)  ;; show only what's within heading
 )
 
 (defun ab/org-show-just-me (&rest _)
@@ -268,16 +293,17 @@
   (org-show-subtree))
 
 (map! :map org-mode-map
-      :leader "o r" 'ab/org-show-just-me)            ;; Mnemonic: restrict
+      :leader "N" 'ab/org-show-just-me)            ;; Mnemonic: narrow
 
 (map! :map org-mode-map
       "M-e" #'org-metaup
       "M-i" #'org-metaright
       "M-n" #'org-metadown)
 
-(map! :map org-mode-map
-      "M-o" '+org/insert-item-below
-      "M-S-o" '+org/insert-item-above)
+(after! org
+  (map! :map org-mode-map
+        "M-o" '+org/insert-item-below
+        "M-O" '+org/insert-item-above))
 
 ;; (defun ab/copy-tasks-from-mobile
 ;;   "Copy tasks I added from Orgzly"
@@ -393,12 +419,23 @@
 ;;   (run-with-idle-timer 2 nil (lambda () (prettify-symbols-mode 1))))
 ;; (add-hook 'TeX-mode-hook 'my-delayed-prettify)
 
-;; (map! :map LaTeX-mode-map
-;;       :localleader
-;;       "m l" 'TeX-command-run-all
-;;       "m v" 'Tex-view
-;;       "m f" 'Tex-fold-env
-;;       "m n" 'LaTeX-narrow-to-environment)
+(map! :map LaTeX-mode-map
+      :localleader
+      :desc "Compile" "," #'TeX-command-run-all
+      :desc "Fold"    "z" #'TeX-fold-buffer
+      :desc "ToC"     "t" #'reftex-toc
+      :desc "View"    "v" #'TeX-view
+)
+
+;; (set-company-backend! 'company-reftex-labels  'company-reftex-citations
+;;   'company-ispell 'company-capf 'company-files
+;;   'company-files 'company-tide 'company-yasnippet)
+
+;; (set-company-backend! 'company-reftex-labels  'company-reftex-citations
+;;   'company-ispell 'company-capf 'company-files
+;;   'company-files 'company-tide 'company-yasnippet)
+;; (after! latex
+;;   (set-company-backend! 'latex-mode '(company-latex-commands :with company-yasnippet)))
 
 (use-package! yasnippet
   :config
@@ -414,7 +451,8 @@
 ;;   ;; (flycheck-display-errors-delay .3)
 ;;   (setq-default flycheck-disabled-checkers '(tex-chktex)))
 ;; (after! syntax
-;;   (map! :localleader "n e" 'flycheck-next-error))
+(after! flycheck
+  (map! :leader "a" 'flycheck-next-error))
 
 (after! magit
   :config
@@ -474,22 +512,22 @@
         :i "C-n"      #'+company/complete
         :i "C-SPC"    #'+company/complete))
 
-(set-company-backend! '(c-mode
-                        ess-mode
-                        emacs-lisp-mode
-                        elisp-mode
-                        latex-mode
-                        tex-mode
-                        lisp-mode
-                        sh-mode
-                        python-mode
-                        )
-  '(:separate  company-tabnine
-               company-files
-               company-capf
-               company-yasnippet))
+;; (set-company-backend! '(c-mode
+;;                         ess-mode
+;;                         emacs-lisp-mode
+;;                         elisp-mode
+;;                         latex-mode
+;;                         tex-mode
+;;                         lisp-mode
+;;                         sh-mode
+;;                         python-mode
+;;                         )
+;;   '(:separate  company-tabnine
+;;                company-files
+;;                company-capf
+;;                company-yasnippet))
 
-(setq +lsp-company-backend '(company-lsp :with company-tabnine :separate))
+;; (setq +lsp-company-backend '(company-lsp :with company-tabnine :separate))
 
 (after! flyspell
   :config
