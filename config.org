@@ -159,6 +159,30 @@ Most of the time I only have two windows open. Switching between should be easy.
 (map! "M-w" 'other-window)
 #+END_SRC
 
+~counsel-find-file~ lets you open a file in a new split.
+
+#+BEGIN_SRC emacs-lisp
+(defun ivy-ffow-done ()
+  "Exit the minibuffer, opening candidate in other window."
+  (interactive)
+  (ivy-set-action #'find-file-other-window)
+  (ivy-done))
+
+(map! :after counsel
+      :map counsel-find-file-map
+      "M-RET" #'ivy-ffow-done)
+#+END_SRC
+
+** abbreviation
+
+Used to love ~iabbrev~ in vim. This does the same.
+
+#+BEGIN_SRC emacs-lisp
+(setq abbrev-file-name
+      "~/.doom.d/abbrev-defs")
+(setq abbrev-mode t)
+#+END_SRC
+
 * config file
 
 ** quick access
