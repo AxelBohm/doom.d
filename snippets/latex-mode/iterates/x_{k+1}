@@ -1,5 +1,6 @@
 # -*- mode: snippet -*-
 # name: x_{k+1}
 # key: x1
+# condition: 'auto
 # --
 x_{k+1}

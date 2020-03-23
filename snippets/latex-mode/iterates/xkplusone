@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: xkplusone
+# condition: 'auto
+# key: xkp
+# --
+x_{k+1}

@@ -1,5 +1,6 @@
 # -*- mode: snippet -*-
 # name: ykm1
 # key: ykm
+# condition: 'auto
 # --
 y_{k-1}
