@@ -786,13 +786,32 @@ Snippets are everything! still need to figure out how to incorporate snippets in
 (use-package! yasnippet
   :config
   (setq yas-snippet-dirs '("~/.doom.d/snippets"))
+  ;; remove random additional newline at the end of new snippets
+  (setq-default mode-require-final-newline nil)
   (map! :i "C-e" 'yas-expand)
   (map!
-   :leader "s n" 'yas-new-snippet              ;; Snippet New
+   :leader "s n" 'yas/new-snippet              ;; Snippet New
    :leader "s g" 'yas-visit-snippet-file))      ;; Snippet Go
 #+END_SRC
 
-see [[https://stackoverflow.com/questions/14066526/unset-tab-binding-for-yasnippet][stackoverflow]] for some helpful answers.
+For some reason ~yas-new-snippet~ cannot guess where to put the snippet (can't guess the mode).
+There I'm using ~yas/new-snippet~, although it's obsolete
+
+** auto expanding
+
+For selected snippets I want them to be automatically expanded (without pressing a trigger key), similarly to what ~abbrev~ already offers (or ~iabbrev~ in vim). However, ~abbrev~ has a super weird syntax.
+
+This code adds this functionality by adding ~#condition: 'auto~ to the header of the snippet.
+Code is taken from [[https://github.com/joaotavora/yasnippet/issues/998][a github issue]].
+
+#+BEGIN_SRC emacs-lisp
+(defun ab/yas-try-expanding-auto-snippets ()
+  (when yas-minor-mode
+    (let ((yas-buffer-local-condition ''(require-snippet-condition . auto)))
+      (yas-expand))))
+(add-hook 'post-command-hook #'ab/yas-try-expanding-auto-snippets)
+#+END_SRC
+
 * syntax checking
 
 #+BEGIN_SRC emacs-lisp

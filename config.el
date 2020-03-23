@@ -440,10 +440,18 @@
 (use-package! yasnippet
   :config
   (setq yas-snippet-dirs '("~/.doom.d/snippets"))
+  ;; remove random additional newline at the end of new snippets
+  (setq-default mode-require-final-newline nil)
   (map! :i "C-e" 'yas-expand)
   (map!
-   :leader "s n" 'yas-new-snippet              ;; Snippet New
+   :leader "s n" 'yas/new-snippet              ;; Snippet New
    :leader "s g" 'yas-visit-snippet-file))      ;; Snippet Go
+
+(defun ab/yas-try-expanding-auto-snippets ()
+  (when yas-minor-mode
+    (let ((yas-buffer-local-condition ''(require-snippet-condition . auto)))
+      (yas-expand))))
+(add-hook 'post-command-hook #'ab/yas-try-expanding-auto-snippets)
 
 ;; (use-package! flycheck
 ;;   :config
