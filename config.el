@@ -4,6 +4,8 @@
 
 (set-cursor-color "#ffb6c1")
 
+(setq doom-font (font-spec :family "xos4 Terminus" :size 13))
+
 (show-paren-mode 1)
 
 ;; (setq display-line-numbers-type 'relative)
@@ -32,6 +34,8 @@
   ;;   (lambda ()
   ;;     (doom-modeline-set-modeline 'myline 'default)))
   )
+
+(setq hl-todo-mode t)
 
 (setq evil-split-window-below t
       evil-vsplit-window-right t)
@@ -395,9 +399,10 @@
 (after! latex
   (setq tex-fontify-script t
         TeX-save-query nil
+        ;; auto insert second dollar sign
+        ;; TeX-electric-math (cons "$" "$")
         ;; don't show ^ or _ for scripts
         font-latex-fontify-script 'invisible)
-  ;; (add-to-list 'TeX-command-list '("LatexMk" "latexmk -pdflatex='pdflatex -file-line-error -synctex=1' -pdf %t" TeX-run-TeX nil))
 
   ;; use Zathura as pdf viewer
   (setq TeX-view-program-selection '((output-pdf "Zathura"))
@@ -407,24 +412,12 @@
 (after! latex
   (add-hook! 'TeX-after-compilation-finished-functions #'TeX-revert-document-buffer))
 
-;; (defun my-delayed-prettify ()
-;;   (require 'tex-mode)
-;;   (setq prettify-symbols-alist
-;;         (append tex--prettify-symbols-alist prettify-symbols-alist))
-;;   (prettify-symbols-mode 1))
-;; (add-hook 'TeX-mode-hook #'my-delayed-prettify)
-;; (after! latex (add-hook 'TeX-mode-hook #'my-delayed-prettify))
-
-;; (defun my-delayed-prettify ()
-;;   (run-with-idle-timer 2 nil (lambda () (prettify-symbols-mode 1))))
-;; (add-hook 'TeX-mode-hook 'my-delayed-prettify)
-
 (map! :map LaTeX-mode-map
       :localleader
-      :desc "Compile" "," #'TeX-command-run-all
-      :desc "Fold"    "z" #'TeX-fold-buffer
-      :desc "ToC"     "t" #'reftex-toc
-      :desc "View"    "v" #'TeX-view
+      :desc "Compile" ","  #'TeX-command-run-all
+      :desc "Fold"    "z"  #'TeX-fold-buffer
+      :desc "ToC"     "t"  #'reftex-toc
+      :desc "View"    "v"  #'TeX-view
 )
 
 ;; (set-company-backend! 'company-reftex-labels  'company-reftex-citations
@@ -578,7 +571,7 @@
 (use-package! smartparens
   :config
   (sp-local-pair 'org-mode "$" "$")
-  (sp-local-pair 'latex-mode "$" "$")   ;; omg, I want this so badly
+  ;; (sp-local-pair 'latex-mode "$" "$")   ;; omg, I want this so badly
   (sp-local-pair 'latex-mode "\\langle" "\\rangle" :trigger "\\lan")
   (sp-local-pair 'latex-mode "\\lVert" "\\rVert" :trigger "\\lVe")
 
@@ -651,3 +644,6 @@
  :map pdf-view-mode-map
  :m "C-u" 'pdf-view-scroll-down-or-previous-page
  :m "C-d" 'pdf-view-scroll-up-or-next-page)
+
+;; Home row only (the default).
+(setq avy-keys '(?a ?r ?s ?t ?d ?h ?n ?e ?i ?o))

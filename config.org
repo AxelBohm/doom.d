@@ -19,6 +19,11 @@
 #+BEGIN_SRC emacs-lisp
 (set-cursor-color "#ffb6c1")
 #+END_SRC
+*** font
+
+#+BEGIN_SRC emacs-lisp
+(setq doom-font (font-spec :family "xos4 Terminus" :size 13))
+#+END_SRC
 
 *** paren-mode
 Highlight matching parentheses and such in every mode.
@@ -93,6 +98,14 @@ Make emacs opaque (when running compton).
   ;;     (doom-modeline-set-modeline 'myline 'default)))
   )
 #+END_SRC
+*** hl-todo
+
+highlight keywords like TODO/FIXME/NOTE/DEPRECATED/HACK/REVIEW.
+
+#+BEGIN_SRC emacs-lisp
+(setq hl-todo-mode t)
+#+END_SRC
+
 ** general behavior
 
 When splitting windows, put split on a reasonable side.
@@ -214,7 +227,7 @@ When regularly changing configs we also want to be able to use them without rest
 * vi
 ** config
 
-not quite sure what this does but it seems to fix some weird behavior with
+Not quite sure what this does but it seems to fix some weird behavior with
 visual lines
 
 #+BEGIN_SRC emacs-lisp
@@ -252,7 +265,7 @@ Quickly open shell in a split.
 
 (map! :leader "s s" 'ab/open-shell-in-split)
 #+END_SRC
-** colemak settings
+** colemak settings :colemak:
 
 Evil for colemak keyboard layout. Adapted from the [[https://github.com/wbolster/evil-colemak-basics][evil-colemak-basics]] package. For some reason trying to defining everything manually via ~evil-define-key~ or ~define-key evil-motion-state-map~ gave me trouble with ~'inner-text-objects~ and more..
 
@@ -342,7 +355,7 @@ Switching windows also relies on the `hjkl` motions. So make it colemak friendly
   (define-key evil-window-map "i" 'evil-window-right))
 #+END_SRC
 
-** matchit
+** ~matchit~
 
 Extend the ~%~ functionality to jump between tags such as LaTeX ~\begin{...}~ and ~\end{...}~. This is sooo important!!!
 
@@ -369,9 +382,9 @@ want them. Got this from [[https://emacs.stackexchange.com/questions/38596/make-
           (paragraph-separate (default-value 'paragraph-separate)))
       ad-do-it)))
 #+END_SRC
-** custom
+** custom :colemak:
 
-custom mappings.
+Custom mappings.
 
 #+BEGIN_SRC emacs-lisp
 (after! evil
@@ -724,9 +737,10 @@ When calling org capture from outside emacs it uses ~counsel-org-capture~ which 
 (after! latex
   (setq tex-fontify-script t
         TeX-save-query nil
+        ;; auto insert second dollar sign
+        ;; TeX-electric-math (cons "$" "$")
         ;; don't show ^ or _ for scripts
         font-latex-fontify-script 'invisible)
-  ;; (add-to-list 'TeX-command-list '("LatexMk" "latexmk -pdflatex='pdflatex -file-line-error -synctex=1' -pdf %t" TeX-run-TeX nil))
 
   ;; use Zathura as pdf viewer
   (setq TeX-view-program-selection '((output-pdf "Zathura"))
@@ -737,30 +751,18 @@ When calling org capture from outside emacs it uses ~counsel-org-capture~ which 
   (add-hook! 'TeX-after-compilation-finished-functions #'TeX-revert-document-buffer))
 
 #+END_SRC
-** make pretty-code
-#+BEGIN_SRC emacs-lisp
-;; (defun my-delayed-prettify ()
-;;   (require 'tex-mode)
-;;   (setq prettify-symbols-alist
-;;         (append tex--prettify-symbols-alist prettify-symbols-alist))
-;;   (prettify-symbols-mode 1))
-;; (add-hook 'TeX-mode-hook #'my-delayed-prettify)
-;; (after! latex (add-hook 'TeX-mode-hook #'my-delayed-prettify))
-
-;; (defun my-delayed-prettify ()
-;;   (run-with-idle-timer 2 nil (lambda () (prettify-symbols-mode 1))))
-;; (add-hook 'TeX-mode-hook 'my-delayed-prettify)
-#+END_SRC
 
 ** keybindings
+
+LaTeX specific keybindings.
 
 #+BEGIN_SRC emacs-lisp
 (map! :map LaTeX-mode-map
       :localleader
-      :desc "Compile" "," #'TeX-command-run-all
-      :desc "Fold"    "z" #'TeX-fold-buffer
-      :desc "ToC"     "t" #'reftex-toc
-      :desc "View"    "v" #'TeX-view
+      :desc "Compile" ","  #'TeX-command-run-all
+      :desc "Fold"    "z"  #'TeX-fold-buffer
+      :desc "ToC"     "t"  #'reftex-toc
+      :desc "View"    "v"  #'TeX-view
 )
 #+END_SRC
 ** company
@@ -776,7 +778,6 @@ When calling org capture from outside emacs it uses ~counsel-org-capture~ which 
 ;; (after! latex
 ;;   (set-company-backend! 'latex-mode '(company-latex-commands :with company-yasnippet)))
 #+END_SRC
-
 
 * snippets
 
@@ -1006,7 +1007,7 @@ Smart treatment of parenthesis, like auto closing or auto deletion of the matchi
 (use-package! smartparens
   :config
   (sp-local-pair 'org-mode "$" "$")
-  (sp-local-pair 'latex-mode "$" "$")   ;; omg, I want this so badly
+  ;; (sp-local-pair 'latex-mode "$" "$")   ;; omg, I want this so badly
   (sp-local-pair 'latex-mode "\\langle" "\\rangle" :trigger "\\lan")
   (sp-local-pair 'latex-mode "\\lVert" "\\rVert" :trigger "\\lVe")
 
@@ -1096,4 +1097,14 @@ I'm so used to my ranger keybindings. Imitate those:
  :m "C-u" 'pdf-view-scroll-down-or-previous-page
  :m "C-d" 'pdf-view-scroll-up-or-next-page)
 
+#+END_SRC
+* ~avy~
+
+** keys being used :colemak:
+
+~avy~ uses the qwerty home row by default.
+
+#+BEGIN_SRC emacs-lisp
+;; Home row only (the default).
+(setq avy-keys '(?a ?r ?s ?t ?d ?h ?n ?e ?i ?o))
 #+END_SRC
