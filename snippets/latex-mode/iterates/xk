@@ -1,5 +1,5 @@
 # -*- mode: snippet -*-
-# name: xhatmin1
+# name: xk
 # key: xk
 # --
-\hat{x}_{k-1}
+x_k
