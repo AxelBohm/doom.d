@@ -44,9 +44,7 @@ Show line numbers to the left for better jumping.
 
 *** line truncation
 
-stupid doom tries to truncate lines all the time which I don't like. This means
-that long lines go past the window end. When this is turned off they appear
-soft wrapped.
+stupid doom tries to truncate lines all the time which I don't like. This means that long lines go past the window end. When this is turned off they appear soft wrapped.
 
 #+BEGIN_SRC emacs-lisp
 (setq-default truncate-lines nil)
@@ -103,7 +101,7 @@ Make emacs opaque (when running compton).
 highlight keywords like TODO/FIXME/NOTE/DEPRECATED/HACK/REVIEW.
 
 #+BEGIN_SRC emacs-lisp
-(setq hl-todo-mode t)
+(global-hl-todo-mode)
 #+END_SRC
 
 ** general behavior
@@ -121,8 +119,7 @@ I don't want aut-fill on by DEFAULT
 (remove-hook 'text-mode-hook #'auto-fill-mode)
 #+END_SRC
 
-When moving up or down. Start moving the text before the curser hits the border of the screen.
-Equivalent to vims ~scroll-off~.
+When moving up or down. Start moving the text before the curser hits the border of the screen. Equivalent to vims ~scroll-off~.
 
 #+BEGIN_SRC emacs-lisp
 (setq scroll-margin 5)

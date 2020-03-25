@@ -35,7 +35,7 @@
   ;;     (doom-modeline-set-modeline 'myline 'default)))
   )
 
-(setq hl-todo-mode t)
+(global-hl-todo-mode)
 
 (setq evil-split-window-below t
       evil-vsplit-window-right t)
@@ -73,10 +73,6 @@
 (map! :after counsel
       :map counsel-find-file-map
       "M-RET" #'ivy-ffow-done)
-
-(setq abbrev-file-name
-      "~/.doom.d/abbrev-defs")
-(setq abbrev-mode t)
 
 (defun ab/visit-emacs-config ()
   "go to emacs config file"
