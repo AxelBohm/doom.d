@@ -42,6 +42,8 @@
 
 (remove-hook 'text-mode-hook #'auto-fill-mode)
 
+(setq scroll-margin 5)
+
 (add-to-list 'auto-mode-alist '("/mutt" . mail-mode))
 (add-to-list 'auto-mode-alist '("/neomutt" . mail-mode))
 

@@ -121,6 +121,13 @@ I don't want aut-fill on by DEFAULT
 (remove-hook 'text-mode-hook #'auto-fill-mode)
 #+END_SRC
 
+When moving up or down. Start moving the text before the curser hits the border of the screen.
+Equivalent to vims ~scroll-off~.
+
+#+BEGIN_SRC emacs-lisp
+(setq scroll-margin 5)
+#+END_SRC
+
 ** email
 
 currently still using mutt. This tells Emacs to use mail mode when editing emails through mutt.
