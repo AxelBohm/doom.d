@@ -194,16 +194,6 @@ Most of the time I only have two windows open. Switching between should be easy.
       "M-RET" #'ivy-ffow-done)
 #+END_SRC
 
-** abbreviation
-
-Used to love ~iabbrev~ in vim. This does the same.
-
-#+BEGIN_SRC emacs-lisp
-(setq abbrev-file-name
-      "~/.doom.d/abbrev-defs")
-(setq abbrev-mode t)
-#+END_SRC
-
 * config file
 
 ** quick access
