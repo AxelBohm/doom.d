@@ -75,8 +75,8 @@ Similarly in LaTeX due to sub/super -scripts.
 Make emacs opaque (when running compton).
 
 #+BEGIN_SRC emacs-lisp
-(set-frame-parameter (selected-frame) 'alpha '(90 . 90))
-(add-to-list 'default-frame-alist '(alpha . (90 . 90)))
+(set-frame-parameter (selected-frame) 'alpha '(85 . 85))
+(add-to-list 'default-frame-alist '(alpha . (85 . 85)))
 #+END_SRC
 *** modeline
 
@@ -177,7 +177,9 @@ Most of the time I only have two windows open. Switching between should be easy.
 (map! "M-w" 'other-window)
 #+END_SRC
 
-~counsel-find-file~ lets you open a file in a new split.
+~counsel-find-file~ lets you open a file in a new split, but with a weird mapping ~C-o j~.
+I want a better one. However. this currently only works for ~find-file~ and not ~find-buffer~.
+
 
 #+BEGIN_SRC emacs-lisp
 (defun ivy-ffow-done ()
@@ -428,9 +430,17 @@ Load orgmode plus some standard keybindings.
         org-return-follows-link t
         org-reverse-note-order t            ;; add new headings on top
         org-tags-column 0                   ;; position of tags
-        org-todo-keywords '((sequence "TODO(t)" "WAITING(w)" "|" "DONE(d)")
-                            (sequence "TODO(t)" "DIDN'T SUCCEED(s)" "|" "DOESN'T WORK(x)"
-                                      "TOO HARD(h)" "DONE(d)"))
+        org-todo-keywords '((sequence "TODO(t)"
+                                      "WAITING(w)"
+                                      "|"
+                                      "DONE(d)")
+                            ;; research specific
+                            (sequence "TODO(t)"
+                                      "DIDN'T SUCCEED(s)"
+                                      "|"
+                                      "DOESN'T WORK(x)"
+                                      "TOO HARD(h)"
+                                      "DONE(d)"))
         org-todo-keyword-faces '(("WAITING" :foreground "#8FBCBB" :weight bold))))
 
 (map! :leader
@@ -525,12 +535,11 @@ Org structure editing made easy/mnemonic.
   (map! :map org-mode-map
         :localleader
         "w" 'widen                   ;; show everythig
-        "n" 'org-narrow-to-subtree)  ;; show only what's within heading
+        "n" 'org-toggle-narrow-to-subtree)  ;; show only what's within heading
 )
 #+END_SRC
 
-~org-narrow-subtree~ shows only a single heading (the heading of the current subtree). I need more context!! I want the to see which hierarchy this heading belongs to. taken from [[https://emacs.stackexchange.com/questions/29304/how-to-show-all-contents-of-current-subtree-and-fold-all-the-other-subtrees][stackexchange]].
-But this also shows all heading of level 1 and all headings of the same level as current heading
+~org-narrow-subtree~ shows only a single heading (the heading of the current subtree). I need more context!! I want to see which hierarchy this heading belongs to. Taken from [[https://emacs.stackexchange.com/questions/29304/how-to-show-all-contents-of-current-subtree-and-fold-all-the-other-subtrees][stackexchange]].
 
 #+BEGIN_SRC emacs-lisp
 (defun ab/org-show-just-me (&rest _)
@@ -543,6 +552,7 @@ But this also shows all heading of level 1 and all headings of the same level as
 (map! :map org-mode-map
       :leader "N" 'ab/org-show-just-me)            ;; Mnemonic: narrow
 #+END_SRC
+What I don't like is that this also shows all heading of level 1 and all headings of the same level as current heading.
 
 Use vim instead of arrows.
 #+BEGIN_SRC emacs-lisp
@@ -642,11 +652,12 @@ Always start in insert mode when capturing.
   (add-hook 'org-capture-mode-hook 'evil-insert-state))
 #+END_SRC
 
-When refiling I want to be able to refile also to a subheading.
+When refiling I want to be able to refile also to a sub(sub...)headings.
+Default only allows for ~level 3~ or so.
 
 #+BEGIN_SRC emacs-lisp
-;; (setq org-refile-targets '((nil :maxlevel . 6)
-;;                            (org-agenda-files :maxlevel . 6)))
+(setq org-refile-targets '((nil :maxlevel . 6)
+                           (org-agenda-files :maxlevel . 6)))
 ;; (setq org-completion-use-ido t)
 ;; (setq org-outline-path-complete-in-steps nil) ;; has to be nil for ido to work
 ;; (setq org-refile-use-outline-path 'file)
@@ -656,11 +667,7 @@ This seems to work in doom out of the box.
 
 *** templates
 
-Templates for capturing. Also, ~%a~ expands to a link to the file (and position)
-from which =org-capture= was called. I think =%i= is active region. Another nice
-feature is ~%^{Name}~ prompts for name. This probably makes sense for titles or
-something because I tend to put too much next to the asterics and too little
-text underneath..
+Templates for capturing. Also, ~%a~ expands to a link to the file (and position) from which =org-capture= was called. I think =%i= is active region. Another nice feature is ~%^{Name}~ prompts for name. This probably makes sense for titles or something because I tend to put too much next to the asterics and too little text underneath..
 
 #+BEGIN_SRC emacs-lisp
 (after! org
@@ -673,9 +680,25 @@ text underneath..
            (file+headline org-index-file "Inbox")
            "*** %?\n\n")
 
+
           ("t" "Todo" entry
            (file+headline org-index-file "Inbox")
            "*** TODO %?\n"))))
+#+END_SRC
+
+Task with notifier.
+
+#+BEGIN_SRC emacs-lisp
+(after! org (add-to-list 'org-capture-templates
+          '("s" "Scheduled task"  entry
+           (file+headline org-index-file "Inbox")
+           "*** TODO %^{taskname}
+:PROPERTIES:
+:CREATED: %U
+:WILD_NOTIFIER_NOTIFY_BEFORE: 30 5
+:END:
+%?
+")))
 #+END_SRC
 
 *** capture anywhere
@@ -723,6 +746,13 @@ When calling org capture from outside emacs it uses ~counsel-org-capture~ which 
 (after! org
   (advice-add 'counsel-org-capture :override #'org-capture))
 #+END_SRC
+*** org-wild-notifier
+
+enable notifications.
+#+BEGIN_SRC emacs-lisp
+(org-wild-notifier-mode t)
+#+END_SRC
+
 
 * LaTeX
 ** general
@@ -730,11 +760,14 @@ When calling org capture from outside emacs it uses ~counsel-org-capture~ which 
 #+BEGIN_SRC emacs-lisp
 (after! latex
   (setq tex-fontify-script t
+        ;; automatically put braces after ^ and _
+        TeX-electric-sub-and-superscript nil
+        ;; stop asking if I want to save
         TeX-save-query nil
         ;; auto insert second dollar sign
         ;; TeX-electric-math (cons "$" "$")
         ;; don't show ^ or _ for scripts
-        font-latex-fontify-script 'invisible)
+        font-latex-fontify-script nil)
 
   ;; use Zathura as pdf viewer
   (setq TeX-view-program-selection '((output-pdf "Zathura"))
@@ -772,14 +805,23 @@ LaTeX specific keybindings.
 ;; (after! latex
 ;;   (set-company-backend! 'latex-mode '(company-latex-commands :with company-yasnippet)))
 #+END_SRC
+** matchit
+
+add some LaTeX keywords which are not included by ~evil-matchit~ by default.
+
+#+BEGIN_SRC emacs-lisp
+(eval-after-load 'evil-matchit-latex
+  '(progn
+     (push '("langle" nil "rangle") evilmi-latex-match-tags)))
+     ;; (push '(("unless" "if") ("elsif" "else") "end"))) evilmi-latex-match-tags)
+#+END_SRC
 
 * snippets
 
 Snippets are everything! still need to figure out how to incorporate snippets into autocompletion (the way deoplete and Ultisnips did it for vim).
 
 #+BEGIN_SRC emacs-lisp
-(use-package! yasnippet
-  :config
+(after! snippets
   (setq yas-snippet-dirs '("~/.doom.d/snippets"))
   ;; remove random additional newline at the end of new snippets
   (setq-default mode-require-final-newline nil)
@@ -884,7 +926,7 @@ I used to think =company= is slow, but I just had to turn the ~idle-delay~ down.
 (after! company
   :init
   (setq company-dabbrev-ignore-case t
-        company-idle-delay 0.1
+        company-idle-delay 0.2
         ;; Number the candidates (use M-1, M-2 etc to select completions).
         company-show-numbers t
         company-tooltip-limit 8
@@ -1018,51 +1060,24 @@ Smart treatment of parenthesis, like auto closing or auto deletion of the matchi
 finally I found a config using offlineimap.
 
 #+BEGIN_SRC emacs-lisp
-;; (after! mu4e
-;;   (setq +mu4e-backend 'offlineimap)
-;;   ;; (set-email-account! "EduPolitech"
-;;   ;;   `((mu4e-sent-folder       . "/edu-politech/Sent Mail")
-;;   ;;     (mu4e-drafts-folder     . "/edu-politech/Drafts")
-;;   ;;     (mu4e-trash-folder      . "/edu-politech/Trash")
-;;   ;;     (mu4e-refile-folder     . "/edu-politech/All Mail")
-;;   ;;     (smtpmail-smtp-user     . ,(password-store-get "mail/edu-politech"))
-;;   ;;     (user-mail-address      . ,(password-store-get "mail/edu-politech"))
-;;   ;;     (mu4e-compose-signature . "---\nEdu Politech"))
-;;   ;;   t)
-;;   (set-email-account! "MainMail"
-;;     `((mu4e-sent-folder       . "~/.mail/uniwien/Sent")
-;;       (mu4e-drafts-folder     . "~/.mail/uniwien/Drafts")
-;;       (mu4e-trash-folder      . "~/.mail/uniwien/Trash")
-;;       (mu4e-refile-folder     . "/All Mail")
-;;       (smtpmail-smtp-user     . ,(auth-source-pass-get "user" "mail/mainmail"))
-;;       (user-mail-address      . ,(auth-source-pass-get "user" "mail/mainmail"))
-;;       (mu4e-compose-signature . "---\nMain Mail")))
-;;   (set-email-account! "Paradox"
-;;     `((mu4e-sent-folder       . "/paradox/Sent Mail")
-;;       (mu4e-drafts-folder     . "/paradox/Drafts")
-;;       (mu4e-trash-folder      . "/paradox/Trash")
-;;       (mu4e-refile-folder     . "/paradox/All Mail")
-;;       (smtpmail-smtp-user     . ,(auth-source-pass-get "user" "mail/paradox"))
-;;       (user-mail-address      . ,(auth-source-pass-get "user" "mail/paradox"))
-;;       (mu4e-compose-signature . "---\nParadox"))
-;;     t))
-
-;; (add-to-list 'load-path "/usr/share/emacs/site-lisp")
-
 (after! mu4e
   (setq +mu4e-backend 'offlineimap)
   (setq mu4e-maildir "~/.mail")
 
-;; Each path is relative to `+mu4e-mu4e-mail-path', which is ~/.mail by default
-(set-email-account! "uniwien"
-  '((mu4e-sent-folder       . "/uniwien/INBOX.Sent/")
-    (mu4e-drafts-folder     . "/uniwien/INBOX.Drafts")
-    (mu4e-trash-folder      . "/uniwien/INBOX.Trash")
-    (mu4e-refile-folder     . "/uniwien/INBOX.Archive")
-    (smtpmail-smtp-user     . "axel.boehm@univie.ac.at")
-    (user-mail-address      . "axel.boehm@univie.ac.at")
-    (mu4e-compose-signature . "---\nAxel Boehm"))
-  t)
+  ;; Each path is relative to `+mu4e-mu4e-mail-path', which is ~/.mail by default
+  (set-email-account! "uniwien"
+                      '((user-full-name        . "Axel Böhm")
+                        (user-mail-address      . "axel.boehm@univie.ac.at")
+                        (smtpmail-smtp-user     . "boehma53@univie.ac.at")
+
+                        (mu4e-sent-folder       . "/uniwien/INBOX.Sent/")
+                        (mu4e-drafts-folder     . "/uniwien/INBOX.Drafts")
+                        (mu4e-trash-folder      . "/uniwien/INBOX.Trash")
+                        (mu4e-refile-folder     . "/uniwien/INBOX.Archive")
+                        (smtpmail-smtp-server   . "mail.unvie.ac.at")
+                        (smtpmail-smtp-service  .  587)
+                        (mu4e-compose-signature . "---\nAxel Boehm"))
+                      t)
 
   ;; use mu4e for e-mail in emacs
   (setq mail-user-agent 'mu4e-user-agent)
@@ -1073,7 +1088,37 @@ finally I found a config using offlineimap.
   )
 #+END_SRC
 
+Next account.
+
+#+BEGIN_SRC emacs-lisp
+(after! mu4e
+  (set-email-account! "ymail"
+    `((mu4e-sent-folder       . "/ymail/Sent")
+      (mu4e-drafts-folder     . "/ymail/Drafts")
+      (mu4e-trash-folder      . "/ymail/Trash")
+      (mu4e-refile-folder     . "/ymail/Archive")
+      ;; (smtpmail-smtp-user     . ,(auth-source-pass-get "user" "mail/mainmail"))
+      ;; (user-mail-address      . ,(auth-source-pass-get "user" "mail/mainmail"))
+      (mu4e-compose-signature . "---\nAxel Boehm"))))
+#+END_SRC
+
+
 still to do
+
+** contacts
+
+#+BEGIN_SRC emacs-lisp
+(use-package! org-contacts
+  :after org
+  :custom (org-contacts-files '("~/documents/contacts.org")))
+
+(setq mu4e-org-contacts-file (car org-contacts-files))
+(add-to-list 'mu4e-headers-actions
+             '("org-contact-add" . mu4e-action-add-org-contact) t)
+(add-to-list 'mu4e-view-actions
+             '("org-contact-add" . mu4e-action-add-org-contact) t)
+#+END_SRC
+
 * dired
 
 I'm so used to my ranger keybindings. Imitate those:
@@ -1082,7 +1127,10 @@ I'm so used to my ranger keybindings. Imitate those:
 (map! :map dired-mode
       "h" 'dired-up-directory)
 #+END_SRC
+
 * pdf
+
+Navigate pdfs the way I'm used to.
 
 #+BEGIN_SRC emacs-lisp
 ;; Use the usual C-u/C-d keybindings to navigate pdfs.
@@ -1092,13 +1140,13 @@ I'm so used to my ranger keybindings. Imitate those:
  :m "C-d" 'pdf-view-scroll-up-or-next-page)
 
 #+END_SRC
+
 * ~avy~
 
 ** keys being used :colemak:
 
-~avy~ uses the qwerty home row by default.
+~avy~ uses the qwerty home row by default. Change this.
 
 #+BEGIN_SRC emacs-lisp
-;; Home row only (the default).
 (setq avy-keys '(?a ?r ?s ?t ?d ?h ?n ?e ?i ?o))
 #+END_SRC

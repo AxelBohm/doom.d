@@ -17,8 +17,8 @@
 
 (remove-hook 'text-mode-hook #'hl-line-mode)
 
-(set-frame-parameter (selected-frame) 'alpha '(90 . 90))
-(add-to-list 'default-frame-alist '(alpha . (90 . 90)))
+(set-frame-parameter (selected-frame) 'alpha '(85 . 85))
+(add-to-list 'default-frame-alist '(alpha . (85 . 85)))
 
 (after! doom-modeline
   ;; Disable unwanted modeline details.
@@ -222,9 +222,17 @@
         org-return-follows-link t
         org-reverse-note-order t            ;; add new headings on top
         org-tags-column 0                   ;; position of tags
-        org-todo-keywords '((sequence "TODO(t)" "WAITING(w)" "|" "DONE(d)")
-                            (sequence "TODO(t)" "DIDN'T SUCCEED(s)" "|" "DOESN'T WORK(x)"
-                                      "TOO HARD(h)" "DONE(d)"))
+        org-todo-keywords '((sequence "TODO(t)"
+                                      "WAITING(w)"
+                                      "|"
+                                      "DONE(d)")
+                            ;; research specific
+                            (sequence "TODO(t)"
+                                      "DIDN'T SUCCEED(s)"
+                                      "|"
+                                      "DOESN'T WORK(x)"
+                                      "TOO HARD(h)"
+                                      "DONE(d)"))
         org-todo-keyword-faces '(("WAITING" :foreground "#8FBCBB" :weight bold))))
 
 (map! :leader
@@ -284,7 +292,7 @@
   (map! :map org-mode-map
         :localleader
         "w" 'widen                   ;; show everythig
-        "n" 'org-narrow-to-subtree)  ;; show only what's within heading
+        "n" 'org-toggle-narrow-to-subtree)  ;; show only what's within heading
 )
 
 (defun ab/org-show-just-me (&rest _)
@@ -350,8 +358,8 @@
 (after! org
   (add-hook 'org-capture-mode-hook 'evil-insert-state))
 
-;; (setq org-refile-targets '((nil :maxlevel . 6)
-;;                            (org-agenda-files :maxlevel . 6)))
+(setq org-refile-targets '((nil :maxlevel . 6)
+                           (org-agenda-files :maxlevel . 6)))
 ;; (setq org-completion-use-ido t)
 ;; (setq org-outline-path-complete-in-steps nil) ;; has to be nil for ido to work
 ;; (setq org-refile-use-outline-path 'file)
@@ -366,9 +374,21 @@
            (file+headline org-index-file "Inbox")
            "*** %?\n\n")
 
+
           ("t" "Todo" entry
            (file+headline org-index-file "Inbox")
            "*** TODO %?\n"))))
+
+(after! org (add-to-list 'org-capture-templates
+          '("s" "Scheduled task"  entry
+           (file+headline org-index-file "Inbox")
+           "*** TODO %^{taskname}
+:PROPERTIES:
+:CREATED: %U
+:WILD_NOTIFIER_NOTIFY_BEFORE: 30 5
+:END:
+%?
+")))
 
 (after! org
   (defadvice org-switch-to-buffer-other-window
@@ -394,13 +414,18 @@
 (after! org
   (advice-add 'counsel-org-capture :override #'org-capture))
 
+(org-wild-notifier-mode t)
+
 (after! latex
   (setq tex-fontify-script t
+        ;; automatically put braces after ^ and _
+        TeX-electric-sub-and-superscript nil
+        ;; stop asking if I want to save
         TeX-save-query nil
         ;; auto insert second dollar sign
         ;; TeX-electric-math (cons "$" "$")
         ;; don't show ^ or _ for scripts
-        font-latex-fontify-script 'invisible)
+        font-latex-fontify-script nil)
 
   ;; use Zathura as pdf viewer
   (setq TeX-view-program-selection '((output-pdf "Zathura"))
@@ -428,8 +453,12 @@
 ;; (after! latex
 ;;   (set-company-backend! 'latex-mode '(company-latex-commands :with company-yasnippet)))
 
-(use-package! yasnippet
-  :config
+(eval-after-load 'evil-matchit-latex
+  '(progn
+     (push '("langle" nil "rangle") evilmi-latex-match-tags)))
+     ;; (push '(("unless" "if") ("elsif" "else") "end"))) evilmi-latex-match-tags)
+
+(after! snippets
   (setq yas-snippet-dirs '("~/.doom.d/snippets"))
   ;; remove random additional newline at the end of new snippets
   (setq-default mode-require-final-newline nil)
@@ -486,7 +515,7 @@
 (after! company
   :init
   (setq company-dabbrev-ignore-case t
-        company-idle-delay 0.1
+        company-idle-delay 0.2
         ;; Number the candidates (use M-1, M-2 etc to select completions).
         company-show-numbers t
         company-tooltip-limit 8
@@ -580,51 +609,24 @@
 
   (smartparens-global-mode 1)) ;; I always want this
 
-;; (after! mu4e
-;;   (setq +mu4e-backend 'offlineimap)
-;;   ;; (set-email-account! "EduPolitech"
-;;   ;;   `((mu4e-sent-folder       . "/edu-politech/Sent Mail")
-;;   ;;     (mu4e-drafts-folder     . "/edu-politech/Drafts")
-;;   ;;     (mu4e-trash-folder      . "/edu-politech/Trash")
-;;   ;;     (mu4e-refile-folder     . "/edu-politech/All Mail")
-;;   ;;     (smtpmail-smtp-user     . ,(password-store-get "mail/edu-politech"))
-;;   ;;     (user-mail-address      . ,(password-store-get "mail/edu-politech"))
-;;   ;;     (mu4e-compose-signature . "---\nEdu Politech"))
-;;   ;;   t)
-;;   (set-email-account! "MainMail"
-;;     `((mu4e-sent-folder       . "~/.mail/uniwien/Sent")
-;;       (mu4e-drafts-folder     . "~/.mail/uniwien/Drafts")
-;;       (mu4e-trash-folder      . "~/.mail/uniwien/Trash")
-;;       (mu4e-refile-folder     . "/All Mail")
-;;       (smtpmail-smtp-user     . ,(auth-source-pass-get "user" "mail/mainmail"))
-;;       (user-mail-address      . ,(auth-source-pass-get "user" "mail/mainmail"))
-;;       (mu4e-compose-signature . "---\nMain Mail")))
-;;   (set-email-account! "Paradox"
-;;     `((mu4e-sent-folder       . "/paradox/Sent Mail")
-;;       (mu4e-drafts-folder     . "/paradox/Drafts")
-;;       (mu4e-trash-folder      . "/paradox/Trash")
-;;       (mu4e-refile-folder     . "/paradox/All Mail")
-;;       (smtpmail-smtp-user     . ,(auth-source-pass-get "user" "mail/paradox"))
-;;       (user-mail-address      . ,(auth-source-pass-get "user" "mail/paradox"))
-;;       (mu4e-compose-signature . "---\nParadox"))
-;;     t))
-
-;; (add-to-list 'load-path "/usr/share/emacs/site-lisp")
-
 (after! mu4e
   (setq +mu4e-backend 'offlineimap)
   (setq mu4e-maildir "~/.mail")
 
-;; Each path is relative to `+mu4e-mu4e-mail-path', which is ~/.mail by default
-(set-email-account! "uniwien"
-  '((mu4e-sent-folder       . "/uniwien/INBOX.Sent/")
-    (mu4e-drafts-folder     . "/uniwien/INBOX.Drafts")
-    (mu4e-trash-folder      . "/uniwien/INBOX.Trash")
-    (mu4e-refile-folder     . "/uniwien/INBOX.Archive")
-    (smtpmail-smtp-user     . "axel.boehm@univie.ac.at")
-    (user-mail-address      . "axel.boehm@univie.ac.at")
-    (mu4e-compose-signature . "---\nAxel Boehm"))
-  t)
+  ;; Each path is relative to `+mu4e-mu4e-mail-path', which is ~/.mail by default
+  (set-email-account! "uniwien"
+                      '((user-full-name        . "Axel Böhm")
+                        (user-mail-address      . "axel.boehm@univie.ac.at")
+                        (smtpmail-smtp-user     . "boehma53@univie.ac.at")
+
+                        (mu4e-sent-folder       . "/uniwien/INBOX.Sent/")
+                        (mu4e-drafts-folder     . "/uniwien/INBOX.Drafts")
+                        (mu4e-trash-folder      . "/uniwien/INBOX.Trash")
+                        (mu4e-refile-folder     . "/uniwien/INBOX.Archive")
+                        (smtpmail-smtp-server   . "mail.unvie.ac.at")
+                        (smtpmail-smtp-service  .  587)
+                        (mu4e-compose-signature . "---\nAxel Boehm"))
+                      t)
 
   ;; use mu4e for e-mail in emacs
   (setq mail-user-agent 'mu4e-user-agent)
@@ -633,6 +635,26 @@
   ;; allow for updating mail using 'U' in the main view:
   ;; (setq mu4e-get-mail-command "offlineimap") )
   )
+
+(after! mu4e
+  (set-email-account! "ymail"
+    `((mu4e-sent-folder       . "/ymail/Sent")
+      (mu4e-drafts-folder     . "/ymail/Drafts")
+      (mu4e-trash-folder      . "/ymail/Trash")
+      (mu4e-refile-folder     . "/ymail/Archive")
+      ;; (smtpmail-smtp-user     . ,(auth-source-pass-get "user" "mail/mainmail"))
+      ;; (user-mail-address      . ,(auth-source-pass-get "user" "mail/mainmail"))
+      (mu4e-compose-signature . "---\nAxel Boehm"))))
+
+(use-package! org-contacts
+  :after org
+  :custom (org-contacts-files '("~/documents/contacts.org")))
+
+(setq mu4e-org-contacts-file (car org-contacts-files))
+(add-to-list 'mu4e-headers-actions
+             '("org-contact-add" . mu4e-action-add-org-contact) t)
+(add-to-list 'mu4e-view-actions
+             '("org-contact-add" . mu4e-action-add-org-contact) t)
 
 (map! :map dired-mode
       "h" 'dired-up-directory)
@@ -643,5 +665,4 @@
  :m "C-u" 'pdf-view-scroll-down-or-previous-page
  :m "C-d" 'pdf-view-scroll-up-or-next-page)
 
-;; Home row only (the default).
 (setq avy-keys '(?a ?r ?s ?t ?d ?h ?n ?e ?i ?o))
