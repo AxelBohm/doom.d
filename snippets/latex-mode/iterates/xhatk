@@ -1,6 +1,6 @@
 # -*- mode: snippet -*-
-# name: yk
-# key: ykk
+# name: xhatk
+# key: xhk
 # condition: 'auto
 # --
-y_k
+\hat{x}_k

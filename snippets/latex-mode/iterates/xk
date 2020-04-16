@@ -1,5 +1,6 @@
 # -*- mode: snippet -*-
 # name: xk
-# key: xk
+# key: xkk
+# condition: 'auto
 # --
 x_k
