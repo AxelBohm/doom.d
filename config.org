@@ -465,6 +465,11 @@ configure the symbol for stuff hidden after heading.
 #+END_SRC
 
 
+#+BEGIN_SRC emacs-lisp
+(after! org
+  (setq org-pretty-entities 1))
+#+END_SRC
+
 ** structure and files
 
 Tell emacs where I store my org stuff.
@@ -746,13 +751,35 @@ When calling org capture from outside emacs it uses ~counsel-org-capture~ which 
 (after! org
   (advice-add 'counsel-org-capture :override #'org-capture))
 #+END_SRC
-*** org-wild-notifier
 
-enable notifications.
+** org-notifications
+
+I want notifications for scheduled headlines. Unfortunately ~org-alert~ only has the capability to notify every N minutes and doesn't consider the time an item is scheduled for.
+
+This package sends a notification every x minutes before schedule and even allows for multiple notifications per TODO.
+
+
 #+BEGIN_SRC emacs-lisp
-(org-wild-notifier-mode t)
+(use-package! org-wild-notifier
+  :defer t
+  :init
+  (add-hook 'doom-after-init-modules-hook #'org-wild-notifier-mode t)
+  :config
+  (setq org-wild-notifier-alert-time 15
+        ;; use dunst for system wide notifications
+        alert-default-style 'libnotify))
 #+END_SRC
+** opening pdfs
 
+I want pdfs to be opened in an external pdf viewer.
+
+#+BEGIN_SRC emacs-lisp
+(after! org
+  (add-hook 'org-mode-hook
+            '(lambda ()
+               (delete '("\\.pdf\\'" . default) org-file-apps)
+               (add-to-list 'org-file-apps '("\\.pdf\\'" . "zathura %s")))))
+#+END_SRC
 
 * LaTeX
 ** general
@@ -1108,15 +1135,15 @@ still to do
 ** contacts
 
 #+BEGIN_SRC emacs-lisp
-(use-package! org-contacts
-  :after org
-  :custom (org-contacts-files '("~/documents/contacts.org")))
+;; (use-package! org-contacts
+;;   :after org
+;;   :custom (org-contacts-files '("~/documents/contacts.org")))
 
-(setq mu4e-org-contacts-file (car org-contacts-files))
-(add-to-list 'mu4e-headers-actions
-             '("org-contact-add" . mu4e-action-add-org-contact) t)
-(add-to-list 'mu4e-view-actions
-             '("org-contact-add" . mu4e-action-add-org-contact) t)
+;; (setq mu4e-org-contacts-file (car org-contacts-files))
+;; (add-to-list 'mu4e-headers-actions
+;;              '("org-contact-add" . mu4e-action-add-org-contact) t)
+;; (add-to-list 'mu4e-view-actions
+;;              '("org-contact-add" . mu4e-action-add-org-contact) t)
 #+END_SRC
 
 * dired

@@ -250,6 +250,9 @@
   (setq org-ellipsis " ..."))
 
 (after! org
+  (setq org-pretty-entities 1))
+
+(after! org
   (setq org-directory "~/org")
 
   (defun org-file-path (filename)
@@ -414,7 +417,20 @@
 (after! org
   (advice-add 'counsel-org-capture :override #'org-capture))
 
-(org-wild-notifier-mode t)
+(use-package! org-wild-notifier
+  :defer t
+  :init
+  (add-hook 'doom-after-init-modules-hook #'org-wild-notifier-mode t)
+  :config
+  (setq org-wild-notifier-alert-time 15
+        ;; use dunst for system wide notifications
+        alert-default-style 'libnotify))
+
+(after! org
+  (add-hook 'org-mode-hook
+            '(lambda ()
+               (delete '("\\.pdf\\'" . default) org-file-apps)
+               (add-to-list 'org-file-apps '("\\.pdf\\'" . "zathura %s")))))
 
 (after! latex
   (setq tex-fontify-script t
@@ -646,15 +662,15 @@
       ;; (user-mail-address      . ,(auth-source-pass-get "user" "mail/mainmail"))
       (mu4e-compose-signature . "---\nAxel Boehm"))))
 
-(use-package! org-contacts
-  :after org
-  :custom (org-contacts-files '("~/documents/contacts.org")))
+;; (use-package! org-contacts
+;;   :after org
+;;   :custom (org-contacts-files '("~/documents/contacts.org")))
 
-(setq mu4e-org-contacts-file (car org-contacts-files))
-(add-to-list 'mu4e-headers-actions
-             '("org-contact-add" . mu4e-action-add-org-contact) t)
-(add-to-list 'mu4e-view-actions
-             '("org-contact-add" . mu4e-action-add-org-contact) t)
+;; (setq mu4e-org-contacts-file (car org-contacts-files))
+;; (add-to-list 'mu4e-headers-actions
+;;              '("org-contact-add" . mu4e-action-add-org-contact) t)
+;; (add-to-list 'mu4e-view-actions
+;;              '("org-contact-add" . mu4e-action-add-org-contact) t)
 
 (map! :map dired-mode
       "h" 'dired-up-directory)
