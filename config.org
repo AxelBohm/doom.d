@@ -885,9 +885,8 @@ Code is taken from [[https://github.com/joaotavora/yasnippet/issues/998][a githu
 
 #+BEGIN_SRC emacs-lisp
 (defun ab/yas-try-expanding-auto-snippets ()
-  (when yas-minor-mode
-    (let ((yas-buffer-local-condition ''(require-snippet-condition . auto)))
-      (yas-expand))))
+  (let ((yas-buffer-local-condition ''(require-snippet-condition . auto)))
+    (yas-expand)))
 (add-hook 'post-command-hook #'ab/yas-try-expanding-auto-snippets)
 #+END_SRC
 
