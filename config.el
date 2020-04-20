@@ -220,6 +220,7 @@
 (after! org
   (setq org-hide-emphasis-markers nil
         org-return-follows-link t
+        +org-initial-fold-level 1
         org-reverse-note-order t            ;; add new headings on top
         org-tags-column 0                   ;; position of tags
         org-todo-keywords '((sequence "TODO(t)"
@@ -258,8 +259,8 @@
 (after! org
   (setq org-ellipsis " ..."))
 
-(after! org
-  (setq org-pretty-entities 1))
+;; (after! org
+;;   (setq org-pretty-entities 1))
 
 (after! org
   (setq org-directory "~/org")
@@ -315,7 +316,7 @@
   (org-show-subtree))
 
 (map! :map org-mode-map
-      :leader "N" 'ab/org-show-just-me)            ;; Mnemonic: narrow
+      :localleader "N" 'ab/org-show-just-me)            ;; Mnemonic: narrow
 
 (map! :map org-mode-map
       "M-e" #'org-metaup
@@ -395,6 +396,7 @@
           '("s" "Scheduled task"  entry
            (file+headline org-index-file "Inbox")
            "*** TODO %^{taskname}
+SCHEDULED: %(org-insert-time-stamp (org-read-date nil t \"+0d\"))
 :PROPERTIES:
 :CREATED: %U
 :WILD_NOTIFIER_NOTIFY_BEFORE: 30 5
@@ -493,9 +495,8 @@
    :leader "s g" 'yas-visit-snippet-file))      ;; Snippet Go
 
 (defun ab/yas-try-expanding-auto-snippets ()
-  (when yas-minor-mode
-    (let ((yas-buffer-local-condition ''(require-snippet-condition . auto)))
-      (yas-expand))))
+  (let ((yas-buffer-local-condition ''(require-snippet-condition . auto)))
+    (yas-expand)))
 (add-hook 'post-command-hook #'ab/yas-try-expanding-auto-snippets)
 
 ;; (use-package! flycheck
@@ -507,13 +508,12 @@
 (after! flycheck
   (map! :leader "a" 'flycheck-next-error))
 
-(after! magit
-  :config
-  (use-package evil-magit)
+;; (after! magit
+;;   :config
+;;   (use-package evil-magit)
 
-
-  ;; This library makes it possible to reliably use the Emacsclient as the $EDITOR of child processes.
-  (use-package with-editor))
+;;   ;; This library makes it possible to reliably use the Emacsclient as the $EDITOR of child processes.
+;;   (use-package with-editor))
 
 (map! :leader "g g" 'magit-status)
 
@@ -636,8 +636,15 @@
 
 (after! mu4e
   (setq +mu4e-backend 'offlineimap)
-  (setq mu4e-maildir "~/.mail")
+  (setq mu4e-maildir "~/.mail"))
 
+(defun mu4e-in-new-frame ()
+  "Start mu4e in new frame."
+  (interactive)
+  (select-frame (make-frame))
+  (mu4e))
+
+(after! mu4e
   ;; Each path is relative to `+mu4e-mu4e-mail-path', which is ~/.mail by default
   (set-email-account! "uniwien"
                       '((user-full-name        . "Axel Böhm")

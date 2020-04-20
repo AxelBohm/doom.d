@@ -107,8 +107,8 @@
         +latexmk)
        markdown          ; writing docs for people to ignore
        (org              ; organize your plain life in plain text
-        +dragndrop       ; drag & drop files/images into org buffers
-        +ipython         ; ipython/jupyter support for babel
+        ; +dragndrop       ; drag & drop files/images into org buffers
+        ; +ipython         ; ipython/jupyter support for babel
         +pandoc          ; export-with-pandoc support
         +present)        ; using org-mode for presentations
        (python             ; beautiful is better than ugly

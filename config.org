@@ -428,6 +428,7 @@ Load orgmode plus some standard keybindings.
 (after! org
   (setq org-hide-emphasis-markers nil
         org-return-follows-link t
+        +org-initial-fold-level 1
         org-reverse-note-order t            ;; add new headings on top
         org-tags-column 0                   ;; position of tags
         org-todo-keywords '((sequence "TODO(t)"
@@ -481,8 +482,8 @@ configure the symbol for stuff hidden after heading.
 
 pretty stuff
 #+BEGIN_SRC emacs-lisp
-(after! org
-  (setq org-pretty-entities 1))
+;; (after! org
+;;   (setq org-pretty-entities 1))
 #+END_SRC
 
 ** structure and files
@@ -570,7 +571,7 @@ Org structure editing made easy/mnemonic.
   (org-show-subtree))
 
 (map! :map org-mode-map
-      :leader "N" 'ab/org-show-just-me)            ;; Mnemonic: narrow
+      :localleader "N" 'ab/org-show-just-me)            ;; Mnemonic: narrow
 #+END_SRC
 What I don't like is that this also shows all heading of level 1 and all headings of the same level as current heading.
 
@@ -706,13 +707,14 @@ Templates for capturing. Also, ~%a~ expands to a link to the file (and position)
            "*** TODO %?\n"))))
 #+END_SRC
 
-Task with notifier.
+Scheduled task with notifier.
 
 #+BEGIN_SRC emacs-lisp
 (after! org (add-to-list 'org-capture-templates
           '("s" "Scheduled task"  entry
            (file+headline org-index-file "Inbox")
            "*** TODO %^{taskname}
+SCHEDULED: %(org-insert-time-stamp (org-read-date nil t \"+0d\"))
 :PROPERTIES:
 :CREATED: %U
 :WILD_NOTIFIER_NOTIFY_BEFORE: 30 5
@@ -910,13 +912,12 @@ Fixing would be nice too, but apparently this is open, cf. [[https://github.com/
 * git
 
 #+BEGIN_SRC emacs-lisp
-(after! magit
-  :config
-  (use-package evil-magit)
+;; (after! magit
+;;   :config
+;;   (use-package evil-magit)
 
-
-  ;; This library makes it possible to reliably use the Emacsclient as the $EDITOR of child processes.
-  (use-package with-editor))
+;;   ;; This library makes it possible to reliably use the Emacsclient as the $EDITOR of child processes.
+;;   (use-package with-editor))
 
 (map! :leader "g g" 'magit-status)
 #+END_SRC
@@ -1098,13 +1099,29 @@ Smart treatment of parenthesis, like auto closing or auto deletion of the matchi
 
 * mail
 
-finally I found a config using offlineimap.
+** config
 
 #+BEGIN_SRC emacs-lisp
 (after! mu4e
   (setq +mu4e-backend 'offlineimap)
-  (setq mu4e-maildir "~/.mail")
+  (setq mu4e-maildir "~/.mail"))
+#+END_SRC
 
+Convenience function for starting the whole mu4e in its own frame.
+Posted by the author of mu4e on the mailing list.
+
+#+BEGIN_SRC emacs-lisp
+(defun mu4e-in-new-frame ()
+  "Start mu4e in new frame."
+  (interactive)
+  (select-frame (make-frame))
+  (mu4e))
+#+END_SRC
+
+** univie mailbox
+
+#+BEGIN_SRC emacs-lisp
+(after! mu4e
   ;; Each path is relative to `+mu4e-mu4e-mail-path', which is ~/.mail by default
   (set-email-account! "uniwien"
                       '((user-full-name        . "Axel Böhm")
@@ -1129,7 +1146,7 @@ finally I found a config using offlineimap.
   )
 #+END_SRC
 
-Next account.
+** ymail.
 
 #+BEGIN_SRC emacs-lisp
 (after! mu4e

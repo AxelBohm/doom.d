@@ -10,3 +10,4 @@
 (package! evil-matchit)
 
 (package! doom-quit :disable t)
+(package! doom-snippets :disable t)
