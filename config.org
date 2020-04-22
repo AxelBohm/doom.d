@@ -677,9 +677,11 @@ When refiling I want to be able to refile also to a sub(sub...)headings.
 Default only allows for ~level 3~ or so.
 
 #+BEGIN_SRC emacs-lisp
-(setq org-refile-targets '((nil :maxlevel . 6)
-                           (org-agenda-files :maxlevel . 6)))
+(after! org
+ (setq org-refile-targets '((nil :maxlevel . 6)
+                            (org-agenda-files :maxlevel . 6))))
 ;; (setq org-completion-use-ido t)
+
 ;; (setq org-outline-path-complete-in-steps nil) ;; has to be nil for ido to work
 ;; (setq org-refile-use-outline-path 'file)
 #+END_SRC

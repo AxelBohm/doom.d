@@ -371,9 +371,11 @@
 (after! org
   (add-hook 'org-capture-mode-hook 'evil-insert-state))
 
-(setq org-refile-targets '((nil :maxlevel . 6)
-                           (org-agenda-files :maxlevel . 6)))
+(after! org
+ (setq org-refile-targets '((nil :maxlevel . 6)
+                            (org-agenda-files :maxlevel . 6))))
 ;; (setq org-completion-use-ido t)
+
 ;; (setq org-outline-path-complete-in-steps nil) ;; has to be nil for ido to work
 ;; (setq org-refile-use-outline-path 'file)
 
