@@ -491,7 +491,8 @@ SCHEDULED: %(org-insert-time-stamp (org-read-date nil t \"+0d\"))
   (setq yas-snippet-dirs '("~/.doom.d/snippets"))
   ;; remove random additional newline at the end of new snippets
   (setq-default mode-require-final-newline nil)
-  (map! :i "C-e" 'yas-expand)
+  (map! :i "C-e" 'yas-expand
+        :i "C-f" 'yas-next-field)
   (map!
    :leader "s n" 'yas/new-snippet              ;; Snippet New
    :leader "s g" 'yas-visit-snippet-file))      ;; Snippet Go

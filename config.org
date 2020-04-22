@@ -871,14 +871,16 @@ Snippets are everything! still need to figure out how to incorporate snippets in
   (setq yas-snippet-dirs '("~/.doom.d/snippets"))
   ;; remove random additional newline at the end of new snippets
   (setq-default mode-require-final-newline nil)
-  (map! :i "C-e" 'yas-expand)
+  (map! :i "C-e" 'yas-expand
+        :i "C-f" 'yas-next-field)
   (map!
    :leader "s n" 'yas/new-snippet              ;; Snippet New
    :leader "s g" 'yas-visit-snippet-file))      ;; Snippet Go
 #+END_SRC
 
 For some reason ~yas-new-snippet~ cannot guess where to put the snippet (can't guess the mode).
-There I'm using ~yas/new-snippet~, although it's obsolete
+There I'm using ~yas/new-snippet~, although it's obsolete since yasnippet 0.8.
+Note that Doom overwrites ~yas-new-snippet~ with ~+snippet/new~. Maybe this is where the problem happens.
 
 ** auto expanding
 
