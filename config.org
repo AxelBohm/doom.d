@@ -864,23 +864,32 @@ add some LaTeX keywords which are not included by ~evil-matchit~ by default.
 
 * snippets
 
-Snippets are everything! still need to figure out how to incorporate snippets into autocompletion (the way deoplete and Ultisnips did it for vim).
+Snippets are everything!
+
+~yas-keymap~: "The active keymap while a snippet expansion is in progress."
 
 #+BEGIN_SRC emacs-lisp
 (after! yasnippet
-  (setq yas-snippet-dirs '("~/.doom.d/snippets"))
+  (setq yas-snippet-dirs '("~/.doom.d/snippets")
+        yas-triggers-in-field t)
   ;; remove random additional newline at the end of new snippets
   (setq-default mode-require-final-newline nil)
-  (map! :i "C-e" 'yas-expand
-        :i "C-f" 'yas-next-field)
-  (map!
-   :leader "s n" 'yas/new-snippet              ;; Snippet New
-   :leader "s g" 'yas-visit-snippet-file))      ;; Snippet Go
+  (map! :map yas-minor-mode-map
+        :i "C-e" 'yas-expand
+        :i "C-f" 'yas-next-field) ;; sometimes I don't want to expand and just go to the next field
+  (map! :map yas-keymap "C-e" 'yas-next-field-or-maybe-expand))
 #+END_SRC
 
 For some reason ~yas-new-snippet~ cannot guess where to put the snippet (can't guess the mode).
-There I'm using ~yas/new-snippet~, although it's obsolete since yasnippet 0.8.
+Therefore I'm using ~yas/new-snippet~, although it's obsolete since yasnippet 0.8.
 Note that Doom overwrites ~yas-new-snippet~ with ~+snippet/new~. Maybe this is where the problem happens.
+
+#+BEGIN_SRC emacs-lisp
+(after! yasnippet
+  (map! :leader "s n" 'yas/new-snippet              ;; Snippet New
+        :leader "s g" 'yas-visit-snippet-file))      ;; Snippet Go
+#+END_SRC
+
 
 ** auto expanding
 

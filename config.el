@@ -488,14 +488,18 @@ SCHEDULED: %(org-insert-time-stamp (org-read-date nil t \"+0d\"))
      ;; (push '(("unless" "if") ("elsif" "else") "end"))) evilmi-latex-match-tags)
 
 (after! yasnippet
-  (setq yas-snippet-dirs '("~/.doom.d/snippets"))
+  (setq yas-snippet-dirs '("~/.doom.d/snippets")
+        yas-triggers-in-field t)
   ;; remove random additional newline at the end of new snippets
   (setq-default mode-require-final-newline nil)
-  (map! :i "C-e" 'yas-expand
-        :i "C-f" 'yas-next-field)
-  (map!
-   :leader "s n" 'yas/new-snippet              ;; Snippet New
-   :leader "s g" 'yas-visit-snippet-file))      ;; Snippet Go
+  (map! :map yas-minor-mode-map
+        :i "C-e" 'yas-expand
+        :i "C-f" 'yas-next-field) ;; sometimes I don't want to expand and just go to the next field
+  (map! :map yas-keymap "C-e" 'yas-next-field-or-maybe-expand))
+
+(after! yasnippet
+  (map! :leader "s n" 'yas/new-snippet              ;; Snippet New
+        :leader "s g" 'yas-visit-snippet-file))      ;; Snippet Go
 
 (defun ab/yas-try-expanding-auto-snippets ()
   (let ((yas-buffer-local-condition ''(require-snippet-condition . auto)))
