@@ -780,7 +780,7 @@ This package sends a notification every x minutes before schedule and even allow
 
 #+BEGIN_SRC emacs-lisp
 (use-package! org-wild-notifier
-  :defer t
+  :after org
   :init
   (add-hook 'doom-after-init-modules-hook #'org-wild-notifier-mode t)
   :config
@@ -908,13 +908,9 @@ Code is taken from [[https://github.com/joaotavora/yasnippet/issues/998][a githu
 * syntax checking
 
 #+BEGIN_SRC emacs-lisp
-;; (use-package! flycheck
-;;   :config
-;;   (global-flycheck-mode)
-;;   ;; (flycheck-display-errors-delay .3)
-;;   (setq-default flycheck-disabled-checkers '(tex-chktex)))
-;; (after! syntax
 (after! flycheck
+;;(flycheck-display-errors-delay .3)
+;;(setq-default flycheck-disabled-checkers '(tex-chktex)))
   (map! :leader "a" 'flycheck-next-error))
 #+END_SRC
 
@@ -922,23 +918,9 @@ There is a bug in ~chk-tex~, see [[https://github.com/flycheck/flycheck/issues/1
 
 Fixing would be nice too, but apparently this is open, cf. [[https://github.com/flycheck/flycheck/issues/530][issue]].
 
-* git
-
-#+BEGIN_SRC emacs-lisp
-;; (after! magit
-;;   :config
-;;   (use-package evil-magit)
-
-;;   ;; This library makes it possible to reliably use the Emacsclient as the $EDITOR of child processes.
-;;   (use-package with-editor))
-
-(map! :leader "g g" 'magit-status)
-#+END_SRC
-
 * R
 
 #+BEGIN_SRC emacs-lisp
-;; (after! ess)
 ;; (use-package ess-smart-underscore
 ;;   :after ess)
 #+END_SRC
@@ -1074,20 +1056,10 @@ The ~counsel~ package installs all three of them. ~Swiper~ is just the fancy
 search. ~Ivy~ does the narrowing. ~counsel~ adds options to ~Ivy~
 
 #+BEGIN_SRC emacs-lisp
-(use-package! counsel
-  :config
-  (ivy-mode 1)
+(after! ivy
+  (map! "C-s" 'counsel-grep-or-swiper)
   ;; Virtual buffers correspond to bookmarks and recent files list
-  (setq ivy-use-virtual-buffers t)
-  (setq enable-recursive-minibuffers t)
-  (global-set-key "\C-s" 'swiper)
-
-  (map! :leader "f f" 'counsel-find-file)
-  ;; make projectile use ivy as completion system
-  ;; (setq projectile-completion-system 'ivy)
-
-  ;; Deletes current input, resets the candidates list to the currently restricted matches.
-  (define-key minibuffer-local-map (kbd "S-SPC") 'ivy-restrict-to-matches))
+  (setq ivy-use-virtual-buffers t))
 #+END_SRC
 
 * auto closing of parenthesis
@@ -1095,7 +1067,7 @@ search. ~Ivy~ does the narrowing. ~counsel~ adds options to ~Ivy~
 Smart treatment of parenthesis, like auto closing or auto deletion of the matching one.
 
 #+BEGIN_SRC emacs-lisp
-(use-package! smartparens
+(after! smartparens
   :config
   (sp-local-pair 'org-mode "$" "$")
   ;; (sp-local-pair 'latex-mode "$" "$")   ;; omg, I want this so badly
@@ -1112,7 +1084,7 @@ Smart treatment of parenthesis, like auto closing or auto deletion of the matchi
 
 * mail
 
-** config
+** mu4e config
 
 #+BEGIN_SRC emacs-lisp
 (after! mu4e
@@ -1130,7 +1102,6 @@ Posted by the author of mu4e on the mailing list.
   (select-frame (make-frame))
   (mu4e))
 #+END_SRC
-
 ** univie mailbox
 
 #+BEGIN_SRC emacs-lisp

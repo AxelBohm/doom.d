@@ -431,7 +431,7 @@ SCHEDULED: %(org-insert-time-stamp (org-read-date nil t \"+0d\"))
   (advice-add 'counsel-org-capture :override #'org-capture))
 
 (use-package! org-wild-notifier
-  :defer t
+  :after org
   :init
   (add-hook 'doom-after-init-modules-hook #'org-wild-notifier-mode t)
   :config
@@ -506,25 +506,11 @@ SCHEDULED: %(org-insert-time-stamp (org-read-date nil t \"+0d\"))
     (yas-expand)))
 (add-hook 'post-command-hook #'ab/yas-try-expanding-auto-snippets)
 
-;; (use-package! flycheck
-;;   :config
-;;   (global-flycheck-mode)
-;;   ;; (flycheck-display-errors-delay .3)
-;;   (setq-default flycheck-disabled-checkers '(tex-chktex)))
-;; (after! syntax
 (after! flycheck
+;;(flycheck-display-errors-delay .3)
+;;(setq-default flycheck-disabled-checkers '(tex-chktex)))
   (map! :leader "a" 'flycheck-next-error))
 
-;; (after! magit
-;;   :config
-;;   (use-package evil-magit)
-
-;;   ;; This library makes it possible to reliably use the Emacsclient as the $EDITOR of child processes.
-;;   (use-package with-editor))
-
-(map! :leader "g g" 'magit-status)
-
-;; (after! ess)
 ;; (use-package ess-smart-underscore
 ;;   :after ess)
 
@@ -612,22 +598,12 @@ SCHEDULED: %(org-insert-time-stamp (org-read-date nil t \"+0d\"))
 
 (map! :n "z g" 'ab/save-word)
 
-(use-package! counsel
-  :config
-  (ivy-mode 1)
+(after! ivy
+  (map! "C-s" 'counsel-grep-or-swiper)
   ;; Virtual buffers correspond to bookmarks and recent files list
-  (setq ivy-use-virtual-buffers t)
-  (setq enable-recursive-minibuffers t)
-  (global-set-key "\C-s" 'swiper)
+  (setq ivy-use-virtual-buffers t))
 
-  (map! :leader "f f" 'counsel-find-file)
-  ;; make projectile use ivy as completion system
-  ;; (setq projectile-completion-system 'ivy)
-
-  ;; Deletes current input, resets the candidates list to the currently restricted matches.
-  (define-key minibuffer-local-map (kbd "S-SPC") 'ivy-restrict-to-matches))
-
-(use-package! smartparens
+(after! smartparens
   :config
   (sp-local-pair 'org-mode "$" "$")
   ;; (sp-local-pair 'latex-mode "$" "$")   ;; omg, I want this so badly
