@@ -67,6 +67,7 @@
        :emacs
        (dired +ranger)             ; making dired pretty [functional]
        electric          ; smarter, keyword-based electric-indent
+       undo              ; persistent, smarter undo for your inevitable mistakes
        vc                ; version-control and Emacs, sitting in a tree
 
        :term
@@ -98,7 +99,7 @@
        data              ; config/data formats
        emacs-lisp          ; drown in parentheses
        ess                 ; emacs speaks statistics
-       ;;go                ; the hipster dialect
+       ;;(go +lsp)         ; the hipster dialect
        ;;(haskell +intero) ; a language that's lazier than I am
        ;;(java +meghanada) ; the poster child for carpal tunnel syndrome
        ;;javascript        ; all(hope(abandon(ye(who(enter(here))))))
@@ -119,7 +120,7 @@
 
        :email
        mu4e                ; WIP
-       ;;notmuch             ; WIP
+       notmuch             ; WIP
        ;;(wanderlust +gmail) ; WIP
 
        ;; Applications are complex and opinionated modules that transform Emacs
@@ -137,10 +138,9 @@
        :config
        ;; For literate config users. This will tangle+compile a config.org
        ;; literate config in your `doom-private-dir' whenever it changes.
-       ;;literate
+       literate
 
        ;; The default module sets reasonable defaults for Emacs. It also
        ;; provides a Spacemacs-inspired keybinding scheme and a smartparens
        ;; config. Use it as a reference for your own modules.
-       (default +bindings +smartparens)
-       literate)
+       (default +bindings +smartparens))
