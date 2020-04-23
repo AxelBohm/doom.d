@@ -861,6 +861,14 @@ add some LaTeX keywords which are not included by ~evil-matchit~ by default.
      (push '("langle" nil "rangle") evilmi-latex-match-tags)))
      ;; (push '(("unless" "if") ("elsif" "else") "end"))) evilmi-latex-match-tags)
 #+END_SRC
+** ~evil-tex~
+
+#+BEGIN_SRC emacs-lisp
+(use-package! evil-tex
+  :after latex
+  :config
+  (add-hook 'latex-mode-hook #'evil-tex-mode))
+#+END_SRC
 
 * snippets
 

@@ -487,6 +487,11 @@ SCHEDULED: %(org-insert-time-stamp (org-read-date nil t \"+0d\"))
      (push '("langle" nil "rangle") evilmi-latex-match-tags)))
      ;; (push '(("unless" "if") ("elsif" "else") "end"))) evilmi-latex-match-tags)
 
+(use-package! evil-tex
+  :after latex
+  :config
+  (add-hook 'latex-mode-hook #'evil-tex-mode))
+
 (after! yasnippet
   (setq yas-snippet-dirs '("~/.doom.d/snippets")
         yas-triggers-in-field t)
