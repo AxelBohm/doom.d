@@ -913,6 +913,13 @@ Code is taken from [[https://github.com/joaotavora/yasnippet/issues/998][a githu
     (yas-expand)))
 (add-hook 'post-command-hook #'ab/yas-try-expanding-auto-snippets)
 #+END_SRC
+** allow snippets to modify buffer
+I added some snippets which modify the buffer by deleting spaces before the snippet. This causes yasnippet to issue warnings.
+Remove those warnings:
+#+BEGIN_SRC emacs-lisp
+(add-to-list 'warning-suppress-types '(yasnippet backquote-change))
+#+END_SRC
+
 
 * syntax checking
 

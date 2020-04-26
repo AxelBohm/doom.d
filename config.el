@@ -509,6 +509,8 @@ SCHEDULED: %(org-insert-time-stamp (org-read-date nil t \"+0d\"))
     (yas-expand)))
 (add-hook 'post-command-hook #'ab/yas-try-expanding-auto-snippets)
 
+(add-to-list 'warning-suppress-types '(yasnippet backquote-change))
+
 (after! flycheck
 ;;(flycheck-display-errors-delay .3)
 ;;(setq-default flycheck-disabled-checkers '(tex-chktex)))

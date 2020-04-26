@@ -2,4 +2,4 @@
 # name: eqref
 # key: eqr
 # --
-~\eqref{eq:$0}
+`(delete-backward-char 1)`~\eqref{eq:$0}
