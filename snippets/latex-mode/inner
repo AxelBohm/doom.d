@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: inner
+# key: in
+# --
+\langle $0 \rangle

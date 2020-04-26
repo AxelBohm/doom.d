@@ -2,4 +2,4 @@
 # name: emph
 # key: em
 # --
-\emph{$1}$0
+\emph{$0}
