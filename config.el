@@ -99,14 +99,6 @@
       "n" #'other-window
       "w" #'save-buffer)
 
-(defun ab/open-shell-in-split ()
-  ;; open eshell
-  (interactive)
-  ;; (evil-window-split)
-  (eshell))
-
-(map! :leader "s s" 'ab/open-shell-in-split)
-
 (defgroup evil-colemak nil
   "Basic key rebindings for evil-mode with the Colemak keyboard layout."
   :prefix "evil-colemak-"
@@ -154,7 +146,6 @@
     (evil-define-key 'operator keymap
       "i" 'evil-forward-char)
     keymap))
-;; ~I~ is still available
 
 (defvar evil-colemak-keymap
   (evil-colemak--make-keymap)
@@ -179,13 +170,15 @@
 (after! evil
   (global-evil-colemak-mode))
 
-;; (map! "I" 'evil-org-end-of-line)
-;; (map! "H" 'evil-first-non-blank)
-
 (with-eval-after-load 'evil-maps
   (define-key evil-window-map "n" 'evil-window-down)
   (define-key evil-window-map "e" 'evil-window-up)
   (define-key evil-window-map "i" 'evil-window-right))
+
+(after! evil-org
+  (map! :map evil-org-mode-map
+        :mnvo "i" #'evil-forward-char
+        :mnvo "I" #'evil-org-end-of-line))
 
 (after! evil
   (use-package! evil-matchit
@@ -202,14 +195,10 @@
   (map! :mnv "H" #'evil-first-non-blank
         :mnv "I" #'evil-end-of-line
         :mnv "E" #'+lookup/definition
-        :mnv "S" #'evil-avy-goto-char
-        :leader "l" 'avy-goto-line)
-  )
+        :leader "l" 'avy-goto-line))
 
-(after! evil-org
-  (map! :map evil-org-mode-map
-        :mnvo "i" #'evil-forward-char
-        :mnvo "I" #'evil-org-end-of-line))
+(after! evil-snipe
+  (map! :leader "/" #'evil-avy-goto-char-2))
 
 (defun ab/switch-to-previous-buffer ()
   (interactive)

@@ -249,18 +249,6 @@ Set the leader key and some very basic keybindings.
       "w" #'save-buffer)
 #+END_SRC
 
-
-Quickly open shell in a split.
-
-#+BEGIN_SRC emacs-lisp
-(defun ab/open-shell-in-split ()
-  ;; open eshell
-  (interactive)
-  ;; (evil-window-split)
-  (eshell))
-
-(map! :leader "s s" 'ab/open-shell-in-split)
-#+END_SRC
 ** colemak settings :colemak:
 
 Evil for colemak keyboard layout. Adapted from the [[https://github.com/wbolster/evil-colemak-basics][evil-colemak-basics]] package. For some reason trying to defining everything manually via ~evil-define-key~ or ~define-key evil-motion-state-map~ gave me trouble with ~'inner-text-objects~ and more..
@@ -313,7 +301,6 @@ Evil for colemak keyboard layout. Adapted from the [[https://github.com/wbolster
     (evil-define-key 'operator keymap
       "i" 'evil-forward-char)
     keymap))
-;; ~I~ is still available
 
 (defvar evil-colemak-keymap
   (evil-colemak--make-keymap)
@@ -337,9 +324,6 @@ Evil for colemak keyboard layout. Adapted from the [[https://github.com/wbolster
 
 (after! evil
   (global-evil-colemak-mode))
-
-;; (map! "I" 'evil-org-end-of-line)
-;; (map! "H" 'evil-first-non-blank)
 #+END_SRC
 
 Switching windows also relies on the `hjkl` motions. So make it colemak friendly.
@@ -349,6 +333,16 @@ Switching windows also relies on the `hjkl` motions. So make it colemak friendly
   (define-key evil-window-map "n" 'evil-window-down)
   (define-key evil-window-map "e" 'evil-window-up)
   (define-key evil-window-map "i" 'evil-window-right))
+#+END_SRC
+
+
+~evil-org-mode~ overrides some of my colemak settings. Override them again afterwards.
+
+#+BEGIN_SRC emacs-lisp
+(after! evil-org
+  (map! :map evil-org-mode-map
+        :mnvo "i" #'evil-forward-char
+        :mnvo "I" #'evil-org-end-of-line))
 #+END_SRC
 
 ** ~matchit~
@@ -387,19 +381,10 @@ Custom mappings.
   (map! :mnv "H" #'evil-first-non-blank
         :mnv "I" #'evil-end-of-line
         :mnv "E" #'+lookup/definition
-        :mnv "S" #'evil-avy-goto-char
-        :leader "l" 'avy-goto-line)
-  )
-#+END_SRC
+        :leader "l" 'avy-goto-line))
 
-I need to figure out how to make ~avy~ use other letters than the querty home row..
-
-~evil-org-mode~ overrides some of my colemak settings. Override them again afterwards.
-#+BEGIN_SRC emacs-lisp
-(after! evil-org
-  (map! :map evil-org-mode-map
-        :mnvo "i" #'evil-forward-char
-        :mnvo "I" #'evil-org-end-of-line))
+(after! evil-snipe
+  (map! :leader "/" #'evil-avy-goto-char-2))
 #+END_SRC
 
 * buffer handling
