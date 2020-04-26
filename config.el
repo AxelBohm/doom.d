@@ -487,10 +487,7 @@ SCHEDULED: %(org-insert-time-stamp (org-read-date nil t \"+0d\"))
      (push '("langle" nil "rangle") evilmi-latex-match-tags)))
      ;; (push '(("unless" "if") ("elsif" "else") "end"))) evilmi-latex-match-tags)
 
-(use-package! evil-tex
-  :after latex
-  :config
-  (add-hook 'latex-mode-hook #'evil-tex-mode))
+(add-hook 'TeX-mode-hook (lambda () (interactive) (evil-tex-mode 1)))
 
 (after! yasnippet
   (setq yas-snippet-dirs '("~/.doom.d/snippets")
@@ -504,6 +501,7 @@ SCHEDULED: %(org-insert-time-stamp (org-read-date nil t \"+0d\"))
 
 (after! yasnippet
   (map! :leader "s n" 'yas/new-snippet              ;; Snippet New
+        ;; :leader "s f" '+snippet/find                ;; Snippet Go
         :leader "s g" 'yas-visit-snippet-file))      ;; Snippet Go
 
 (defun ab/yas-try-expanding-auto-snippets ()
@@ -609,16 +607,15 @@ SCHEDULED: %(org-insert-time-stamp (org-read-date nil t \"+0d\"))
   (setq ivy-use-virtual-buffers t))
 
 (after! smartparens
-  :config
   (sp-local-pair 'org-mode "$" "$")
   ;; (sp-local-pair 'latex-mode "$" "$")   ;; omg, I want this so badly
   (sp-local-pair 'latex-mode "\\langle" "\\rangle" :trigger "\\lan")
   (sp-local-pair 'latex-mode "\\lVert" "\\rVert" :trigger "\\lVe")
 
-  (sp-local-pair 'latex-mode "\\left(" "\\right)" :trigger "\\l(")
+  (sp-local-pair 'latex-mode "\\left(" "\\right)" :trigger "\\(")
   (sp-local-pair 'latex-mode "\\left[" "\\right]" :trigger "\\l[")
   (sp-local-pair 'latex-mode "\\left\\{" "\\right\\}" :trigger "\\l{")
-  (sp-local-pair 'latex-mode "\\left\\langle" "\\right\\rangle" :trigger "\\left\\la(")
+  (sp-local-pair 'latex-mode "\\left\\langle" "\\right\\rangle" :trigger "\\left\\la")
 
   (smartparens-global-mode 1)) ;; I always want this
 

@@ -861,13 +861,13 @@ add some LaTeX keywords which are not included by ~evil-matchit~ by default.
      (push '("langle" nil "rangle") evilmi-latex-match-tags)))
      ;; (push '(("unless" "if") ("elsif" "else") "end"))) evilmi-latex-match-tags)
 #+END_SRC
+
 ** ~evil-tex~
 
+This package introduces new text objects e.g. ~ci$~ now changes inside $...$.
+Always use it when editing tex files:
 #+BEGIN_SRC emacs-lisp
-(use-package! evil-tex
-  :after latex
-  :config
-  (add-hook 'latex-mode-hook #'evil-tex-mode))
+(add-hook 'TeX-mode-hook (lambda () (interactive) (evil-tex-mode 1)))
 #+END_SRC
 
 * snippets
@@ -895,6 +895,7 @@ Note that Doom overwrites ~yas-new-snippet~ with ~+snippet/new~. Maybe this is w
 #+BEGIN_SRC emacs-lisp
 (after! yasnippet
   (map! :leader "s n" 'yas/new-snippet              ;; Snippet New
+        ;; :leader "s f" '+snippet/find                ;; Snippet Go
         :leader "s g" 'yas-visit-snippet-file))      ;; Snippet Go
 #+END_SRC
 
@@ -964,6 +965,7 @@ How does emacs know which one is the right environment? I don't know..
 #+END_SRC
 
 * auto completion
+** company
 
 I used to think =company= is slow, but I just had to turn the ~idle-delay~ down...
 
@@ -999,7 +1001,7 @@ I used to think =company= is slow, but I just had to turn the ~idle-delay~ down.
 
 The code chunk in the middle which makes yasnippet work with company is taken from [[https://emacs.stackexchange.com/questions/10431/get-company-to-show-suggestions-for-yasnippet-names][stackexchange]]. How can people live without this?? Also for some reason it has to be inside the entire thing even if company is not defered (no idea why).
 
-** company- backends
+** company-backends
 
 For some reason it is super hard to get ~company-backends~ right...
 This is copied from [[https://www.gtrun.org/post/init/#org-mode][here]].
@@ -1076,16 +1078,15 @@ Smart treatment of parenthesis, like auto closing or auto deletion of the matchi
 
 #+BEGIN_SRC emacs-lisp
 (after! smartparens
-  :config
   (sp-local-pair 'org-mode "$" "$")
   ;; (sp-local-pair 'latex-mode "$" "$")   ;; omg, I want this so badly
   (sp-local-pair 'latex-mode "\\langle" "\\rangle" :trigger "\\lan")
   (sp-local-pair 'latex-mode "\\lVert" "\\rVert" :trigger "\\lVe")
 
-  (sp-local-pair 'latex-mode "\\left(" "\\right)" :trigger "\\l(")
+  (sp-local-pair 'latex-mode "\\left(" "\\right)" :trigger "\\(")
   (sp-local-pair 'latex-mode "\\left[" "\\right]" :trigger "\\l[")
   (sp-local-pair 'latex-mode "\\left\\{" "\\right\\}" :trigger "\\l{")
-  (sp-local-pair 'latex-mode "\\left\\langle" "\\right\\rangle" :trigger "\\left\\la(")
+  (sp-local-pair 'latex-mode "\\left\\langle" "\\right\\rangle" :trigger "\\left\\la")
 
   (smartparens-global-mode 1)) ;; I always want this
 #+END_SRC
