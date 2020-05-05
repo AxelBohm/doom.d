@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: ref
+# key: r
+# --
+`(delete-backward-char 1)`~\ref{$0}
