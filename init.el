@@ -88,6 +88,7 @@
         +docsets)        ; ...or in Dash docsets locally
        lsp
        magit             ; a git porcelain for Emacs
+       biblio              ; bibtex-completion
        ;;make              ; run make tasks from Emacs
        ;;pass              ; password manager for nerds
        pdf               ; pdf enhancements
@@ -105,6 +106,7 @@
        ;;javascript        ; all(hope(abandon(ye(who(enter(here))))))
        ;;julia             ; a better, faster MATLAB
        (latex             ; writing papers in Emacs has never been so fun
+        +lsp
         +latexmk)
        markdown          ; writing docs for people to ignore
        (org              ; organize your plain life in plain text
