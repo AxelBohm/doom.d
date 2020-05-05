@@ -240,7 +240,7 @@ Set the leader key and some very basic keybindings.
 
 #+BEGIN_SRC emacs-lisp
 (map! :leader
-      "q" #'kill-buffer
+      "q" #'evil-quit
       "s h" #'evil-window-split
       "s v" #'evil-window-vsplit
       "e c" #'ab/visit-emacs-config
@@ -445,6 +445,12 @@ Line numbers in org mode are useless.
 (add-hook 'org-mode-hook #'ab/disable-line-numbers)
 #+END_SRC
 
+No instant spell checking.. Takes too long.
+#+BEGIN_SRC emacs-lisp
+(after! org
+  (setq-hook! 'org-mode-hook +flyspell-immediately nil))
+#+END_SRC
+
 ** appearance
 
 heading size and color.
@@ -644,6 +650,17 @@ So let's have a command that does both.
 
 (map! :map org-mode-map :leader "o d" 'ab/mark-done-and-archive)
 #+END_SRC
+*** general
+
+These used to be default but got changed at some point.
+#+BEGIN_SRC emacs-lisp
+(after! org
+  (map! :map org-mode-map
+        :localleader
+        "s" 'org-schedule
+        "d" 'org-deadline))
+#+END_SRC
+
 
 ** org capture
 
@@ -762,10 +779,8 @@ I want notifications for scheduled headlines. Unfortunately ~org-alert~ only has
 
 This package sends a notification every x minutes before schedule and even allows for multiple notifications per TODO.
 
-
 #+BEGIN_SRC emacs-lisp
 (use-package! org-wild-notifier
-  :after org
   :init
   (add-hook 'doom-after-init-modules-hook #'org-wild-notifier-mode t)
   :config
@@ -773,6 +788,9 @@ This package sends a notification every x minutes before schedule and even allow
         ;; use dunst for system wide notifications
         alert-default-style 'libnotify))
 #+END_SRC
+
+If the package is defered to ~:after org~ the hook won't work.
+
 ** opening pdfs
 
 I want pdfs to be opened in an external pdf viewer.
@@ -808,6 +826,21 @@ I want pdfs to be opened in an external pdf viewer.
 (after! latex
   (add-hook! 'TeX-after-compilation-finished-functions #'TeX-revert-document-buffer))
 
+#+END_SRC
+
+Do not spellcheck latex documents when opened, this takes a lot of time.
+#+BEGIN_SRC emacs-lisp
+(after! tex
+  (setq-hook! 'TeX-mode-hook +flyspell-immediately nil))
+#+END_SRC
+
+experimental
+#+BEGIN_SRC emacs-lisp
+(defun ab/run-latexmk ()
+  "Run LatexMk without asking for confirmation. Saves the master file (and children)."
+  (interactive)
+  (TeX-save-document (TeX-master-file))
+  (TeX-command "LatexMk" #'TeX-master-file -1))
 #+END_SRC
 
 ** keybindings
@@ -853,6 +886,12 @@ This package introduces new text objects e.g. ~ci$~ now changes inside $...$.
 Always use it when editing tex files:
 #+BEGIN_SRC emacs-lisp
 (add-hook 'TeX-mode-hook (lambda () (interactive) (evil-tex-mode 1)))
+#+END_SRC
+** bibtex completion
+
+#+BEGIN_SRC emacs-lisp
+(setq bibtex-completion-bibliography
+      '("~/PhD/research_projects/saddle_point/bibfile.bib"))
 #+END_SRC
 
 * snippets
@@ -902,9 +941,9 @@ Code is taken from [[https://github.com/joaotavora/yasnippet/issues/998][a githu
 I added some snippets which modify the buffer by deleting spaces before the snippet. This causes yasnippet to issue warnings.
 Remove those warnings:
 #+BEGIN_SRC emacs-lisp
-(add-to-list 'warning-suppress-types '(yasnippet backquote-change))
+(after! warnings
+  (add-to-list 'warning-suppress-types '(yasnippet backquote-change)))
 #+END_SRC
-
 
 * syntax checking
 
@@ -1016,6 +1055,13 @@ This is copied from [[https://www.gtrun.org/post/init/#org-mode][here]].
 
 ;; (setq +lsp-company-backend '(company-lsp :with company-tabnine :separate))
 #+END_SRC
+** lsp
+
+#+BEGIN_SRC emacs-lisp
+(after! lsp
+  (push 'company-lsp company-backends)
+  (setq lsp-ui-mode t))
+#+END_SRC
 
 * spell checking
 
@@ -1090,7 +1136,7 @@ Smart treatment of parenthesis, like auto closing or auto deletion of the matchi
 #+BEGIN_SRC emacs-lisp
 (after! mu4e
   (setq +mu4e-backend 'offlineimap)
-  (setq mu4e-maildir "~/.mail"))
+  (setq mu4e-root-maildir "~/.mail"))
 #+END_SRC
 
 Convenience function for starting the whole mu4e in its own frame.

@@ -91,7 +91,7 @@
 (setq evil-respect-visual-line-mode nil)
 
 (map! :leader
-      "q" #'kill-buffer
+      "q" #'evil-quit
       "s h" #'evil-window-split
       "s v" #'evil-window-vsplit
       "e c" #'ab/visit-emacs-config
@@ -237,6 +237,9 @@
 (add-hook 'org-mode-hook #'ab/disable-line-numbers)
 
 (after! org
+  (setq-hook! 'org-mode-hook +flyspell-immediately nil))
+
+(after! org
   (custom-set-faces
    '(org-level-1 ((t (:inherit outline-1 :height 1.5))))
    '(org-level-2 ((t (:inherit outline-2 :height 1.3))))
@@ -358,6 +361,12 @@
 (map! :map org-mode-map :leader "o d" 'ab/mark-done-and-archive)
 
 (after! org
+  (map! :map org-mode-map
+        :localleader
+        "s" 'org-schedule
+        "d" 'org-deadline))
+
+(after! org
   (add-hook 'org-capture-mode-hook 'evil-insert-state))
 
 (after! org
@@ -420,7 +429,6 @@ SCHEDULED: %(org-insert-time-stamp (org-read-date nil t \"+0d\"))
   (advice-add 'counsel-org-capture :override #'org-capture))
 
 (use-package! org-wild-notifier
-  :after org
   :init
   (add-hook 'doom-after-init-modules-hook #'org-wild-notifier-mode t)
   :config
@@ -453,6 +461,15 @@ SCHEDULED: %(org-insert-time-stamp (org-read-date nil t \"+0d\"))
 (after! latex
   (add-hook! 'TeX-after-compilation-finished-functions #'TeX-revert-document-buffer))
 
+(after! tex
+  (setq-hook! 'TeX-mode-hook +flyspell-immediately nil))
+
+(defun ab/run-latexmk ()
+  "Run LatexMk without asking for confirmation. Saves the master file (and children)."
+  (interactive)
+  (TeX-save-document (TeX-master-file))
+  (TeX-command "LatexMk" #'TeX-master-file -1))
+
 (map! :map LaTeX-mode-map
       :localleader
       :desc "Compile" ","  #'TeX-command-run-all
@@ -478,6 +495,9 @@ SCHEDULED: %(org-insert-time-stamp (org-read-date nil t \"+0d\"))
 
 (add-hook 'TeX-mode-hook (lambda () (interactive) (evil-tex-mode 1)))
 
+(setq bibtex-completion-bibliography
+      '("~/PhD/research_projects/saddle_point/bibfile.bib"))
+
 (after! yasnippet
   (setq yas-snippet-dirs '("~/.doom.d/snippets")
         yas-triggers-in-field t)
@@ -498,7 +518,8 @@ SCHEDULED: %(org-insert-time-stamp (org-read-date nil t \"+0d\"))
     (yas-expand)))
 (add-hook 'post-command-hook #'ab/yas-try-expanding-auto-snippets)
 
-(add-to-list 'warning-suppress-types '(yasnippet backquote-change))
+(after! warnings
+  (add-to-list 'warning-suppress-types '(yasnippet backquote-change)))
 
 (after! flycheck
 ;;(flycheck-display-errors-delay .3)
@@ -569,6 +590,10 @@ SCHEDULED: %(org-insert-time-stamp (org-read-date nil t \"+0d\"))
 
 ;; (setq +lsp-company-backend '(company-lsp :with company-tabnine :separate))
 
+(after! lsp
+  (push 'company-lsp company-backends)
+  (setq lsp-ui-mode t))
+
 (after! flyspell
   :config
   (map! :leader "s c" 'flyspell-mode)      ;; toggle spell checking
@@ -612,7 +637,7 @@ SCHEDULED: %(org-insert-time-stamp (org-read-date nil t \"+0d\"))
 
 (after! mu4e
   (setq +mu4e-backend 'offlineimap)
-  (setq mu4e-maildir "~/.mail"))
+  (setq mu4e-root-maildir "~/.mail"))
 
 (defun mu4e-in-new-frame ()
   "Start mu4e in new frame."
