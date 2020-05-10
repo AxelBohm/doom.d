@@ -16,13 +16,24 @@
 
 *** curser theme
 
+When not using ~hl-line-mode~ it can be helpful to have the curser more accentuated.
+
 #+BEGIN_SRC emacs-lisp
-(set-cursor-color "#ffb6c1")
+(setq +evil--default-cursor-color "#ff1493")
 #+END_SRC
+*** hl-line
+
+Highlighting the current line is all nice and stuff but it looks off in org mode due to different sizes of headings.
+Similarly in LaTeX due to sub/super -scripts.
+
+#+BEGIN_SRC emacs-lisp
+(remove-hook 'text-mode-hook #'hl-line-mode)
+#+END_SRC
+
 *** font
 
 #+BEGIN_SRC emacs-lisp
-(setq doom-font (font-spec :family "xos4 Terminus" :size 13))
+(setq doom-font (font-spec :family "Terminus" :size 14))
 #+END_SRC
 
 *** paren-mode
@@ -61,15 +72,6 @@ Emacs ships default with =prettify-symbols mode=.
 #+END_SRC
 doesn't seem to do anything in doom
 
-*** hl-line
-
-Highlighting the current line is all nice and stuff but it looks off in org mode due to different sizes of headings.
-Similarly in LaTeX due to sub/super -scripts.
-
-#+BEGIN_SRC emacs-lisp
-(remove-hook 'text-mode-hook #'hl-line-mode)
-#+END_SRC
-
 *** opacity
 
 Make emacs opaque (when running compton).
@@ -78,6 +80,7 @@ Make emacs opaque (when running compton).
 (set-frame-parameter (selected-frame) 'alpha '(85 . 85))
 (add-to-list 'default-frame-alist '(alpha . (85 . 85)))
 #+END_SRC
+
 *** modeline
 
 #+BEGIN_SRC emacs-lisp
@@ -101,7 +104,7 @@ Make emacs opaque (when running compton).
 highlight keywords like TODO/FIXME/NOTE/DEPRECATED/HACK/REVIEW.
 
 #+BEGIN_SRC emacs-lisp
-(global-hl-todo-mode)
+(add-hook 'after-init-hook 'global-hl-todo-mode)
 #+END_SRC
 
 ** general behavior
@@ -240,13 +243,13 @@ Set the leader key and some very basic keybindings.
 
 #+BEGIN_SRC emacs-lisp
 (map! :leader
-      "q" #'evil-quit
+      "q"   #'evil-quit
       "s h" #'evil-window-split
       "s v" #'evil-window-vsplit
       "e c" #'ab/visit-emacs-config
-      "r" #'ab/visit-references
-      "n" #'other-window
-      "w" #'save-buffer)
+      "r"   #'ab/visit-references
+      "n"   #'other-window
+      "w"   #'save-buffer)
 #+END_SRC
 
 ** colemak settings :colemak:
@@ -350,10 +353,10 @@ Switching windows also relies on the `hjkl` motions. So make it colemak friendly
 Extend the ~%~ functionality to jump between tags such as LaTeX ~\begin{...}~ and ~\end{...}~. This is sooo important!!!
 
 #+BEGIN_SRC emacs-lisp
-(after! evil
-  (use-package! evil-matchit
-    :config
-    (global-evil-matchit-mode)))
+(use-package! evil-matchit
+  :after evil
+  :config
+  (global-evil-matchit-mode))
 #+END_SRC
 
 ** paragraph
@@ -582,7 +585,9 @@ Use ~o~ instead of ~RET~ for new headings/list-items.
         "M-O" '+org/insert-item-above))
 #+END_SRC
 
-*** index file
+*** index file :WIP:
+
+copy tasks/notes from mobile.
 
 #+BEGIN_SRC emacs-lisp
 ;; (defun ab/copy-tasks-from-mobile
@@ -616,7 +621,7 @@ Mnemonic navigation.
 
 #+BEGIN_SRC emacs-lisp
 (map! :map org-mode-map
-        :leader
+        :localleader
         "g h" 'org-previous-visible-heading      ;; Go Heading of current section
         "g e" 'org-previous-visible-heading      ;; Go e (= colemak up)
         "g u" 'outline-up-heading                ;; Go Up in hierarchy
@@ -625,7 +630,7 @@ Mnemonic navigation.
 #+END_SRC
 
 The above motions are easy to remember but feel clunky when trying to go more then one heading up or down (this is probably an antipattern anyways..). Either way, here are some single key mappings.
-I don't use ~(~ or ~)~ in evil mode anyways.
+I don't use ~(~ or ~)~ in evil mode too much anyways.
 
 #+BEGIN_SRC emacs-lisp
 (map! :map org-mode-map
@@ -697,7 +702,7 @@ Templates for capturing. Also, ~%a~ expands to a link to the file (and position)
 #+BEGIN_SRC emacs-lisp
 (after! org
   (setq org-capture-templates
-        '(("l" "todo with Link" entry
+        '(("l" "Link (with todo)" entry
            (file+headline org-index-file "Inbox")
            "*** TODO %?\n  %i\n  See: %a\n")
 
@@ -781,15 +786,18 @@ This package sends a notification every x minutes before schedule and even allow
 
 #+BEGIN_SRC emacs-lisp
 (use-package! org-wild-notifier
+  :after org
   :init
-  (add-hook 'doom-after-init-modules-hook #'org-wild-notifier-mode t)
+  (add-hook 'org-mode-hook #'org-wild-notifier-mode t)
   :config
   (setq org-wild-notifier-alert-time 15
         ;; use dunst for system wide notifications
         alert-default-style 'libnotify))
+
 #+END_SRC
 
-If the package is defered to ~:after org~ the hook won't work.
+If the package is deferred to ~:after org~ the hook won't work.
+Not quite happy with this solution. If it's not deferred that org is loaded at startup (which is slow..)
 
 ** opening pdfs
 
@@ -857,6 +865,15 @@ LaTeX specific keybindings.
 )
 #+END_SRC
 ** company
+
+#+BEGIN_SRC emacs-lisp
+(add-hook! 'company-mode-hook :append
+  (when (eq major-mode 'latex-mode)
+    (setq-local company-backends
+                (list (append '(company-reftex-labels company-reftex-citations)
+                              +latex--company-backends)))))
+#+END_SRC
+
 
 #+BEGIN_SRC emacs-lisp
 ;; (set-company-backend! 'company-reftex-labels  'company-reftex-citations
@@ -1007,21 +1024,21 @@ I used to think =company= is slow, but I just had to turn the ~idle-delay~ down.
         company-idle-delay 0.2
         ;; Number the candidates (use M-1, M-2 etc to select completions).
         company-show-numbers t
-        company-tooltip-limit 8
+        company-tooltip-limit 7
         company-tooltip-minimum-width 40
         company-minimum-prefix-length 2)
   (add-hook 'after-init-hook 'global-company-mode)
   :config
   ;; Add yasnippet support for all company backends
   ;; https://github.com/syl20bnr/spacemacs/pull/179
-  (defvar company-mode/enable-yas t
-    "Enable yasnippet for all backends.")
-  (defun company-mode/backend-with-yas (backend)
-    (if (or (not company-mode/enable-yas) (and (listp backend) (member 'company-yasnippet backend)))
-        backend
-      (append (if (consp backend) backend (list backend))
-              '(:with company-yasnippet))))
-  (setq company-backends (mapcar #'company-mode/backend-with-yas company-backends))
+  ;; (defvar company-mode/enable-yas t
+  ;;   "Enable yasnippet for all backends.")
+  ;; (defun company-mode/backend-with-yas (backend)
+  ;;   (if (or (not company-mode/enable-yas) (and (listp backend) (member 'company-yasnippet backend)))
+  ;;       backend
+  ;;     (append (if (consp backend) backend (list backend))
+  ;;             '(:with company-yasnippet))))
+  ;; (setq company-backends (mapcar #'company-mode/backend-with-yas company-backends))
 
   (map! :i "C-n" 'company-complete)) ;; doesn't work
 
@@ -1155,16 +1172,18 @@ Posted by the author of mu4e on the mailing list.
 (after! mu4e
   ;; Each path is relative to `+mu4e-mu4e-mail-path', which is ~/.mail by default
   (set-email-account! "uniwien"
-                      '((user-full-name        . "Axel Böhm")
+                      '((user-full-name         . "Axel Böhm")
                         (user-mail-address      . "axel.boehm@univie.ac.at")
-                        (smtpmail-smtp-user     . "boehma53@univie.ac.at")
+                        (smtpmail-smtp-user     . "boehma53")
 
                         (mu4e-sent-folder       . "/uniwien/INBOX.Sent/")
                         (mu4e-drafts-folder     . "/uniwien/INBOX.Drafts")
                         (mu4e-trash-folder      . "/uniwien/INBOX.Trash")
                         (mu4e-refile-folder     . "/uniwien/INBOX.Archive")
                         (smtpmail-smtp-server   . "mail.unvie.ac.at")
+                        (smtpmail-default-smtp-server . "smtp.gmail.com")
                         (smtpmail-smtp-service  .  587)
+                        (smtpmail-local-domain  . "univie.ac.at")
                         (mu4e-compose-signature . "---\nAxel Boehm"))
                       t)
 

@@ -2,9 +2,11 @@
 
 (setq doom-theme 'doom-nord)
 
-(set-cursor-color "#ffb6c1")
+(setq +evil--default-cursor-color "#ff1493")
 
-(setq doom-font (font-spec :family "xos4 Terminus" :size 13))
+(remove-hook 'text-mode-hook #'hl-line-mode)
+
+(setq doom-font (font-spec :family "Terminus" :size 14))
 
 (show-paren-mode 1)
 
@@ -14,8 +16,6 @@
 (setq-default truncate-lines nil)
 
 (global-prettify-symbols-mode 1)
-
-(remove-hook 'text-mode-hook #'hl-line-mode)
 
 (set-frame-parameter (selected-frame) 'alpha '(85 . 85))
 (add-to-list 'default-frame-alist '(alpha . (85 . 85)))
@@ -35,7 +35,7 @@
   ;;     (doom-modeline-set-modeline 'myline 'default)))
   )
 
-(global-hl-todo-mode)
+(add-hook 'after-init-hook 'global-hl-todo-mode)
 
 (setq evil-split-window-below t
       evil-vsplit-window-right t)
@@ -91,13 +91,13 @@
 (setq evil-respect-visual-line-mode nil)
 
 (map! :leader
-      "q" #'evil-quit
+      "q"   #'evil-quit
       "s h" #'evil-window-split
       "s v" #'evil-window-vsplit
       "e c" #'ab/visit-emacs-config
-      "r" #'ab/visit-references
-      "n" #'other-window
-      "w" #'save-buffer)
+      "r"   #'ab/visit-references
+      "n"   #'other-window
+      "w"   #'save-buffer)
 
 (defgroup evil-colemak nil
   "Basic key rebindings for evil-mode with the Colemak keyboard layout."
@@ -180,10 +180,10 @@
         :mnvo "i" #'evil-forward-char
         :mnvo "I" #'evil-org-end-of-line))
 
-(after! evil
-  (use-package! evil-matchit
-    :config
-    (global-evil-matchit-mode)))
+(use-package! evil-matchit
+  :after evil
+  :config
+  (global-evil-matchit-mode))
 
 (with-eval-after-load 'evil
   (defadvice forward-evil-paragraph (around default-values activate)
@@ -340,7 +340,7 @@
 (map! :leader "i" #'ab/open-index-file)
 
 (map! :map org-mode-map
-        :leader
+        :localleader
         "g h" 'org-previous-visible-heading      ;; Go Heading of current section
         "g e" 'org-previous-visible-heading      ;; Go e (= colemak up)
         "g u" 'outline-up-heading                ;; Go Up in hierarchy
@@ -379,7 +379,7 @@
 
 (after! org
   (setq org-capture-templates
-        '(("l" "todo with Link" entry
+        '(("l" "Link (with todo)" entry
            (file+headline org-index-file "Inbox")
            "*** TODO %?\n  %i\n  See: %a\n")
 
@@ -429,8 +429,9 @@ SCHEDULED: %(org-insert-time-stamp (org-read-date nil t \"+0d\"))
   (advice-add 'counsel-org-capture :override #'org-capture))
 
 (use-package! org-wild-notifier
+  :after org
   :init
-  (add-hook 'doom-after-init-modules-hook #'org-wild-notifier-mode t)
+  (add-hook 'org-mode-hook #'org-wild-notifier-mode t)
   :config
   (setq org-wild-notifier-alert-time 15
         ;; use dunst for system wide notifications
@@ -477,6 +478,12 @@ SCHEDULED: %(org-insert-time-stamp (org-read-date nil t \"+0d\"))
       :desc "ToC"     "t"  #'reftex-toc
       :desc "View"    "v"  #'TeX-view
 )
+
+(add-hook! 'company-mode-hook :append
+  (when (eq major-mode 'latex-mode)
+    (setq-local company-backends
+                (list (append '(company-reftex-labels company-reftex-citations)
+                              +latex--company-backends)))))
 
 ;; (set-company-backend! 'company-reftex-labels  'company-reftex-citations
 ;;   'company-ispell 'company-capf 'company-files
@@ -551,21 +558,21 @@ SCHEDULED: %(org-insert-time-stamp (org-read-date nil t \"+0d\"))
         company-idle-delay 0.2
         ;; Number the candidates (use M-1, M-2 etc to select completions).
         company-show-numbers t
-        company-tooltip-limit 8
+        company-tooltip-limit 7
         company-tooltip-minimum-width 40
         company-minimum-prefix-length 2)
   (add-hook 'after-init-hook 'global-company-mode)
   :config
   ;; Add yasnippet support for all company backends
   ;; https://github.com/syl20bnr/spacemacs/pull/179
-  (defvar company-mode/enable-yas t
-    "Enable yasnippet for all backends.")
-  (defun company-mode/backend-with-yas (backend)
-    (if (or (not company-mode/enable-yas) (and (listp backend) (member 'company-yasnippet backend)))
-        backend
-      (append (if (consp backend) backend (list backend))
-              '(:with company-yasnippet))))
-  (setq company-backends (mapcar #'company-mode/backend-with-yas company-backends))
+  ;; (defvar company-mode/enable-yas t
+  ;;   "Enable yasnippet for all backends.")
+  ;; (defun company-mode/backend-with-yas (backend)
+  ;;   (if (or (not company-mode/enable-yas) (and (listp backend) (member 'company-yasnippet backend)))
+  ;;       backend
+  ;;     (append (if (consp backend) backend (list backend))
+  ;;             '(:with company-yasnippet))))
+  ;; (setq company-backends (mapcar #'company-mode/backend-with-yas company-backends))
 
   (map! :i "C-n" 'company-complete)) ;; doesn't work
 
@@ -591,7 +598,6 @@ SCHEDULED: %(org-insert-time-stamp (org-read-date nil t \"+0d\"))
 ;; (setq +lsp-company-backend '(company-lsp :with company-tabnine :separate))
 
 (after! lsp
-  (push 'company-lsp company-backends)
   (setq lsp-ui-mode t))
 
 (after! flyspell
@@ -648,16 +654,18 @@ SCHEDULED: %(org-insert-time-stamp (org-read-date nil t \"+0d\"))
 (after! mu4e
   ;; Each path is relative to `+mu4e-mu4e-mail-path', which is ~/.mail by default
   (set-email-account! "uniwien"
-                      '((user-full-name        . "Axel Böhm")
+                      '((user-full-name         . "Axel Böhm")
                         (user-mail-address      . "axel.boehm@univie.ac.at")
-                        (smtpmail-smtp-user     . "boehma53@univie.ac.at")
+                        (smtpmail-smtp-user     . "boehma53")
 
                         (mu4e-sent-folder       . "/uniwien/INBOX.Sent/")
                         (mu4e-drafts-folder     . "/uniwien/INBOX.Drafts")
                         (mu4e-trash-folder      . "/uniwien/INBOX.Trash")
                         (mu4e-refile-folder     . "/uniwien/INBOX.Archive")
                         (smtpmail-smtp-server   . "mail.unvie.ac.at")
+                        (smtpmail-default-smtp-server . "smtp.gmail.com")
                         (smtpmail-smtp-service  .  587)
+                        (smtpmail-local-domain  . "univie.ac.at")
                         (mu4e-compose-signature . "---\nAxel Boehm"))
                       t)
 
