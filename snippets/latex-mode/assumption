@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name:assumption
+# key:ass
+# --
+\begin{assumption}%
+  \label{ass:$1}
+  $0
+\end{assumption}
