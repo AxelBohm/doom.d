@@ -666,7 +666,6 @@ These used to be default but got changed at some point.
         "d" 'org-deadline))
 #+END_SRC
 
-
 ** org capture
 
 Keep everything out of your head! Has to be as convenient as possible.
@@ -1076,7 +1075,6 @@ This is copied from [[https://www.gtrun.org/post/init/#org-mode][here]].
 
 #+BEGIN_SRC emacs-lisp
 (after! lsp
-  (push 'company-lsp company-backends)
   (setq lsp-ui-mode t))
 #+END_SRC
 

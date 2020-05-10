@@ -22,8 +22,9 @@
         +childframe)           ; the ultimate code completion backend
        ;;helm              ; the *other* search engine for love and life
        ;;ido               ; the other *other* search engine...
-       ivy               ; a search engine for love and life
-
+       (ivy               ; a search engine for love and life
+        +childframe)
+       
        :ui
        ;;deft              ; notational velocity for Emacs
        doom              ; what makes DOOM look the way it does
@@ -88,7 +89,7 @@
         +docsets)        ; ...or in Dash docsets locally
        lsp
        magit             ; a git porcelain for Emacs
-       biblio              ; bibtex-completion
+       ;; biblio              ; bibtex-completion
        ;;make              ; run make tasks from Emacs
        ;;pass              ; password manager for nerds
        pdf               ; pdf enhancements
@@ -106,6 +107,7 @@
        ;;javascript        ; all(hope(abandon(ye(who(enter(here))))))
        ;;julia             ; a better, faster MATLAB
        (latex             ; writing papers in Emacs has never been so fun
+        +ref
         +lsp
         +latexmk)
        markdown          ; writing docs for people to ignore
