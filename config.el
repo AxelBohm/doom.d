@@ -396,12 +396,12 @@
           '("s" "Scheduled task"  entry
            (file+headline org-index-file "Inbox")
            "*** TODO %^{taskname}
-SCHEDULED: %(org-insert-time-stamp (org-read-date nil t \"+0d\"))
+SCHEDULED: %^t
 :PROPERTIES:
 :CREATED: %U
-:WILD_NOTIFIER_NOTIFY_BEFORE: 30 5
+:WILD_NOTIFIER_NOTIFY_BEFORE: %^{notify when?} 30 5
 :END:
-%?
+%?\n
 ")))
 
 (after! org
