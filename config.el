@@ -97,6 +97,7 @@
       "e c" #'ab/visit-emacs-config
       "r"   #'ab/visit-references
       "n"   #'other-window
+      "x"   #'counsel-M-x ;; no need to press *meta*
       "w"   #'save-buffer)
 
 (defgroup evil-colemak nil
