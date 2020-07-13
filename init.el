@@ -92,7 +92,7 @@
        ;; biblio              ; bibtex-completion
        ;;make              ; run make tasks from Emacs
        ;;pass              ; password manager for nerds
-       pdf               ; pdf enhancements
+       ;; pdf               ; pdf enhancements
        ;;tmux              ; an API for interacting with tmux
        ;;upload            ; map local to remote projects via ssh/ftp
 
@@ -108,14 +108,14 @@
        ;;julia             ; a better, faster MATLAB
        (latex             ; writing papers in Emacs has never been so fun
         +ref
-        +lsp
+        ;; +lsp            ; currently doesn't let me use reftex
         +latexmk)
        markdown          ; writing docs for people to ignore
-       (org              ; organize your plain life in plain text
+       org              ; organize your plain life in plain text
         ; +dragndrop       ; drag & drop files/images into org buffers
         ; +ipython         ; ipython/jupyter support for babel
-        +pandoc          ; export-with-pandoc support
-        +present)        ; using org-mode for presentations
+        ; +pandoc          ; export-with-pandoc support
+        ; +present)        ; using org-mode for presentations
        (python             ; beautiful is better than ugly
         +lsp
         +conda)

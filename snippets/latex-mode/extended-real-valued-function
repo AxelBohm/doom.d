@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: extended-real-valued-function
+# key: er    
+# --
+\to \R\cup\\{+\infty\\}

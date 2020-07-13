@@ -2,7 +2,7 @@
 # name: prop
 # key: prop
 # --
-\begin{proposition}
+\begin{proposition}%
   \label{prop:$1}
   $0
 \end{proposition}

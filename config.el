@@ -1,6 +1,6 @@
 (setq doom-localleader-key ",")
 
-(setq doom-theme 'doom-nord)
+(setq doom-theme 'doom-sourcerer)
 
 (setq +evil--default-cursor-color "#ff1493")
 
@@ -80,6 +80,13 @@
   (find-file "~/.doom.d/config.org"))
 
 (map! :leader "e c" #'ab/visit-emacs-config)
+
+(defun ab/visit-init ()
+  "go to doom init file"
+  (interactive)
+  (find-file "~/.doom.d/init.el"))
+
+(map! :leader "e i" #'ab/visit-init)
 
 (defun ab/reload-init-file ()
   "reload config file"
@@ -176,6 +183,11 @@
   (define-key evil-window-map "e" 'evil-window-up)
   (define-key evil-window-map "i" 'evil-window-right))
 
+(after! evil
+  (map! :map evil-org-mode-map
+        :mnvo "i" #'evil-forward-char
+        :mnvo "I" #'evil-org-end-of-line))
+
 (after! evil-org
   (map! :map evil-org-mode-map
         :mnvo "i" #'evil-forward-char
@@ -198,6 +210,12 @@
         :mnv "E" #'+lookup/definition
         :leader "l" 'avy-goto-line))
 
+(after! evil-org
+  (map! :mnv "H" #'evil-first-non-blank
+        :mnv "I" #'evil-end-of-line
+        :mnv "E" #'+lookup/definition
+        :leader "l" 'avy-goto-line))
+
 (after! evil-snipe
   (map! :leader "/" #'evil-avy-goto-char-2))
 
@@ -210,10 +228,13 @@
 (after! org
   (setq org-hide-emphasis-markers nil
         org-return-follows-link t
+        org-agenda-skip-scheduled-if-done t ;; don't show in agenda if done
+        org-agenda-compact-blocks t
         +org-initial-fold-level 1
         org-reverse-note-order t            ;; add new headings on top
         org-tags-column 0                   ;; position of tags
         org-todo-keywords '((sequence "TODO(t)"
+                                      "NEXT(n)"
                                       "WAITING(w)"
                                       "|"
                                       "DONE(d)")
@@ -224,7 +245,10 @@
                                       "DOESN'T WORK(x)"
                                       "TOO HARD(h)"
                                       "DONE(d)"))
-        org-todo-keyword-faces '(("WAITING" :foreground "#8FBCBB" :weight bold))))
+
+        org-todo-keyword-faces '(("WAITING" :foreground "#8FBCBB" :weight bold)
+                                 ("NEXT" :foreground "#ff9800" :weight bold)
+                                 )))
 
 (map! :leader
       "o s l" 'org-store-link
@@ -333,8 +357,8 @@
 (defun ab/open-index-file ()
   "Open the master org TODO list."
   (interactive)
-  (find-file org-inbox-file)
-  (split-window-horizontally)
+  ;; (find-file org-inbox-file)
+  ;; (split-window-horizontally)
   (find-file org-index-file)
   )
 
@@ -361,11 +385,18 @@
 
 (map! :map org-mode-map :leader "o d" 'ab/mark-done-and-archive)
 
-(after! org
-  (map! :map org-mode-map
-        :localleader
-        "s" 'org-schedule
-        "d" 'org-deadline))
+;; (after! org
+;;   (map! :map org-mode-map
+;;         :localleader
+;;         "s" 'org-schedule
+;;         "d" 'org-deadline))
+
+(defun ab/open-agenda-next-tasks  ()
+  "show all tasks marked as NEXT"
+  (interactive)
+  (org-tags-view t "/NEXT"))
+
+(map! :leader "o n" 'ab/open-agenda-next-tasks)
 
 (after! org
   (add-hook 'org-capture-mode-hook 'evil-insert-state))
@@ -382,7 +413,12 @@
   (setq org-capture-templates
         '(("l" "Link (with todo)" entry
            (file+headline org-index-file "Inbox")
-           "*** TODO %?\n  %i\n  See: %a\n")
+           "*** TODO %^{task}
+:PROPERTIES:
+:CONTEXT: %A
+:FILE: %F
+:END:
+%?\n")
 
           ("n" "Note"  entry
            (file+headline org-index-file "Inbox")
@@ -396,7 +432,7 @@
 (after! org (add-to-list 'org-capture-templates
           '("s" "Scheduled task"  entry
            (file+headline org-index-file "Inbox")
-           "*** TODO %^{taskname}
+           "*** TODO %^{task}
 SCHEDULED: %^t
 :PROPERTIES:
 :CREATED: %U
@@ -474,17 +510,18 @@ SCHEDULED: %^t
 
 (map! :map LaTeX-mode-map
       :localleader
-      :desc "Compile" ","  #'TeX-command-run-all
-      :desc "Fold"    "z"  #'TeX-fold-buffer
-      :desc "ToC"     "t"  #'reftex-toc
-      :desc "View"    "v"  #'TeX-view
+      :desc "Compile"   ","  #'TeX-command-run-all
+      :desc "Fold"      "z"  #'TeX-fold-buffer
+      :desc "ToC"       "t"  #'reftex-toc
+      :desc "next err"  "n"  #'TeX-next-error
+      :desc "View"      "v"  #'TeX-view
 )
 
-(add-hook! 'company-mode-hook :append
-  (when (eq major-mode 'latex-mode)
-    (setq-local company-backends
-                (list (append '(company-reftex-labels company-reftex-citations)
-                              +latex--company-backends)))))
+;; (add-hook! 'company-mode-hook :append
+  ;; (when (eq major-mode 'latex-mode)
+  ;;   (setq-local company-backends
+  ;;               (list (append '(company-reftex-labels company-reftex-citations)
+  ;;                             +latex--company-backends)))))
 
 ;; (set-company-backend! 'company-reftex-labels  'company-reftex-citations
 ;;   'company-ispell 'company-capf 'company-files
@@ -566,14 +603,14 @@ SCHEDULED: %^t
   :config
   ;; Add yasnippet support for all company backends
   ;; https://github.com/syl20bnr/spacemacs/pull/179
-  ;; (defvar company-mode/enable-yas t
-  ;;   "Enable yasnippet for all backends.")
-  ;; (defun company-mode/backend-with-yas (backend)
-  ;;   (if (or (not company-mode/enable-yas) (and (listp backend) (member 'company-yasnippet backend)))
-  ;;       backend
-  ;;     (append (if (consp backend) backend (list backend))
-  ;;             '(:with company-yasnippet))))
-  ;; (setq company-backends (mapcar #'company-mode/backend-with-yas company-backends))
+  (defvar company-mode/enable-yas t
+    "Enable yasnippet for all backends.")
+  (defun company-mode/backend-with-yas (backend)
+    (if (or (not company-mode/enable-yas) (and (listp backend) (member 'company-yasnippet backend)))
+        backend
+      (append (if (consp backend) backend (list backend))
+              '(:with company-yasnippet))))
+  (setq company-backends (mapcar #'company-mode/backend-with-yas company-backends))
 
   (map! :i "C-n" 'company-complete)) ;; doesn't work
 
@@ -608,12 +645,30 @@ SCHEDULED: %^t
 
   (setq ispell-program-name "hunspell"
         ispell-silently-savep t            ;; save persal dictionary without asking
-        ispell-local-dictionary "en_US"
         ;; ispell-extra-args '("--sug-mode=ultra" "--lang=en_US")
-        ispell-list-command "--list"
-        ispell-local-dictionary-alist '(("en_US" "[[:alpha:]]" "[^[:alpha:]]" "['‘’]"
-                                         t ; Many other characters
-                                         ("-d" "en_US") nil utf-8))))
+        ;; ispell-list-command "--list"
+        )
+  (add-to-list 'ispell-local-dictionary-alist '(("en_US")))
+  (add-to-list 'ispell-local-dictionary-alist '(("de_AT")))
+
+  ;; (add-to-list 'ispell-local-dictionary-alist '(("english-hunspell"
+  ;;                                                "[[:alpha:]]"
+  ;;                                                "[^[:alpha:]]"
+  ;;                                                "['‘’]"
+  ;;                                                t ; Many other characters
+  ;;                                                ("-d" "en_US")
+  ;;                                                nil
+  ;;                                                utf-8)))
+  ;; (add-to-list 'ispell-local-dictionary-alist '("deutsch-hunspell"
+  ;;                                               "[[:alpha:]]"
+  ;;                                               "[^[:alpha:]]"
+  ;;                                               "[']"
+  ;;                                               t
+  ;;                                               ("-d" "de_AT"); Dictionary file name
+  ;;                                               nil
+  ;;                                               iso-8859-1))
+
+)
 
 (defun ab/save-word ()
   (interactive)
