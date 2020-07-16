@@ -510,11 +510,12 @@ SCHEDULED: %^t
 
 (map! :map LaTeX-mode-map
       :localleader
-      :desc "Compile"   ","  #'TeX-command-run-all
-      :desc "Fold"      "z"  #'TeX-fold-buffer
-      :desc "ToC"       "t"  #'reftex-toc
-      :desc "next err"  "n"  #'TeX-next-error
-      :desc "View"      "v"  #'TeX-view
+      :desc "Compile"     ","  #'TeX-command-run-all
+      :desc "Fold"        "z"  #'TeX-fold-buffer
+      :desc "ToC"         "t"  #'reftex-toc
+      :desc "next err"    "n"  #'TeX-next-error
+      :desc "View"        "v"  #'TeX-view
+      :desc "count words" "c"  #'tex-count-words
 )
 
 ;; (add-hook! 'company-mode-hook :append
