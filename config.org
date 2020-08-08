@@ -359,14 +359,18 @@ Switching windows also relies on the `hjkl` motions. So make it colemak friendly
   (map! :map evil-org-mode-map
         :mnvo "i" #'evil-forward-char
         :mnvo "I" #'evil-org-end-of-line))
-#+END_SRC
 
+;; (after! evil-tex
+;;   (map! :map evil-tex-mode-map
+;;         :mnvo "i" #'evil-forward-char
+;;         :mnvo "I" #'evil-org-end-of-line))
+#+END_SRC
 ** ~matchit~
 
 Extend the ~%~ functionality to jump between tags such as LaTeX ~\begin{...}~ and ~\end{...}~. This is sooo important!!!
 
 #+BEGIN_SRC emacs-lisp
-(use-package! evil-matchit
+(after! evil-matchit
   :after evil
   :config
   (global-evil-matchit-mode))
@@ -829,8 +833,7 @@ I want notifications for scheduled headlines. Unfortunately ~org-alert~ only has
 This package sends a notification every x minutes before schedule and even allows for multiple notifications per TODO.
 
 #+BEGIN_SRC emacs-lisp
-(use-package! org-wild-notifier
-  :after org
+(after! org
   :init
   (add-hook 'org-mode-hook #'org-wild-notifier-mode t)
   :config
