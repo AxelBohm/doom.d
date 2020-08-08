@@ -463,9 +463,6 @@ Load orgmode plus some standard keybindings.
       "o c" 'org-capture)
 #+END_SRC
 
-#+RESULTS:
-: org-capture
-
 Line numbers in org mode are useless.
 
 #+BEGIN_SRC emacs-lisp
@@ -695,6 +692,8 @@ These used to be default but got changed at some point.
 #+END_SRC
 
 This config complains about the fact that ~d~ is a prefix..
+
+Show all todos with state ~NEXT~.
 
 #+BEGIN_SRC emacs-lisp
 (defun ab/open-agenda-next-tasks  ()
@@ -1283,7 +1282,7 @@ still to do
 ** contacts
 
 #+BEGIN_SRC emacs-lisp
-;; (use-package! org-contacts
+;; ( org-contacts
 ;;   :after org
 ;;   :custom (org-contacts-files '("~/documents/contacts.org")))
 
