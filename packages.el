@@ -8,7 +8,7 @@
 
 (package! org-wild-notifier)
 (package! evil-matchit)
-(package! evil-tex :recipe (:host github :repo "itai33/evil-tex"))
+(package! evil-tex :recipe (:host github :repo "iyefrat/evil-tex"))
 
 (package! doom-quit :disable t)
 (package! doom-snippets :disable t)
