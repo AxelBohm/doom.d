@@ -123,11 +123,11 @@
   "Initialise the keymap baset on the current configuration."
   (let ((keymap (make-sparse-keymap)))
     (evil-define-key '(motion normal visual) keymap
-      "n" 'evil-next-line
-      "gn" 'evil-next-visual-line
-      "gN" 'evil-next-visual-line
-      "e" 'evil-previous-line
-      "ge" 'evil-previous-visual-line
+      "n" 'evil-next-visual-line
+      ;; "gn" 'evil-next-visual-line
+      ;; "gN" 'evil-next-visual-line
+      "e" 'evil-previous-visual-line
+      ;; "ge" 'evil-previous-visual-line
       "E" 'evil-lookup
       "i" 'evil-forward-char
       "I" 'evil-end-of-line
@@ -193,9 +193,12 @@
         :mnvo "i" #'evil-forward-char
         :mnvo "I" #'evil-org-end-of-line))
 
-(use-package! evil-matchit
-  :after evil
-  :config
+;; (after! evil-tex
+;;   (map! :map evil-tex-mode-map
+;;         :mnvo "i" #'evil-forward-char
+;;         :mnvo "I" #'evil-org-end-of-line))
+
+(after! evil
   (global-evil-matchit-mode))
 
 (with-eval-after-load 'evil
@@ -465,8 +468,7 @@ SCHEDULED: %^t
 (after! org
   (advice-add 'counsel-org-capture :override #'org-capture))
 
-(use-package! org-wild-notifier
-  :after org
+(after! org
   :init
   (add-hook 'org-mode-hook #'org-wild-notifier-mode t)
   :config
@@ -744,7 +746,7 @@ SCHEDULED: %^t
       ;; (user-mail-address      . ,(auth-source-pass-get "user" "mail/mainmail"))
       (mu4e-compose-signature . "---\nAxel Boehm"))))
 
-;; (use-package! org-contacts
+;; ( org-contacts
 ;;   :after org
 ;;   :custom (org-contacts-files '("~/documents/contacts.org")))
 

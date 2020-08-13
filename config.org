@@ -281,11 +281,11 @@ Evil for colemak keyboard layout. Adapted from the [[https://github.com/wbolster
   "Initialise the keymap baset on the current configuration."
   (let ((keymap (make-sparse-keymap)))
     (evil-define-key '(motion normal visual) keymap
-      "n" 'evil-next-line
-      "gn" 'evil-next-visual-line
-      "gN" 'evil-next-visual-line
-      "e" 'evil-previous-line
-      "ge" 'evil-previous-visual-line
+      "n" 'evil-next-visual-line
+      ;; "gn" 'evil-next-visual-line
+      ;; "gN" 'evil-next-visual-line
+      "e" 'evil-previous-visual-line
+      ;; "ge" 'evil-previous-visual-line
       "E" 'evil-lookup
       "i" 'evil-forward-char
       "I" 'evil-end-of-line
