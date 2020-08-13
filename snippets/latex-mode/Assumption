@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: Assumption
+# key: Ass
+# --
+Assumption~\ref{ass:$0}
