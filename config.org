@@ -370,9 +370,7 @@ Switching windows also relies on the `hjkl` motions. So make it colemak friendly
 Extend the ~%~ functionality to jump between tags such as LaTeX ~\begin{...}~ and ~\end{...}~. This is sooo important!!!
 
 #+BEGIN_SRC emacs-lisp
-(after! evil-matchit
-  :after evil
-  :config
+(after! evil
   (global-evil-matchit-mode))
 #+END_SRC
 
