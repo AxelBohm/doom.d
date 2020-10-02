@@ -111,11 +111,13 @@
         ;; +lsp            ; currently doesn't let me use reftex
         +latexmk)
        markdown          ; writing docs for people to ignore
-       org              ; organize your plain life in plain text
+       (org              ; organize your plain life in plain text
         ; +dragndrop       ; drag & drop files/images into org buffers
         ; +ipython         ; ipython/jupyter support for babel
         ; +pandoc          ; export-with-pandoc support
-        ; +present)        ; using org-mode for presentations
+        ; +present        ; using org-mode for presentations
+        ; +noter           ; annotate pdfs
+        +pretty)
        (python             ; beautiful is better than ugly
         +lsp
         +conda)
