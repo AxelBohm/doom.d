@@ -596,7 +596,7 @@ SCHEDULED: %^t
 
 (after! company
   :init
-  (setq company-dabbrev-ignore-case t
+  (setq company-dabbrev-ignore-case nil
         company-idle-delay 0.2
         ;; Number the candidates (use M-1, M-2 etc to select completions).
         company-show-numbers t
