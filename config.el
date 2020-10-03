@@ -233,7 +233,6 @@
         org-return-follows-link t
         org-agenda-skip-scheduled-if-done t ;; don't show in agenda if done
         org-agenda-compact-blocks t
-        +org-initial-fold-level 1
         org-reverse-note-order t            ;; add new headings on top
         org-tags-column 0                   ;; position of tags
         org-todo-keywords '((sequence "TODO(t)"
