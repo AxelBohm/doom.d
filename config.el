@@ -492,7 +492,7 @@ SCHEDULED: %^t
         ;; auto insert second dollar sign
         ;; TeX-electric-math (cons "$" "$")
         ;; don't show ^ or _ for scripts
-        font-latex-fontify-script nil)
+        font-latex-fontify-script t)
 
   ;; use Zathura as pdf viewer
   (setq TeX-view-program-selection '((output-pdf "Zathura"))
