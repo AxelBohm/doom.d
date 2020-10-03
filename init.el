@@ -18,12 +18,13 @@
        grammar
 
        :completion
-       (company
-        +childframe)           ; the ultimate code completion backend
+       company
+       ;; FIXME childframe has terrible performance on void linux!!
+       ;; +childframe)           ; the ultimate code completion backend
        ;;helm              ; the *other* search engine for love and life
        ;;ido               ; the other *other* search engine...
-       (ivy               ; a search engine for love and life
-        +childframe)
+       ivy               ; a search engine for love and life
+       ;; +childframe)
        
        :ui
        ;;deft              ; notational velocity for Emacs
