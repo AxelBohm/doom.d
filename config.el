@@ -254,7 +254,7 @@
 
 (map! :leader
       "o s l" 'org-store-link
-      "o a" 'org-agenda
+      ;; "o a" 'org-agenda
       "o c" 'org-capture)
 
 (defun ab/disable-line-numbers ()

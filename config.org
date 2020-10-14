@@ -461,7 +461,7 @@ Load orgmode plus some standard keybindings.
 
 (map! :leader
       "o s l" 'org-store-link
-      "o a" 'org-agenda
+      ;; "o a" 'org-agenda
       "o c" 'org-capture)
 #+END_SRC
 
