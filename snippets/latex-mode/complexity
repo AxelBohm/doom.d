@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: complexity
+# key: com
+# --
+\mathcal{O}(\epsilon^{-$0})
