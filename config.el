@@ -10,8 +10,8 @@
 
 (show-paren-mode 1)
 
-;; (setq display-line-numbers-type 'relative)
-(setq display-line-numbers-type nil)
+(setq display-line-numbers-type 'relative)
+;; (setq display-line-numbers-type nil)
 
 (setq-default truncate-lines nil)
 
