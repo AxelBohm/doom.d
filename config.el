@@ -186,17 +186,19 @@
 (after! evil
   (map! :map evil-org-mode-map
         :mnvo "i" #'evil-forward-char
-        :mnvo "I" #'evil-org-end-of-line))
+        :mnvo "I" #'evil-end-of-line))
 
 (after! evil-org
   (map! :map evil-org-mode-map
         :mnvo "i" #'evil-forward-char
         :mnvo "I" #'evil-org-end-of-line))
 
-;; (after! evil-tex
+;; (after! evil
 ;;   (map! :map evil-tex-mode-map
 ;;         :mnvo "i" #'evil-forward-char
 ;;         :mnvo "I" #'evil-org-end-of-line))
+;; (add-hook 'evil-tex-mode-hook (lambda () (global-evil-colemak-mode)))
+;; (add-hook 'LaTeX-mode-hook (lambda () (global-evil-colemak-mode)))
 
 (after! evil
   (global-evil-matchit-mode))
