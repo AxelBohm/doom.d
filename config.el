@@ -661,28 +661,30 @@ SCHEDULED: %^t
 
   (setq ispell-program-name "hunspell"
         ispell-silently-savep t            ;; save persal dictionary without asking
+        ;; ispell-hunspell-dict-paths-alist '(("en_US" "~/.hunspell_en_US")
+        ;;                                    ("de_AT" "~/.hunspell_de_AT"))
         ;; ispell-extra-args '("--sug-mode=ultra" "--lang=en_US")
         ;; ispell-list-command "--list"
         )
   (add-to-list 'ispell-local-dictionary-alist '(("en_US")))
   (add-to-list 'ispell-local-dictionary-alist '(("de_AT")))
 
-  ;; (add-to-list 'ispell-local-dictionary-alist '(("english-hunspell"
-  ;;                                                "[[:alpha:]]"
-  ;;                                                "[^[:alpha:]]"
-  ;;                                                "['‘’]"
-  ;;                                                t ; Many other characters
-  ;;                                                ("-d" "en_US")
-  ;;                                                nil
-  ;;                                                utf-8)))
-  ;; (add-to-list 'ispell-local-dictionary-alist '("deutsch-hunspell"
-  ;;                                               "[[:alpha:]]"
-  ;;                                               "[^[:alpha:]]"
-  ;;                                               "[']"
-  ;;                                               t
-  ;;                                               ("-d" "de_AT"); Dictionary file name
-  ;;                                               nil
-  ;;                                               iso-8859-1))
+  (add-to-list 'ispell-local-dictionary-alist '(("english-hunspell"
+                                                 "[[:alpha:]]"
+                                                 "[^[:alpha:]]"
+                                                 "['‘’]"
+                                                 t ; Many other characters
+                                                 ("-d" "en_US")
+                                                 nil
+                                                 utf-8)))
+  (add-to-list 'ispell-local-dictionary-alist '("deutsch-hunspell"
+                                                "[[:alpha:]]"
+                                                "[^[:alpha:]]"
+                                                "[']"
+                                                t
+                                                ("-d" "de_AT"); Dictionary file name
+                                                nil
+                                                iso-8859-1))
 
 )
 
