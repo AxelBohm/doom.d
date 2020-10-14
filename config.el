@@ -774,10 +774,17 @@ SCHEDULED: %^t
 (map! :map dired-mode
       "h" 'dired-up-directory)
 
-;; Use the usual C-u/C-d keybindings to navigate pdfs.
-(map!
- :map pdf-view-mode-map
- :m "C-u" 'pdf-view-scroll-down-or-previous-page
- :m "C-d" 'pdf-view-scroll-up-or-next-page)
+(after! pdf-tools
+  (map!
+   :map pdf-view-mode-map
+   :m "n"   'evil-collection-pdf-view-next-line-or-next-page
+   :m "e"   'evil-collection-pdf-view-previous-line-or-previous-page
+   :m "C-o" 'pdf-view-shrink
+   :m "C-i" 'pdf-view-enlarge
+   :m "C-u" 'pdf-view-scroll-down-or-previous-page
+   :m "C-d" 'pdf-view-scroll-up-or-next-page))
+
+(after! pdf-tools
+  (add-hook! 'pdf-tools-enabled-hook 'pdf-view-midnight-minor-mode))
 
 (setq avy-keys '(?a ?r ?s ?t ?d ?h ?n ?e ?i ?o))
