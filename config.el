@@ -543,8 +543,21 @@ SCHEDULED: %^t
 
 (add-hook 'TeX-mode-hook (lambda () (interactive) (evil-tex-mode 1)))
 
-(setq bibtex-completion-bibliography
-      '("~/PhD/research_projects/saddle_point/bibfile.bib"))
+(after! bibtex-completion
+  (setq! bibtex-completion-bibliography '("~/PhD/bibliography/bibfile.bib")
+         bibtex-completion-notes-path "~/PhD/bibliography/notes/"
+         bibtex-completion-library-path '("~/Dropbox/papers" )))
+
+;; (setq! +biblio-pdf-library-dir "~/Dropbox/papers"
+;;        +biblio-default-bibliography-files '("~/PhD/bibliography/bibfile.bib")
+;;        +biblio-notes-path "~/PhD/bibliography/notes/")
+
+(after! bibtex-completion
+  (setq bibtex-completion-additional-search-fields '(tags)))
+
+;; (after! bibtex-completion
+;;   (setq!  bibtex-completion-notes-template-multiple-files
+;;          "${title} : (${=key=})\n Some more format options"))
 
 (after! yasnippet
   (setq yas-snippet-dirs '("~/.doom.d/snippets")

@@ -952,12 +952,49 @@ Always use it when editing tex files:
 #+BEGIN_SRC emacs-lisp
 (add-hook 'TeX-mode-hook (lambda () (interactive) (evil-tex-mode 1)))
 #+END_SRC
-** bibtex completion
+* bibtex completion
+
+~bibtex-completion~ configuration through the package itself (should work in vanilla emacs).
 
 #+BEGIN_SRC emacs-lisp
-(setq bibtex-completion-bibliography
-      '("~/PhD/research_projects/saddle_point/bibfile.bib"))
+(after! bibtex-completion
+  (setq! bibtex-completion-bibliography '("~/PhD/bibliography/bibfile.bib")
+         bibtex-completion-notes-path "~/PhD/bibliography/notes/"
+         bibtex-completion-library-path '("~/Dropbox/papers" )))
 #+END_SRC
+
+Doom provides a way to configure ~bibtex-completion~ and ~org-ref~ at the same time through:
+
+#+BEGIN_SRC emacs-lisp
+;; (setq! +biblio-pdf-library-dir "~/Dropbox/papers"
+;;        +biblio-default-bibliography-files '("~/PhD/bibliography/bibfile.bib")
+;;        +biblio-notes-path "~/PhD/bibliography/notes/")
+#+END_SRC
+
+Use additional tags to find papers.
+
+#+BEGIN_SRC emacs-lisp
+(after! bibtex-completion
+  (setq bibtex-completion-additional-search-fields '(tags)))
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(after! bibtex-completion
+  (ivy-set-actions
+   'ivy-bibtex
+   '(("p" ivy-bibtex-open-any "Open PDF, URL, or DOI")
+     ("i" ivy-bibtex-insert-key "Insert key")
+     ("e" ivy-bibtex-edit-notes "Edit notes"))))
+#+END_SRC
+
+
+Reasonable default templates are provided for the packages, however, if you wish to change these refer to the respective packages for indepth instructions.
+
+#+BEGIN_src emacs-lisp
+;; (after! bibtex-completion
+;;   (setq!  bibtex-completion-notes-template-multiple-files
+;;          "${title} : (${=key=})\n Some more format options"))
+#+END_src
 
 * snippets
 
