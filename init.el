@@ -13,9 +13,11 @@
        ;;japanese
 
        :checkers
-       (spell)
+       (spell
+        +hunspell
+        +flyspell)       ;; TODO: switch to spell-fu eventually
        (syntax)
-       grammar
+       ;; grammar
 
        :completion
        (company
@@ -38,15 +40,15 @@
        nav-flash         ; blink the current line after jumping
        ;;neotree           ; a project drawer, like NERDTree for vim
        ophints           ; highlight the region an operation acts on
-       (popup            ; tame sudden yet inevitable temporary windows
-        +all             ; catch all popups that start with an asterix
-        +defaults)       ; default popup rules
+       ;; (popup            ; tame sudden yet inevitable temporary windows
+       ;;  +all             ; catch all popups that start with an asterix
+       ;;  +defaults)       ; default popup rules
        ;; pretty-code       ; replace bits of code with pretty symbols
        ;;tabs              ; an tab bar for Emacs
        ;;treemacs          ; a project drawer, like neotree but cooler
        ;;unicode           ; extended unicode support for various languages
        vc-gutter         ; vcs diff in the fringe
-       vi-tilde-fringe   ; fringe tildes to mark beyond EOB
+       ;; vi-tilde-fringe   ; fringe tildes to mark beyond EOB
        window-select     ; visually switch windows
        workspaces        ; tab emulation, persistence & separate workspaces
        ;;zen               ; distraction-free coding or writing
@@ -68,7 +70,7 @@
        :emacs
        (dired +ranger)             ; making dired pretty [functional]
        electric          ; smarter, keyword-based electric-indent
-       ;; undo              ; persistent, smarter undo for your inevitable mistakes
+       undo              ; persistent, smarter undo for your inevitable mistakes
        vc                ; version-control and Emacs, sitting in a tree
 
        :term
@@ -89,10 +91,10 @@
         +docsets)        ; ...or in Dash docsets locally
        lsp
        magit             ; a git porcelain for Emacs
-       ;; biblio              ; bibtex-completion
+       biblio              ; bibtex-completion
        ;;make              ; run make tasks from Emacs
        ;;pass              ; password manager for nerds
-       ;; pdf               ; pdf enhancements
+       pdf               ; pdf enhancements
        ;;tmux              ; an API for interacting with tmux
        ;;upload            ; map local to remote projects via ssh/ftp
 
@@ -116,13 +118,15 @@
         ; +ipython         ; ipython/jupyter support for babel
         ; +pandoc          ; export-with-pandoc support
         ; +present        ; using org-mode for presentations
-        ; +noter           ; annotate pdfs
+        +roam
+        +noter           ; annotate pdfs
         +pretty)
        (python             ; beautiful is better than ugly
         +lsp
         +conda)
        ;;rust              ; Fe2O3.unwrap().unwrap().unwrap().unwrap()
-       sh                ; she sells {ba,z,fi}sh shells on the C xor
+       (sh                ; she sells {ba,z,fi}sh shells on the C xor
+        +lsp)
 
        :email
        mu4e                ; WIP
