@@ -256,6 +256,7 @@
 
 (map! :leader
       "o s l" 'org-store-link
+      "o s n" 'default/org-notes-search
       ;; "o a" 'org-agenda
       "o c" 'org-capture)
 
@@ -282,7 +283,7 @@
 
 (after! org
   (setq org-superstar-mode 1))
-(add-hook 'org-mode-hook (lambda () (org-superstar-mode 1)))
+;; (add-hook 'org-mode-hook (lambda () (org-superstar-mode 1)))
 
 (after! org
   (setq org-directory "~/org")
@@ -484,6 +485,9 @@ SCHEDULED: %^t
                (delete '("\\.pdf\\'" . default) org-file-apps)
                (add-to-list 'org-file-apps '("\\.pdf\\'" . "zathura %s")))))
 
+(after! org-noter
+  (setq! org-noter-notes-search-path '("~/PhD/bibliography/notes/")))
+
 (after! latex
   (setq tex-fontify-script t
         ;; automatically put braces after ^ and _
@@ -545,7 +549,13 @@ SCHEDULED: %^t
 
 (add-hook 'TeX-mode-hook (lambda () (interactive) (evil-tex-mode 1)))
 
+(map! :leader "b t" 'ivy-bibtex)
+(map! :leader "b a" 'biblio-arxiv-lookup)
+
 (after! bibtex-completion
+
+
+
   (setq! bibtex-completion-bibliography '("~/PhD/bibliography/bibfile.bib")
          bibtex-completion-notes-path "~/PhD/bibliography/notes/"
          bibtex-completion-library-path '("~/Dropbox/papers" )))
@@ -560,6 +570,22 @@ SCHEDULED: %^t
 ;; (after! bibtex-completion
 ;;   (setq!  bibtex-completion-notes-template-multiple-files
 ;;          "${title} : (${=key=})\n Some more format options"))
+
+(after! ivy-bibtex
+
+  ;; (ivy-add-actions 'ivy-bibtex '(("o" ivy-bibtex-open-any "Open PDF, URL, or DOI")))
+  ;; (ivy-add-actions 'ivy-bibtex '(("e" ivy-bibtex-edit-notes "Edit notes")))
+  ;; (ivy-add-actions 'ivy-bibtex '(("i" ivy-bibtex-insert-key "Insert key")))
+
+  ;; (setq ivy-bibtex-default-action 'ivy-bibtex-insert-key)
+  (setq ivy-bibtex-default-action 'ivy-bibtex-edit-notes)
+
+  ;; if the default action list is too long
+  (ivy-set-actions
+   'ivy-bibtex
+   '(("o" ivy-bibtex-open-any "Open PDF, URL, or DOI")
+     ("i" ivy-bibtex-insert-key "Insert key")
+     ("e" ivy-bibtex-edit-notes "Edit notes"))))
 
 (after! yasnippet
   (setq yas-snippet-dirs '("~/.doom.d/snippets")
@@ -777,10 +803,19 @@ SCHEDULED: %^t
       "h" 'dired-up-directory)
 
 (after! pdf-tools
+
+  (require 'pdf-continuous-scroll-mode)
+
+  ;; more fine-grained zooming
+  (setq! pdf-view-resize-factor 1.1)
+
   (map!
    :map pdf-view-mode-map
    :m "n"   'evil-collection-pdf-view-next-line-or-next-page
    :m "e"   'evil-collection-pdf-view-previous-line-or-previous-page
+   ;; :m "gg"  'pdf-view-first-page
+   ;; :m "G"   'pdf-view-last-page
+   :m "h"   'pdf-view-con
    :m "C-o" 'pdf-view-shrink
    :m "C-i" 'pdf-view-enlarge
    :m "C-u" 'pdf-view-scroll-down-or-previous-page
@@ -788,5 +823,91 @@ SCHEDULED: %^t
 
 (after! pdf-tools
   (add-hook! 'pdf-tools-enabled-hook 'pdf-view-midnight-minor-mode))
+
+(setq pdf-annot-activate-created-annotations t)
+(after! pdf-tools
+  (map! :map pdf-view-mode-map
+    :m "h" 'pdf-annot-add-highlight-markup-annotation)
+
+  ;; automatically annotate highlights
+  (setq pdf-annot-activate-created-annotations t))
+
+;; (defun my/scroll-other-window ()
+;;   (interactive)
+;;   (let* ((wind (other-window-for-scrolling))
+;;          (mode (with-selected-window wind major-mode)))
+;;     (if (eq mode 'pdf-view-mode)
+;;         (with-selected-window wind
+;;       (pdf-view-next-line-or-next-page 2))
+;;       (scroll-other-window 2))))
+
+;; (defun my/scroll-other-window-down ()
+;;   (interactive)
+;;   (let* ((wind (other-window-for-scrolling))
+;;          (mode (with-selected-window wind major-mode)))
+;;     (if (eq mode 'pdf-view-mode)
+;;     (with-selected-window wind
+;;       (progn
+;;         (pdf-view-previous-line-or-previous-page 2)
+;;         (other-window 1)))
+;;       (scroll-other-window-down 2))))
+
+(defvar-local sow-scroll-up-command nil)
+
+(defvar-local sow-scroll-down-command nil)
+
+(defvar sow-mode-map
+  (let ((km (make-sparse-keymap)))
+    (define-key km [remap scroll-other-window] 'sow-scroll-other-window)
+    (define-key km [remap scroll-other-window-down] 'sow-scroll-other-window-down)
+    km)
+  "Keymap used for `sow-mode'")
+
+(define-minor-mode sow-mode
+  "FIXME: Not documented."
+  nil nil nil
+  :global t)
+
+(defun sow-scroll-other-window (&optional arg)
+  (interactive "P")
+  (sow--scroll-other-window-1 arg))
+
+(defun sow-scroll-other-window-down (&optional arg)
+  (interactive "P")
+  (sow--scroll-other-window-1 arg t))
+
+(defun sow--scroll-other-window-1 (n &optional down-p)
+  (let* ((win (other-window-for-scrolling))
+         (cmd (with-current-buffer (window-buffer win)
+		(if down-p
+		    (or sow-scroll-down-command #'scroll-up-command)
+		  (or sow-scroll-up-command #'scroll-down-command)))))
+    (with-current-buffer (window-buffer win)
+      (save-excursion
+        (goto-char (window-point win))
+        (with-selected-window win
+          (funcall cmd n))
+        (set-window-point win (point))))))
+
+(add-hook 'Info-mode-hook
+	  (lambda nil
+	    (setq sow-scroll-up-command
+		  (lambda (_) (Info-scroll-up))
+		  sow-scroll-down-command
+		  (lambda (_) (Info-scroll-down)))))
+
+(add-hook 'doc-view-mode-hook
+          (lambda nil
+            (setq sow-scroll-up-command
+                  'doc-view-scroll-up-or-next-page
+                  sow-scroll-down-command
+                  'doc-view-scroll-down-or-previous-page)))
+
+(add-hook 'pdf-view-mode-hook
+          (lambda nil
+            (setq sow-scroll-up-command
+                  'pdf-view-scroll-up-or-next-page
+                  sow-scroll-down-command
+                  'pdf-view-scroll-down-or-previous-page)))
 
 (setq avy-keys '(?a ?r ?s ?t ?d ?h ?n ?e ?i ?o))

@@ -463,6 +463,7 @@ Load orgmode plus some standard keybindings.
 
 (map! :leader
       "o s l" 'org-store-link
+      "o s n" 'default/org-notes-search
       ;; "o a" 'org-agenda
       "o c" 'org-capture)
 #+END_SRC
@@ -858,6 +859,14 @@ I want pdfs to be opened in an external pdf viewer.
                (delete '("\\.pdf\\'" . default) org-file-apps)
                (add-to-list 'org-file-apps '("\\.pdf\\'" . "zathura %s")))))
 #+END_SRC
+** org-noter
+
+where to store the notes
+
+#+BEGIN_SRC emacs-lisp
+(after! org-noter
+  (setq! org-noter-notes-search-path '("~/PhD/bibliography/notes/")))
+#+END_SRC
 
 * LaTeX
 ** general
@@ -959,7 +968,13 @@ Always use it when editing tex files:
 ~bibtex-completion~ configuration through the package itself (should work in vanilla emacs).
 
 #+BEGIN_SRC emacs-lisp
+(map! :leader "b t" 'ivy-bibtex)
+(map! :leader "b a" 'biblio-arxiv-lookup)
+
 (after! bibtex-completion
+
+
+
   (setq! bibtex-completion-bibliography '("~/PhD/bibliography/bibfile.bib")
          bibtex-completion-notes-path "~/PhD/bibliography/notes/"
          bibtex-completion-library-path '("~/Dropbox/papers" )))
@@ -980,23 +995,37 @@ Use additional tags to find papers.
   (setq bibtex-completion-additional-search-fields '(tags)))
 #+END_SRC
 
-#+BEGIN_SRC emacs-lisp
-(after! bibtex-completion
-  (ivy-set-actions
-   'ivy-bibtex
-   '(("p" ivy-bibtex-open-any "Open PDF, URL, or DOI")
-     ("i" ivy-bibtex-insert-key "Insert key")
-     ("e" ivy-bibtex-edit-notes "Edit notes"))))
-#+END_SRC
-
-
-Reasonable default templates are provided for the packages, however, if you wish to change these refer to the respective packages for indepth instructions.
+Reasonable default templates are provided for the packages, however, if you wish to change these refer to the respective packages for in depth instructions.
 
 #+BEGIN_src emacs-lisp
 ;; (after! bibtex-completion
 ;;   (setq!  bibtex-completion-notes-template-multiple-files
 ;;          "${title} : (${=key=})\n Some more format options"))
 #+END_src
+
+** ivy-bibtex
+
+#+BEGIN_SRC emacs-lisp
+(after! ivy-bibtex
+
+  ;; (ivy-add-actions 'ivy-bibtex '(("o" ivy-bibtex-open-any "Open PDF, URL, or DOI")))
+  ;; (ivy-add-actions 'ivy-bibtex '(("e" ivy-bibtex-edit-notes "Edit notes")))
+  ;; (ivy-add-actions 'ivy-bibtex '(("i" ivy-bibtex-insert-key "Insert key")))
+
+  ;; (setq ivy-bibtex-default-action 'ivy-bibtex-insert-key)
+  (setq ivy-bibtex-default-action 'ivy-bibtex-edit-notes)
+
+  ;; if the default action list is too long
+  (ivy-set-actions
+   'ivy-bibtex
+   '(("o" ivy-bibtex-open-any "Open PDF, URL, or DOI")
+     ("i" ivy-bibtex-insert-key "Insert key")
+     ("e" ivy-bibtex-edit-notes "Edit notes"))))
+
+
+#+END_SRC
+
+
 
 * snippets
 
@@ -1347,20 +1376,31 @@ I'm so used to my ranger keybindings. Imitate those:
 
 * pdf
 
+** Navigattion
+
 Navigate pdfs the way I'm used to.
 
 #+BEGIN_SRC emacs-lisp
 (after! pdf-tools
+
+  ;; more fine-grained zooming
+  (setq! pdf-view-resize-factor 1.1)
+
   (map!
    :map pdf-view-mode-map
    :m "n"   'evil-collection-pdf-view-next-line-or-next-page
    :m "e"   'evil-collection-pdf-view-previous-line-or-previous-page
+   ;; :m "gg"  'pdf-view-first-page
+   ;; :m "G"   'pdf-view-last-page
+   :m "h"   'pdf-view-con
    :m "C-o" 'pdf-view-shrink
    :m "C-i" 'pdf-view-enlarge
    :m "C-u" 'pdf-view-scroll-down-or-previous-page
    :m "C-d" 'pdf-view-scroll-up-or-next-page))
 
 #+END_SRC
+
+** UI
 
 Start in dark mode.
 
@@ -1369,8 +1409,105 @@ Start in dark mode.
   (add-hook! 'pdf-tools-enabled-hook 'pdf-view-midnight-minor-mode))
 #+END_SRC
 
+automatically annotate highlights.
 
+#+BEGIN_SRC emacs-lisp
+(setq pdf-annot-activate-created-annotations t)
+(after! pdf-tools
+  (map! :map pdf-view-mode-map
+    :m "h" 'pdf-annot-add-highlight-markup-annotation)
 
+  ;; automatically annotate highlights
+  (setq pdf-annot-activate-created-annotations t))
+#+END_SRC
+
+** smooth scrolling across pages
+
+#+BEGIN_SRC emacs-lisp
+;; (defun my/scroll-other-window ()
+;;   (interactive)
+;;   (let* ((wind (other-window-for-scrolling))
+;;          (mode (with-selected-window wind major-mode)))
+;;     (if (eq mode 'pdf-view-mode)
+;;         (with-selected-window wind
+;;       (pdf-view-next-line-or-next-page 2))
+;;       (scroll-other-window 2))))
+
+;; (defun my/scroll-other-window-down ()
+;;   (interactive)
+;;   (let* ((wind (other-window-for-scrolling))
+;;          (mode (with-selected-window wind major-mode)))
+;;     (if (eq mode 'pdf-view-mode)
+;;     (with-selected-window wind
+;;       (progn
+;;         (pdf-view-previous-line-or-previous-page 2)
+;;         (other-window 1)))
+;;       (scroll-other-window-down 2))))
+#+END_SRC
+
+** second attempt
+
+taken from [[https://gist.github.com/politza/3f46785742e6e12ba0d1a849f853d0b9#file-scroll-other-window-el][scroll-other-window.el · GitHub]]
+
+#+BEGIN_SRC emacs-lisp
+(defvar-local sow-scroll-up-command nil)
+
+(defvar-local sow-scroll-down-command nil)
+
+(defvar sow-mode-map
+  (let ((km (make-sparse-keymap)))
+    (define-key km [remap scroll-other-window] 'sow-scroll-other-window)
+    (define-key km [remap scroll-other-window-down] 'sow-scroll-other-window-down)
+    km)
+  "Keymap used for `sow-mode'")
+
+(define-minor-mode sow-mode
+  "FIXME: Not documented."
+  nil nil nil
+  :global t)
+
+(defun sow-scroll-other-window (&optional arg)
+  (interactive "P")
+  (sow--scroll-other-window-1 arg))
+
+(defun sow-scroll-other-window-down (&optional arg)
+  (interactive "P")
+  (sow--scroll-other-window-1 arg t))
+
+(defun sow--scroll-other-window-1 (n &optional down-p)
+  (let* ((win (other-window-for-scrolling))
+         (cmd (with-current-buffer (window-buffer win)
+		(if down-p
+		    (or sow-scroll-down-command #'scroll-up-command)
+		  (or sow-scroll-up-command #'scroll-down-command)))))
+    (with-current-buffer (window-buffer win)
+      (save-excursion
+        (goto-char (window-point win))
+        (with-selected-window win
+          (funcall cmd n))
+        (set-window-point win (point))))))
+
+(add-hook 'Info-mode-hook
+	  (lambda nil
+	    (setq sow-scroll-up-command
+		  (lambda (_) (Info-scroll-up))
+		  sow-scroll-down-command
+		  (lambda (_) (Info-scroll-down)))))
+
+(add-hook 'doc-view-mode-hook
+          (lambda nil
+            (setq sow-scroll-up-command
+                  'doc-view-scroll-up-or-next-page
+                  sow-scroll-down-command
+                  'doc-view-scroll-down-or-previous-page)))
+
+(add-hook 'pdf-view-mode-hook
+          (lambda nil
+            (setq sow-scroll-up-command
+                  'pdf-view-scroll-up-or-next-page
+                  sow-scroll-down-command
+                  'pdf-view-scroll-down-or-previous-page)))
+#+END_SRC
 
 * ~avy~
 
