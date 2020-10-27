@@ -2,4 +2,4 @@
 # name: complexity
 # key: com
 # --
-\mathcal{O}(\epsilon^{$1})$0
+\mathcal{O}(\epsilon^{-$0})

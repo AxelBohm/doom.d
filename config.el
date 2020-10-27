@@ -10,8 +10,8 @@
 
 (show-paren-mode 1)
 
-;; (setq display-line-numbers-type 'relative)
-(setq display-line-numbers-type nil)
+(setq display-line-numbers-type 'relative)
+;; (setq display-line-numbers-type nil)
 
 (setq-default truncate-lines nil)
 
@@ -186,17 +186,19 @@
 (after! evil
   (map! :map evil-org-mode-map
         :mnvo "i" #'evil-forward-char
-        :mnvo "I" #'evil-org-end-of-line))
+        :mnvo "I" #'evil-end-of-line))
 
 (after! evil-org
   (map! :map evil-org-mode-map
         :mnvo "i" #'evil-forward-char
         :mnvo "I" #'evil-org-end-of-line))
 
-;; (after! evil-tex
+;; (after! evil
 ;;   (map! :map evil-tex-mode-map
 ;;         :mnvo "i" #'evil-forward-char
 ;;         :mnvo "I" #'evil-org-end-of-line))
+;; (add-hook 'evil-tex-mode-hook (lambda () (global-evil-colemak-mode)))
+;; (add-hook 'LaTeX-mode-hook (lambda () (global-evil-colemak-mode)))
 
 (after! evil
   (global-evil-matchit-mode))
@@ -254,7 +256,7 @@
 
 (map! :leader
       "o s l" 'org-store-link
-      "o a" 'org-agenda
+      ;; "o a" 'org-agenda
       "o c" 'org-capture)
 
 (defun ab/disable-line-numbers ()
@@ -543,8 +545,21 @@ SCHEDULED: %^t
 
 (add-hook 'TeX-mode-hook (lambda () (interactive) (evil-tex-mode 1)))
 
-(setq bibtex-completion-bibliography
-      '("~/PhD/research_projects/saddle_point/bibfile.bib"))
+(after! bibtex-completion
+  (setq! bibtex-completion-bibliography '("~/PhD/bibliography/bibfile.bib")
+         bibtex-completion-notes-path "~/PhD/bibliography/notes/"
+         bibtex-completion-library-path '("~/Dropbox/papers" )))
+
+;; (setq! +biblio-pdf-library-dir "~/Dropbox/papers"
+;;        +biblio-default-bibliography-files '("~/PhD/bibliography/bibfile.bib")
+;;        +biblio-notes-path "~/PhD/bibliography/notes/")
+
+(after! bibtex-completion
+  (setq bibtex-completion-additional-search-fields '(tags)))
+
+;; (after! bibtex-completion
+;;   (setq!  bibtex-completion-notes-template-multiple-files
+;;          "${title} : (${=key=})\n Some more format options"))
 
 (after! yasnippet
   (setq yas-snippet-dirs '("~/.doom.d/snippets")
@@ -648,28 +663,30 @@ SCHEDULED: %^t
 
   (setq ispell-program-name "hunspell"
         ispell-silently-savep t            ;; save persal dictionary without asking
+        ;; ispell-hunspell-dict-paths-alist '(("en_US" "~/.hunspell_en_US")
+        ;;                                    ("de_AT" "~/.hunspell_de_AT"))
         ;; ispell-extra-args '("--sug-mode=ultra" "--lang=en_US")
         ;; ispell-list-command "--list"
         )
   (add-to-list 'ispell-local-dictionary-alist '(("en_US")))
   (add-to-list 'ispell-local-dictionary-alist '(("de_AT")))
 
-  ;; (add-to-list 'ispell-local-dictionary-alist '(("english-hunspell"
-  ;;                                                "[[:alpha:]]"
-  ;;                                                "[^[:alpha:]]"
-  ;;                                                "['‘’]"
-  ;;                                                t ; Many other characters
-  ;;                                                ("-d" "en_US")
-  ;;                                                nil
-  ;;                                                utf-8)))
-  ;; (add-to-list 'ispell-local-dictionary-alist '("deutsch-hunspell"
-  ;;                                               "[[:alpha:]]"
-  ;;                                               "[^[:alpha:]]"
-  ;;                                               "[']"
-  ;;                                               t
-  ;;                                               ("-d" "de_AT"); Dictionary file name
-  ;;                                               nil
-  ;;                                               iso-8859-1))
+  (add-to-list 'ispell-local-dictionary-alist '(("english-hunspell"
+                                                 "[[:alpha:]]"
+                                                 "[^[:alpha:]]"
+                                                 "['‘’]"
+                                                 t ; Many other characters
+                                                 ("-d" "en_US")
+                                                 nil
+                                                 utf-8)))
+  (add-to-list 'ispell-local-dictionary-alist '("deutsch-hunspell"
+                                                "[[:alpha:]]"
+                                                "[^[:alpha:]]"
+                                                "[']"
+                                                t
+                                                ("-d" "de_AT"); Dictionary file name
+                                                nil
+                                                iso-8859-1))
 
 )
 
@@ -759,10 +776,17 @@ SCHEDULED: %^t
 (map! :map dired-mode
       "h" 'dired-up-directory)
 
-;; Use the usual C-u/C-d keybindings to navigate pdfs.
-(map!
- :map pdf-view-mode-map
- :m "C-u" 'pdf-view-scroll-down-or-previous-page
- :m "C-d" 'pdf-view-scroll-up-or-next-page)
+(after! pdf-tools
+  (map!
+   :map pdf-view-mode-map
+   :m "n"   'evil-collection-pdf-view-next-line-or-next-page
+   :m "e"   'evil-collection-pdf-view-previous-line-or-previous-page
+   :m "C-o" 'pdf-view-shrink
+   :m "C-i" 'pdf-view-enlarge
+   :m "C-u" 'pdf-view-scroll-down-or-previous-page
+   :m "C-d" 'pdf-view-scroll-up-or-next-page))
+
+(after! pdf-tools
+  (add-hook! 'pdf-tools-enabled-hook 'pdf-view-midnight-minor-mode))
 
 (setq avy-keys '(?a ?r ?s ?t ?d ?h ?n ?e ?i ?o))
