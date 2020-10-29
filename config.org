@@ -1005,22 +1005,34 @@ Reasonable default templates are provided for the packages, however, if you wish
 
 ** ivy-bibtex
 
+how to set ivy-height as a function [[https://github.com/abo-abo/swiper/issues/1722][github issue.]]
+
 #+BEGIN_SRC emacs-lisp
 (after! ivy-bibtex
 
+  (setq ivy-height 30)
+
+  (defun bibtex-completion-pdf-open-with-zathura (entry)
+    (let ((pdf (bibtex-completion-find-pdf entry)))
+      (call-process "zathura" nil 0 nil (car pdf))))
+
+  ;; (ivy-add-actions 'ivy-bibtex '(("z" bibtex-completion-pdf-open-with-zathura "Open PDF in zathura")))
   ;; (ivy-add-actions 'ivy-bibtex '(("o" ivy-bibtex-open-any "Open PDF, URL, or DOI")))
+
   ;; (ivy-add-actions 'ivy-bibtex '(("e" ivy-bibtex-edit-notes "Edit notes")))
   ;; (ivy-add-actions 'ivy-bibtex '(("i" ivy-bibtex-insert-key "Insert key")))
 
   ;; (setq ivy-bibtex-default-action 'ivy-bibtex-insert-key)
-  (setq ivy-bibtex-default-action 'ivy-bibtex-edit-notes)
 
-  ;; if the default action list is too long
-  (ivy-set-actions
-   'ivy-bibtex
-   '(("o" ivy-bibtex-open-any "Open PDF, URL, or DOI")
-     ("i" ivy-bibtex-insert-key "Insert key")
-     ("e" ivy-bibtex-edit-notes "Edit notes"))))
+;; the default action list is too long and there is no (obvious) way to remove entries so I start from scratch
+(ivy-set-actions
+ 'ivy-bibtex
+ '(("o" ivy-bibtex-open-any "Open PDF, URL, or DOI")
+   ("i" ivy-bibtex-insert-key "Insert key")
+   ("a" ivy-bibtex-add-PDF-attachment "Attach PDF to email")
+   ("s" ivy-bibtex-show-entry "Show entry")
+   ("z" bibtex-completion-pdf-open-with-zathura "Open PDF in zathura")
+   ("e" ivy-bibtex-edit-notes "Edit notes"))))
 
 
 #+END_SRC
@@ -1421,93 +1433,20 @@ automatically annotate highlights.
   (setq pdf-annot-activate-created-annotations t))
 #+END_SRC
 
-** smooth scrolling across pages
+** via ~pdf-continuous-scroll-mode.el~
 
 #+BEGIN_SRC emacs-lisp
-;; (defun my/scroll-other-window ()
-;;   (interactive)
-;;   (let* ((wind (other-window-for-scrolling))
-;;          (mode (with-selected-window wind major-mode)))
-;;     (if (eq mode 'pdf-view-mode)
-;;         (with-selected-window wind
-;;       (pdf-view-next-line-or-next-page 2))
-;;       (scroll-other-window 2))))
-
-;; (defun my/scroll-other-window-down ()
-;;   (interactive)
-;;   (let* ((wind (other-window-for-scrolling))
-;;          (mode (with-selected-window wind major-mode)))
-;;     (if (eq mode 'pdf-view-mode)
-;;     (with-selected-window wind
-;;       (progn
-;;         (pdf-view-previous-line-or-previous-page 2)
-;;         (other-window 1)))
-;;       (scroll-other-window-down 2))))
+(with-eval-after-load 'pdf-view
+  (require 'pdf-continuous-scroll-mode))
 #+END_SRC
 
-** second attempt
-
-taken from [[https://gist.github.com/politza/3f46785742e6e12ba0d1a849f853d0b9#file-scroll-other-window-el][scroll-other-window.el · GitHub]]
+** org-noter
 
 #+BEGIN_SRC emacs-lisp
-(defvar-local sow-scroll-up-command nil)
-
-(defvar-local sow-scroll-down-command nil)
-
-(defvar sow-mode-map
-  (let ((km (make-sparse-keymap)))
-    (define-key km [remap scroll-other-window] 'sow-scroll-other-window)
-    (define-key km [remap scroll-other-window-down] 'sow-scroll-other-window-down)
-    km)
-  "Keymap used for `sow-mode'")
-
-(define-minor-mode sow-mode
-  "FIXME: Not documented."
-  nil nil nil
-  :global t)
-
-(defun sow-scroll-other-window (&optional arg)
-  (interactive "P")
-  (sow--scroll-other-window-1 arg))
-
-(defun sow-scroll-other-window-down (&optional arg)
-  (interactive "P")
-  (sow--scroll-other-window-1 arg t))
-
-(defun sow--scroll-other-window-1 (n &optional down-p)
-  (let* ((win (other-window-for-scrolling))
-         (cmd (with-current-buffer (window-buffer win)
-		(if down-p
-		    (or sow-scroll-down-command #'scroll-up-command)
-		  (or sow-scroll-up-command #'scroll-down-command)))))
-    (with-current-buffer (window-buffer win)
-      (save-excursion
-        (goto-char (window-point win))
-        (with-selected-window win
-          (funcall cmd n))
-        (set-window-point win (point))))))
-
-(add-hook 'Info-mode-hook
-	  (lambda nil
-	    (setq sow-scroll-up-command
-		  (lambda (_) (Info-scroll-up))
-		  sow-scroll-down-command
-		  (lambda (_) (Info-scroll-down)))))
-
-(add-hook 'doc-view-mode-hook
-          (lambda nil
-            (setq sow-scroll-up-command
-                  'doc-view-scroll-up-or-next-page
-                  sow-scroll-down-command
-                  'doc-view-scroll-down-or-previous-page)))
-
-(add-hook 'pdf-view-mode-hook
-          (lambda nil
-            (setq sow-scroll-up-command
-                  'pdf-view-scroll-up-or-next-page
-                  sow-scroll-down-command
-                  'pdf-view-scroll-down-or-previous-page)))
+(after! org-noter
+  (setq org-noter-doc-split-fraction (0.6 0.4)))
 #+END_SRC
+
 
 * ~avy~
 

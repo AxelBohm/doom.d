@@ -10,7 +10,9 @@
 (package! evil-matchit)
 (package! org-roam-bibtex)
 (package! helm-bibtex :pin "12f8809aac3a13dd11a1c664a13f789005f7a199")
-(package! :location (recipe :fetcher github :repo "dalanicolai/pdf-continuous-scroll-mode.el"))
+(package! pdf-continuous-sroll-mode :recipe
+  (:host github
+   :repo "dalanicolai/pdf-continuous-scroll-mode.el"))
 
 (package! doom-quit :disable t)
 (package! doom-snippets :disable t)
