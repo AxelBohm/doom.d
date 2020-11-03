@@ -549,6 +549,13 @@ SCHEDULED: %^t
 
 (add-hook 'TeX-mode-hook (lambda () (interactive) (evil-tex-mode 1)))
 
+(map! :map LaTeX-mode-map
+      :localleader :desc "toggle delimiter" "d"  #'evil-tex-toggle-delim)
+
+(after! evil-tex
+  ;; `ts` starts Toggle Surround
+  (setq evil-tex-toggle-override-t t))
+
 (map! :leader "b t" 'ivy-bibtex)
 (map! :leader "b a" 'biblio-arxiv-lookup)
 

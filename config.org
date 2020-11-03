@@ -960,9 +960,23 @@ add some LaTeX keywords which are not included by ~evil-matchit~ by default.
 
 This package introduces new text objects e.g. ~ci$~ now changes inside $...$.
 Always use it when editing tex files:
+
 #+BEGIN_SRC emacs-lisp
 (add-hook 'TeX-mode-hook (lambda () (interactive) (evil-tex-mode 1)))
+
 #+END_SRC
+
+evil-tex has very nice toggle commands but I can't remember them.
+
+#+BEGIN_SRC emacs-lisp
+(map! :map LaTeX-mode-map
+      :localleader :desc "toggle delimiter" "d"  #'evil-tex-toggle-delim)
+
+(after! evil-tex
+  ;; `ts` starts Toggle Surround
+  (setq evil-tex-toggle-override-t t))
+#+END_SRC
+
 * bibtex completion
 
 ~bibtex-completion~ configuration through the package itself (should work in vanilla emacs).
