@@ -580,17 +580,13 @@ SCHEDULED: %^t
 
 (after! ivy-bibtex
 
-  (setq ivy-height 30)
+  (setq ivy-height 30) ;; this is actually a general ivy configuration
 
   (defun bibtex-completion-pdf-open-with-zathura (entry)
     (let ((pdf (bibtex-completion-find-pdf entry)))
       (call-process "zathura" nil 0 nil (car pdf))))
 
-  ;; (ivy-add-actions 'ivy-bibtex '(("z" bibtex-completion-pdf-open-with-zathura "Open PDF in zathura")))
   ;; (ivy-add-actions 'ivy-bibtex '(("o" ivy-bibtex-open-any "Open PDF, URL, or DOI")))
-
-  ;; (ivy-add-actions 'ivy-bibtex '(("e" ivy-bibtex-edit-notes "Edit notes")))
-  ;; (ivy-add-actions 'ivy-bibtex '(("i" ivy-bibtex-insert-key "Insert key")))
 
   ;; (setq ivy-bibtex-default-action 'ivy-bibtex-insert-key)
 
