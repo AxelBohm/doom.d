@@ -434,7 +434,7 @@ Switch back and forth between the two MRU buffers.
 
 ** config
 
-Load orgmode plus some standard keybindings.
+Load org-mode plus some standard keybindings.
 
 #+BEGIN_SRC emacs-lisp
 (after! org
@@ -987,12 +987,20 @@ evil-tex has very nice toggle commands but I can't remember them.
 
 (after! bibtex-completion
 
-
-
   (setq! bibtex-completion-bibliography '("~/PhD/bibliography/bibfile.bib")
          bibtex-completion-notes-path "~/PhD/bibliography/notes/"
          bibtex-completion-library-path '("~/Dropbox/papers" )))
 #+END_SRC
+
+You may store additional PDFs for a given entry, such as an annotated version of the original PDF, a file containing supplemental material, or chapter files.
+All files whose name start with the BibTeX key will then be associated with an entry.
+Note that for performance reasons, these additional files are only detected when triggering an action, such as “Open PDF file”. When the whole bibliography is loaded, only the “main” PDF bibtex-key.pdf is detected.
+
+#+BEGIN_SRC emacs-lisp
+(after! bibtex-completion
+  (setq! bibtex-completion-find-additional-pdfs t))
+#+END_SRC
+
 
 Doom provides a way to configure ~bibtex-completion~ and ~org-ref~ at the same time through:
 
@@ -1009,13 +1017,6 @@ Use additional tags to find papers.
   (setq bibtex-completion-additional-search-fields '(tags)))
 #+END_SRC
 
-Reasonable default templates are provided for the packages, however, if you wish to change these refer to the respective packages for in depth instructions.
-
-#+BEGIN_src emacs-lisp
-;; (after! bibtex-completion
-;;   (setq!  bibtex-completion-notes-template-multiple-files
-;;          "${title} : (${=key=})\n Some more format options"))
-#+END_src
 
 ** ivy-bibtex
 
@@ -1046,7 +1047,6 @@ how to set ivy-height as a function [[https://github.com/abo-abo/swiper/issues/1
 
 
 #+END_SRC
-
 
 * snippets
 
@@ -1453,7 +1453,7 @@ automatically annotate highlights.
 
 #+BEGIN_SRC emacs-lisp
 (after! org-noter
-  (setq org-noter-doc-split-fraction (0.6 0.4)))
+  (setq org-noter-doc-split-fraction (0.6 . 0.4)))
 #+END_SRC
 
 

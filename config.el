@@ -561,11 +561,12 @@ SCHEDULED: %^t
 
 (after! bibtex-completion
 
-
-
   (setq! bibtex-completion-bibliography '("~/PhD/bibliography/bibfile.bib")
          bibtex-completion-notes-path "~/PhD/bibliography/notes/"
          bibtex-completion-library-path '("~/Dropbox/papers" )))
+
+(after! bibtex-completion
+  (setq! bibtex-completion-find-additional-pdfs t))
 
 ;; (setq! +biblio-pdf-library-dir "~/Dropbox/papers"
 ;;        +biblio-default-bibliography-files '("~/PhD/bibliography/bibfile.bib")
@@ -573,10 +574,6 @@ SCHEDULED: %^t
 
 (after! bibtex-completion
   (setq bibtex-completion-additional-search-fields '(tags)))
-
-;; (after! bibtex-completion
-;;   (setq!  bibtex-completion-notes-template-multiple-files
-;;          "${title} : (${=key=})\n Some more format options"))
 
 (after! ivy-bibtex
 
@@ -847,6 +844,6 @@ SCHEDULED: %^t
   (require 'pdf-continuous-scroll-mode))
 
 (after! org-noter
-  (setq org-noter-doc-split-fraction (0.6 0.4)))
+  (setq org-noter-doc-split-fraction (0.6 . 0.4)))
 
 (setq avy-keys '(?a ?r ?s ?t ?d ?h ?n ?e ?i ?o))
