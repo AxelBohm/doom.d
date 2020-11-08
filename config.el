@@ -256,6 +256,7 @@
 
 (map! :leader
       "o s l" 'org-store-link
+      "o s n" 'default/org-notes-search
       ;; "o a" 'org-agenda
       "o c" 'org-capture)
 
@@ -282,7 +283,7 @@
 
 (after! org
   (setq org-superstar-mode 1))
-(add-hook 'org-mode-hook (lambda () (org-superstar-mode 1)))
+;; (add-hook 'org-mode-hook (lambda () (org-superstar-mode 1)))
 
 (after! org
   (setq org-directory "~/org")
@@ -484,6 +485,9 @@ SCHEDULED: %^t
                (delete '("\\.pdf\\'" . default) org-file-apps)
                (add-to-list 'org-file-apps '("\\.pdf\\'" . "zathura %s")))))
 
+(after! org-noter
+  (setq! org-noter-notes-search-path '("~/PhD/bibliography/notes/")))
+
 (after! latex
   (setq tex-fontify-script t
         ;; automatically put braces after ^ and _
@@ -545,10 +549,24 @@ SCHEDULED: %^t
 
 (add-hook 'TeX-mode-hook (lambda () (interactive) (evil-tex-mode 1)))
 
+(map! :map LaTeX-mode-map
+      :localleader :desc "toggle delimiter" "d"  #'evil-tex-toggle-delim)
+
+(after! evil-tex
+  ;; `ts` starts Toggle Surround
+  (setq evil-tex-toggle-override-t t))
+
+(map! :leader "b t" 'ivy-bibtex)
+(map! :leader "b a" 'biblio-arxiv-lookup)
+
 (after! bibtex-completion
+
   (setq! bibtex-completion-bibliography '("~/PhD/bibliography/bibfile.bib")
          bibtex-completion-notes-path "~/PhD/bibliography/notes/"
          bibtex-completion-library-path '("~/Dropbox/papers" )))
+
+(after! bibtex-completion
+  (setq! bibtex-completion-find-additional-pdfs t))
 
 ;; (setq! +biblio-pdf-library-dir "~/Dropbox/papers"
 ;;        +biblio-default-bibliography-files '("~/PhD/bibliography/bibfile.bib")
@@ -557,9 +575,27 @@ SCHEDULED: %^t
 (after! bibtex-completion
   (setq bibtex-completion-additional-search-fields '(tags)))
 
-;; (after! bibtex-completion
-;;   (setq!  bibtex-completion-notes-template-multiple-files
-;;          "${title} : (${=key=})\n Some more format options"))
+(after! ivy-bibtex
+
+  (setq ivy-height 30) ;; this is actually a general ivy configuration
+
+  (defun bibtex-completion-pdf-open-with-zathura (entry)
+    (let ((pdf (bibtex-completion-find-pdf entry)))
+      (call-process "zathura" nil 0 nil (car pdf))))
+
+  ;; (ivy-add-actions 'ivy-bibtex '(("o" ivy-bibtex-open-any "Open PDF, URL, or DOI")))
+
+  ;; (setq ivy-bibtex-default-action 'ivy-bibtex-insert-key)
+
+;; the default action list is too long and there is no (obvious) way to remove entries so I start from scratch
+(ivy-set-actions
+ 'ivy-bibtex
+ '(("o" ivy-bibtex-open-any "Open PDF, URL, or DOI")
+   ("i" ivy-bibtex-insert-key "Insert key")
+   ("a" ivy-bibtex-add-PDF-attachment "Attach PDF to email")
+   ("s" ivy-bibtex-show-entry "Show entry")
+   ("z" bibtex-completion-pdf-open-with-zathura "Open PDF in zathura")
+   ("e" ivy-bibtex-edit-notes "Edit notes"))))
 
 (after! yasnippet
   (setq yas-snippet-dirs '("~/.doom.d/snippets")
@@ -777,10 +813,17 @@ SCHEDULED: %^t
       "h" 'dired-up-directory)
 
 (after! pdf-tools
+
+  ;; more fine-grained zooming
+  (setq! pdf-view-resize-factor 1.1)
+
   (map!
    :map pdf-view-mode-map
    :m "n"   'evil-collection-pdf-view-next-line-or-next-page
    :m "e"   'evil-collection-pdf-view-previous-line-or-previous-page
+   ;; :m "gg"  'pdf-view-first-page
+   ;; :m "G"   'pdf-view-last-page
+   :m "h"   'pdf-view-con
    :m "C-o" 'pdf-view-shrink
    :m "C-i" 'pdf-view-enlarge
    :m "C-u" 'pdf-view-scroll-down-or-previous-page
@@ -788,5 +831,19 @@ SCHEDULED: %^t
 
 (after! pdf-tools
   (add-hook! 'pdf-tools-enabled-hook 'pdf-view-midnight-minor-mode))
+
+(setq pdf-annot-activate-created-annotations t)
+(after! pdf-tools
+  (map! :map pdf-view-mode-map
+    :m "h" 'pdf-annot-add-highlight-markup-annotation)
+
+  ;; automatically annotate highlights
+  (setq pdf-annot-activate-created-annotations t))
+
+(with-eval-after-load 'pdf-view
+  (require 'pdf-continuous-scroll-mode))
+
+(after! org-noter
+  (setq org-noter-doc-split-fraction (0.6 . 0.4)))
 
 (setq avy-keys '(?a ?r ?s ?t ?d ?h ?n ?e ?i ?o))

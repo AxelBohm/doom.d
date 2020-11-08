@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: onslide
+# key: on
+# --
+\onslide<${1:onwards}->{%
+  $0
+}

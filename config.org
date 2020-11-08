@@ -434,7 +434,7 @@ Switch back and forth between the two MRU buffers.
 
 ** config
 
-Load orgmode plus some standard keybindings.
+Load org-mode plus some standard keybindings.
 
 #+BEGIN_SRC emacs-lisp
 (after! org
@@ -463,6 +463,7 @@ Load orgmode plus some standard keybindings.
 
 (map! :leader
       "o s l" 'org-store-link
+      "o s n" 'default/org-notes-search
       ;; "o a" 'org-agenda
       "o c" 'org-capture)
 #+END_SRC
@@ -858,6 +859,14 @@ I want pdfs to be opened in an external pdf viewer.
                (delete '("\\.pdf\\'" . default) org-file-apps)
                (add-to-list 'org-file-apps '("\\.pdf\\'" . "zathura %s")))))
 #+END_SRC
+** org-noter
+
+where to store the notes
+
+#+BEGIN_SRC emacs-lisp
+(after! org-noter
+  (setq! org-noter-notes-search-path '("~/PhD/bibliography/notes/")))
+#+END_SRC
 
 * LaTeX
 ** general
@@ -951,19 +960,47 @@ add some LaTeX keywords which are not included by ~evil-matchit~ by default.
 
 This package introduces new text objects e.g. ~ci$~ now changes inside $...$.
 Always use it when editing tex files:
+
 #+BEGIN_SRC emacs-lisp
 (add-hook 'TeX-mode-hook (lambda () (interactive) (evil-tex-mode 1)))
+
 #+END_SRC
+
+evil-tex has very nice toggle commands but I can't remember them.
+
+#+BEGIN_SRC emacs-lisp
+(map! :map LaTeX-mode-map
+      :localleader :desc "toggle delimiter" "d"  #'evil-tex-toggle-delim)
+
+(after! evil-tex
+  ;; `ts` starts Toggle Surround
+  (setq evil-tex-toggle-override-t t))
+#+END_SRC
+
 * bibtex completion
 
 ~bibtex-completion~ configuration through the package itself (should work in vanilla emacs).
 
 #+BEGIN_SRC emacs-lisp
+(map! :leader "b t" 'ivy-bibtex)
+(map! :leader "b a" 'biblio-arxiv-lookup)
+
 (after! bibtex-completion
+
   (setq! bibtex-completion-bibliography '("~/PhD/bibliography/bibfile.bib")
          bibtex-completion-notes-path "~/PhD/bibliography/notes/"
          bibtex-completion-library-path '("~/Dropbox/papers" )))
 #+END_SRC
+
+You may store additional PDFs for a given entry, such as an annotated version of the original PDF, a file containing supplemental material, or chapter files.
+All files whose name start with the BibTeX key will then be associated with an entry.
+Note that for performance reasons, these additional files are only detected when triggering an action, such as “Open PDF file”. When the whole bibliography is loaded, only the “main” PDF bibtex-key.pdf is detected.
+
+#+BEGIN_SRC emacs-lisp
+(after! bibtex-completion
+  (setq! bibtex-completion-find-additional-pdfs t))
+#+END_SRC
+
 
 Doom provides a way to configure ~bibtex-completion~ and ~org-ref~ at the same time through:
 
@@ -980,23 +1017,36 @@ Use additional tags to find papers.
   (setq bibtex-completion-additional-search-fields '(tags)))
 #+END_SRC
 
+
+** ivy-bibtex
+
+how to set ivy-height as a function [[https://github.com/abo-abo/swiper/issues/1722][github issue.]]
+
 #+BEGIN_SRC emacs-lisp
-(after! bibtex-completion
-  (ivy-set-actions
-   'ivy-bibtex
-   '(("p" ivy-bibtex-open-any "Open PDF, URL, or DOI")
-     ("i" ivy-bibtex-insert-key "Insert key")
-     ("e" ivy-bibtex-edit-notes "Edit notes"))))
+(after! ivy-bibtex
+
+  (setq ivy-height 30) ;; this is actually a general ivy configuration
+
+  (defun bibtex-completion-pdf-open-with-zathura (entry)
+    (let ((pdf (bibtex-completion-find-pdf entry)))
+      (call-process "zathura" nil 0 nil (car pdf))))
+
+  ;; (ivy-add-actions 'ivy-bibtex '(("o" ivy-bibtex-open-any "Open PDF, URL, or DOI")))
+
+  ;; (setq ivy-bibtex-default-action 'ivy-bibtex-insert-key)
+
+;; the default action list is too long and there is no (obvious) way to remove entries so I start from scratch
+(ivy-set-actions
+ 'ivy-bibtex
+ '(("o" ivy-bibtex-open-any "Open PDF, URL, or DOI")
+   ("i" ivy-bibtex-insert-key "Insert key")
+   ("a" ivy-bibtex-add-PDF-attachment "Attach PDF to email")
+   ("s" ivy-bibtex-show-entry "Show entry")
+   ("z" bibtex-completion-pdf-open-with-zathura "Open PDF in zathura")
+   ("e" ivy-bibtex-edit-notes "Edit notes"))))
+
+
 #+END_SRC
-
-
-Reasonable default templates are provided for the packages, however, if you wish to change these refer to the respective packages for indepth instructions.
-
-#+BEGIN_src emacs-lisp
-;; (after! bibtex-completion
-;;   (setq!  bibtex-completion-notes-template-multiple-files
-;;          "${title} : (${=key=})\n Some more format options"))
-#+END_src
 
 * snippets
 
@@ -1347,20 +1397,31 @@ I'm so used to my ranger keybindings. Imitate those:
 
 * pdf
 
+** Navigattion
+
 Navigate pdfs the way I'm used to.
 
 #+BEGIN_SRC emacs-lisp
 (after! pdf-tools
+
+  ;; more fine-grained zooming
+  (setq! pdf-view-resize-factor 1.1)
+
   (map!
    :map pdf-view-mode-map
    :m "n"   'evil-collection-pdf-view-next-line-or-next-page
    :m "e"   'evil-collection-pdf-view-previous-line-or-previous-page
+   ;; :m "gg"  'pdf-view-first-page
+   ;; :m "G"   'pdf-view-last-page
+   :m "h"   'pdf-view-con
    :m "C-o" 'pdf-view-shrink
    :m "C-i" 'pdf-view-enlarge
    :m "C-u" 'pdf-view-scroll-down-or-previous-page
    :m "C-d" 'pdf-view-scroll-up-or-next-page))
 
 #+END_SRC
+
+** UI
 
 Start in dark mode.
 
@@ -1369,7 +1430,31 @@ Start in dark mode.
   (add-hook! 'pdf-tools-enabled-hook 'pdf-view-midnight-minor-mode))
 #+END_SRC
 
+automatically annotate highlights.
 
+#+BEGIN_SRC emacs-lisp
+(setq pdf-annot-activate-created-annotations t)
+(after! pdf-tools
+  (map! :map pdf-view-mode-map
+    :m "h" 'pdf-annot-add-highlight-markup-annotation)
+
+  ;; automatically annotate highlights
+  (setq pdf-annot-activate-created-annotations t))
+#+END_SRC
+
+** via ~pdf-continuous-scroll-mode.el~
+
+#+BEGIN_SRC emacs-lisp
+(with-eval-after-load 'pdf-view
+  (require 'pdf-continuous-scroll-mode))
+#+END_SRC
+
+** org-noter
+
+#+BEGIN_SRC emacs-lisp
+(after! org-noter
+  (setq org-noter-doc-split-fraction (0.6 . 0.4)))
+#+END_SRC
 
 
 * ~avy~
