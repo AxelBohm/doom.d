@@ -526,6 +526,10 @@ SCHEDULED: %^t
       :desc "count words" "c"  #'tex-count-words
 )
 
+(add-to-list 'company-backends 'company-bibtex)
+(setq company-bibtex-bibliography
+	'("~/PhD/bibliography/bibfile.bib"))
+
 ;; (add-hook! 'company-mode-hook :append
   ;; (when (eq major-mode 'latex-mode)
   ;;   (setq-local company-backends

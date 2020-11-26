@@ -925,6 +925,15 @@ LaTeX specific keybindings.
 #+END_SRC
 ** company
 
+Enable company-bibtex.
+
+#+BEGIN_SRC emacs-lisp
+(add-to-list 'company-backends 'company-bibtex)
+(setq company-bibtex-bibliography
+	'("~/PhD/bibliography/bibfile.bib"))
+#+END_SRC
+
+
 #+BEGIN_SRC emacs-lisp
 ;; (add-hook! 'company-mode-hook :append
   ;; (when (eq major-mode 'latex-mode)
