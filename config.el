@@ -379,8 +379,8 @@
         )
 
 (map! :map org-mode-map
-   :n ")" 'org-next-visible-heading
-   :n "(" 'org-previous-visible-heading
+   :n "]" 'org-next-visible-heading
+   :n "[" 'org-previous-visible-heading
    :leader "g u" 'outline-up-heading)               ;; Go Up in hierarchy
 
 (defun ab/mark-done-and-archive ()
@@ -821,13 +821,17 @@ SCHEDULED: %^t
   ;; more fine-grained zooming
   (setq! pdf-view-resize-factor 1.1)
 
+  ;; (map! image-mode-map
+  ;;  :m "i"   'image-forward-hscroll)
+
   (map!
    :map pdf-view-mode-map
    :m "n"   'evil-collection-pdf-view-next-line-or-next-page
    :m "e"   'evil-collection-pdf-view-previous-line-or-previous-page
+   :m "i"   'image-forward-hscroll
    ;; :m "gg"  'pdf-view-first-page
    ;; :m "G"   'pdf-view-last-page
-   :m "h"   'pdf-view-con
+   ;; :m "h"   'pdf-view-con
    :m "C-o" 'pdf-view-shrink
    :m "C-i" 'pdf-view-enlarge
    :m "C-u" 'pdf-view-scroll-down-or-previous-page
@@ -847,7 +851,7 @@ SCHEDULED: %^t
 (with-eval-after-load 'pdf-view
   (require 'pdf-continuous-scroll-mode))
 
-(after! org-noter
-  (setq org-noter-doc-split-fraction (0.6 . 0.4)))
+;; (after! org-noter
+;;   (setq org-noter-doc-split-fraction (0.6 . 0.4)))
 
 (setq avy-keys '(?a ?r ?s ?t ?d ?h ?n ?e ?i ?o))

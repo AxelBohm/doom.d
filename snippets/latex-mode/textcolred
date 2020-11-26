@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: textcolred
+# key: tr
+# --
+\textcolor{red}{$0}
