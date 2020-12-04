@@ -530,6 +530,11 @@ SCHEDULED: %^t
 (setq company-bibtex-bibliography
 	'("~/PhD/bibliography/bibfile.bib"))
 
+;; (add-hook! LaTeX-mode
+;;         :append
+;;         (set-company-backend! 'latex-mode
+;;  '(company-dabbrev :with company-yasnippet)))
+
 ;; (add-hook! 'company-mode-hook :append
   ;; (when (eq major-mode 'latex-mode)
   ;;   (setq-local company-backends
@@ -585,7 +590,8 @@ SCHEDULED: %^t
 
   (defun bibtex-completion-pdf-open-with-zathura (entry)
     (let ((pdf (bibtex-completion-find-pdf entry)))
-      (call-process "zathura" nil 0 nil (car pdf))))
+      (call-process "zathura" nil 0 nil (car pdf)))
+      (kill-buffer))
 
   ;; (ivy-add-actions 'ivy-bibtex '(("o" ivy-bibtex-open-any "Open PDF, URL, or DOI")))
 
@@ -647,6 +653,10 @@ SCHEDULED: %^t
 (after! conda
   (conda-env-initialize-eshell)
   (conda-env-autoactivate-mode))
+
+(add-hook! python-mode-hook
+  (lambda ()
+    (flycheck-add-next-checker 'lsp 'python-flake8)))
 
 (after! company
   :init

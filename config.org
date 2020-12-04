@@ -931,8 +931,16 @@ Enable company-bibtex.
 	'("~/PhD/bibliography/bibfile.bib"))
 #+END_SRC
 
+but snippets are still not working... maybe with this:
+#+BEGIN_SRC emacs-lisp
+;; (add-hook! LaTeX-mode
+;;         :append
+;;         (set-company-backend! 'latex-mode
+;;  '(company-dabbrev :with company-yasnippet)))
+#+END_SRC
 
 #+BEGIN_SRC emacs-lisp
+
 ;; (add-hook! 'company-mode-hook :append
   ;; (when (eq major-mode 'latex-mode)
   ;;   (setq-local company-backends
@@ -952,6 +960,7 @@ Enable company-bibtex.
 ;; (after! latex
 ;;   (set-company-backend! 'latex-mode '(company-latex-commands :with company-yasnippet)))
 #+END_SRC
+
 ** matchit
 
 add some LaTeX keywords which are not included by ~evil-matchit~ by default.
@@ -1036,7 +1045,8 @@ how to set ivy-height as a function [[https://github.com/abo-abo/swiper/issues/1
 
   (defun bibtex-completion-pdf-open-with-zathura (entry)
     (let ((pdf (bibtex-completion-find-pdf entry)))
-      (call-process "zathura" nil 0 nil (car pdf))))
+      (call-process "zathura" nil 0 nil (car pdf)))
+      (kill-buffer))
 
   ;; (ivy-add-actions 'ivy-bibtex '(("o" ivy-bibtex-open-any "Open PDF, URL, or DOI")))
 
@@ -1155,6 +1165,18 @@ How does emacs know which one is the right environment? I don't know..
   (conda-env-initialize-eshell)
   (conda-env-autoactivate-mode))
 #+END_SRC
+** linting
+
+Flycheck supports multiple checkers at once put only in a sequential fashion, see [[https://www.flycheck.org/en/latest/user/syntax-checkers.html#flycheck-checker-chains][flyckeck.org]]
+
+Not sure whether a hook is the correct approach but it works (was taken from [[https://www.reddit.com/r/emacs/comments/gqymvz/how_to_force_flycheck_to_select_a_specific_syntax/][reddit]]).
+
+#+BEGIN_SRC emacs-lisp
+(add-hook! python-mode-hook
+  (lambda ()
+    (flycheck-add-next-checker 'lsp 'python-flake8)))
+#+END_SRC
+
 
 * auto completion
 ** company
