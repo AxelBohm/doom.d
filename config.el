@@ -643,9 +643,27 @@ SCHEDULED: %^t
         :localleader "r p" 'run-python
                      "s s" 'python-shell-switch-to-shell
                      "s r" 'python-shell-send-region
+                     "r s" 'pyvenv-restart-python
                      ","   'python-shell-send-buffer     ; replace C-c C-c
                      "c a" 'conda-env-activate
         ))
+
+(defun python-shell-start-and-send-buffer()
+  (interactive)
+  (run-python)
+  (evil-window-left)
+  (python-shell-send-buffer))
+
+(defun ab/restart-and-run-python()
+  "restart and run to make sure all changes are registered when running code"
+
+  (interactive)
+  ;; (pyvenv-restart-python)
+  (kill-process "Python")
+  (sleep-for 0.05)
+  (kill-buffer "*Python*")
+  (previous-window-any-frame)
+  (run-python))
 
 (after! python
   (setq python-shell-completion-native-enable nil))
@@ -654,9 +672,14 @@ SCHEDULED: %^t
   (conda-env-initialize-eshell)
   (conda-env-autoactivate-mode))
 
-(add-hook! python-mode-hook
-  (lambda ()
-    (flycheck-add-next-checker 'lsp 'python-flake8)))
+(defun my-flycheck-setup ()
+  (flycheck-add-next-checker 'lsp 'python-flake8))
+
+;; These MODE-local-vars-hook hooks are a Doom thing. They're executed after
+;; MODE-hook, on hack-local-variables-hook. Although `lsp!` is attached to
+;; python-mode-local-vars-hook, it should occur earlier than my-flycheck-setup
+;; this way:
+(add-hook 'python-mode-local-vars-hook #'my-flycheck-setup)
 
 (after! company
   :init
