@@ -811,10 +811,11 @@ The above code, together with the follow shell command does the job.
 # emacsclient -c -F '(quote (name . "capture"))' -e '(activate-capture-frame)'
 # #+END_SRC
 
-For this to work the emacs server hast to be running.
+For this to work the emacs server hast to be running. (But only do if it's not yet running.)
 
 #+BEGIN_SRC emacs-lisp
-(server-start)
+(load "server")
+(unless (server-running-p) (server-start))
 #+END_SRC
 
 The other option would be to start emacs as a daemon. can even be started with systemd, see [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Emacs-Server.html][link]].
@@ -928,7 +929,7 @@ Enable company-bibtex.
 #+BEGIN_SRC emacs-lisp
 (add-to-list 'company-backends 'company-bibtex)
 (setq company-bibtex-bibliography
-	'("~/PhD/bibliography/bibfile.bib"))
+  '("~/PhD/bibliography/bibfile.bib"))
 #+END_SRC
 
 but snippets are still not working... maybe with this:
@@ -1046,7 +1047,7 @@ how to set ivy-height as a function [[https://github.com/abo-abo/swiper/issues/1
   (defun bibtex-completion-pdf-open-with-zathura (entry)
     (let ((pdf (bibtex-completion-find-pdf entry)))
       (call-process "zathura" nil 0 nil (car pdf)))
-      (kill-buffer))
+      (kill-buffer "*doom*"))
 
   ;; (ivy-add-actions 'ivy-bibtex '(("o" ivy-bibtex-open-any "Open PDF, URL, or DOI")))
 

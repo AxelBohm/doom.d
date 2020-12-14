@@ -466,7 +466,8 @@ SCHEDULED: %^t
     (switch-to-buffer (get-buffer-create "*scratch*"))
     (org-capture)))
 
-(server-start)
+(load "server")
+(unless (server-running-p) (server-start))
 
 (after! org
   (advice-add 'counsel-org-capture :override #'org-capture))
@@ -528,7 +529,7 @@ SCHEDULED: %^t
 
 (add-to-list 'company-backends 'company-bibtex)
 (setq company-bibtex-bibliography
-	'("~/PhD/bibliography/bibfile.bib"))
+  '("~/PhD/bibliography/bibfile.bib"))
 
 ;; (add-hook! LaTeX-mode
 ;;         :append
@@ -591,7 +592,7 @@ SCHEDULED: %^t
   (defun bibtex-completion-pdf-open-with-zathura (entry)
     (let ((pdf (bibtex-completion-find-pdf entry)))
       (call-process "zathura" nil 0 nil (car pdf)))
-      (kill-buffer))
+      (kill-buffer "*doom*"))
 
   ;; (ivy-add-actions 'ivy-bibtex '(("o" ivy-bibtex-open-any "Open PDF, URL, or DOI")))
 
