@@ -380,8 +380,7 @@
 
 (map! :map org-mode-map
    :n "]" 'org-next-visible-heading
-   :n "[" 'org-previous-visible-heading
-   :leader "g u" 'outline-up-heading)               ;; Go Up in hierarchy
+   :n "[" 'org-previous-visible-heading)
 
 (defun ab/mark-done-and-archive ()
   "Mark the state of an org-mode item as DONE and archive it."
