@@ -635,9 +635,6 @@ SCHEDULED: %^t
 ;;(setq-default flycheck-disabled-checkers '(tex-chktex)))
   (map! :leader "a" 'flycheck-next-error))
 
-;; (use-package ess-smart-underscore
-;;   :after ess)
-
 (after! python
   (map! :map python-mode-map
         :localleader "r p" 'run-python
@@ -874,15 +871,17 @@ SCHEDULED: %^t
   (add-hook! 'pdf-tools-enabled-hook 'pdf-view-midnight-minor-mode))
 
 (setq pdf-annot-activate-created-annotations t)
+
 (after! pdf-tools
   (map! :map pdf-view-mode-map
     :m "h" 'pdf-annot-add-highlight-markup-annotation)
 
   ;; automatically annotate highlights
-  (setq pdf-annot-activate-created-annotations t))
+  ;; (setq pdf-annot-activate-created-annotations t)
+  )
 
-(with-eval-after-load 'pdf-view
-  (require 'pdf-continuous-scroll-mode))
+;; (with-eval-after-load 'pdf-view
+;;   (require 'pdf-continuous-scroll-mode))
 
 ;; (after! org-noter
 ;;   (setq org-noter-doc-split-fraction (0.6 . 0.4)))

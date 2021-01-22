@@ -1127,12 +1127,6 @@ There is a bug in ~chk-tex~, see [[https://github.com/flycheck/flycheck/issues/1
 
 Fixing would be nice too, but apparently this is open, cf. [[https://github.com/flycheck/flycheck/issues/530][issue]].
 
-* R
-
-#+BEGIN_SRC emacs-lisp
-;; (use-package ess-smart-underscore
-;;   :after ess)
-#+END_SRC
 * python
 ** config
 #+BEGIN_SRC emacs-lisp
@@ -1205,7 +1199,6 @@ This is the correct solution for doom emacs according to [[https://github.com/hl
 #+END_SRC
 
 A general emacs solution was suggested on [[https://www.reddit.com/r/emacs/comments/gqymvz/how_to_force_flycheck_to_select_a_specific_syntax/][reddit]] but doesn't work for doom.
-
 
 * auto completion
 ** company
@@ -1496,19 +1489,21 @@ automatically annotate highlights.
 
 #+BEGIN_SRC emacs-lisp
 (setq pdf-annot-activate-created-annotations t)
+
 (after! pdf-tools
   (map! :map pdf-view-mode-map
     :m "h" 'pdf-annot-add-highlight-markup-annotation)
 
   ;; automatically annotate highlights
-  (setq pdf-annot-activate-created-annotations t))
+  ;; (setq pdf-annot-activate-created-annotations t)
+  )
 #+END_SRC
 
 ** ~pdf-continuous-scroll-mode.el~
 
 #+BEGIN_SRC emacs-lisp
-(with-eval-after-load 'pdf-view
-  (require 'pdf-continuous-scroll-mode))
+;; (with-eval-after-load 'pdf-view
+;;   (require 'pdf-continuous-scroll-mode))
 #+END_SRC
 
 ** org-noter
