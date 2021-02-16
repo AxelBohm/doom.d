@@ -4,10 +4,10 @@
 # --
 
 \begin{algo}[${1:name}]%
-  \begin{equation*}
+  \begin{equation}
     (\forall k \geq 1) \quad
     \left\lfloor \begin{array}{l}
       x_{k+1} = $0
     \end{array}\right.
-  \end{equation*}
+  \end{equation}
 \end{algo}

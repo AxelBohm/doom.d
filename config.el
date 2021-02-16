@@ -379,9 +379,8 @@
         )
 
 (map! :map org-mode-map
-   :n ")" 'org-next-visible-heading
-   :n "(" 'org-previous-visible-heading
-   :leader "g u" 'outline-up-heading)               ;; Go Up in hierarchy
+   :n "]" 'org-next-visible-heading
+   :n "[" 'org-previous-visible-heading)
 
 (defun ab/mark-done-and-archive ()
   "Mark the state of an org-mode item as DONE and archive it."
@@ -466,7 +465,8 @@ SCHEDULED: %^t
     (switch-to-buffer (get-buffer-create "*scratch*"))
     (org-capture)))
 
-(server-start)
+(load "server")
+(unless (server-running-p) (server-start))
 
 (after! org
   (advice-add 'counsel-org-capture :override #'org-capture))
@@ -526,6 +526,15 @@ SCHEDULED: %^t
       :desc "count words" "c"  #'tex-count-words
 )
 
+(add-to-list 'company-backends 'company-bibtex)
+(setq company-bibtex-bibliography
+  '("~/PhD/bibliography/bibfile.bib"))
+
+;; (add-hook! LaTeX-mode
+;;         :append
+;;         (set-company-backend! 'latex-mode
+;;  '(company-dabbrev :with company-yasnippet)))
+
 ;; (add-hook! 'company-mode-hook :append
   ;; (when (eq major-mode 'latex-mode)
   ;;   (setq-local company-backends
@@ -581,7 +590,8 @@ SCHEDULED: %^t
 
   (defun bibtex-completion-pdf-open-with-zathura (entry)
     (let ((pdf (bibtex-completion-find-pdf entry)))
-      (call-process "zathura" nil 0 nil (car pdf))))
+      (call-process "zathura" nil 0 nil (car pdf)))
+      (kill-buffer "*doom*"))
 
   ;; (ivy-add-actions 'ivy-bibtex '(("o" ivy-bibtex-open-any "Open PDF, URL, or DOI")))
 
@@ -625,17 +635,32 @@ SCHEDULED: %^t
 ;;(setq-default flycheck-disabled-checkers '(tex-chktex)))
   (map! :leader "a" 'flycheck-next-error))
 
-;; (use-package ess-smart-underscore
-;;   :after ess)
-
 (after! python
   (map! :map python-mode-map
         :localleader "r p" 'run-python
                      "s s" 'python-shell-switch-to-shell
                      "s r" 'python-shell-send-region
+                     "r s" 'pyvenv-restart-python
                      ","   'python-shell-send-buffer     ; replace C-c C-c
                      "c a" 'conda-env-activate
         ))
+
+(defun python-shell-start-and-send-buffer()
+  (interactive)
+  (run-python)
+  (evil-window-left)
+  (python-shell-send-buffer))
+
+(defun ab/restart-and-run-python()
+  "restart and run to make sure all changes are registered when running code"
+
+  (interactive)
+  ;; (pyvenv-restart-python)
+  (kill-process "Python")
+  (sleep-for 0.05)
+  (kill-buffer "*Python*")
+  (previous-window-any-frame)
+  (run-python))
 
 (after! python
   (setq python-shell-completion-native-enable nil))
@@ -643,6 +668,15 @@ SCHEDULED: %^t
 (after! conda
   (conda-env-initialize-eshell)
   (conda-env-autoactivate-mode))
+
+(defun my-flycheck-setup ()
+  (flycheck-add-next-checker 'lsp 'python-flake8))
+
+;; These MODE-local-vars-hook hooks are a Doom thing. They're executed after
+;; MODE-hook, on hack-local-variables-hook. Although `lsp!` is attached to
+;; python-mode-local-vars-hook, it should occur earlier than my-flycheck-setup
+;; this way:
+(add-hook 'python-mode-local-vars-hook #'my-flycheck-setup)
 
 (after! company
   :init
@@ -817,13 +851,17 @@ SCHEDULED: %^t
   ;; more fine-grained zooming
   (setq! pdf-view-resize-factor 1.1)
 
+  ;; (map! image-mode-map
+  ;;  :m "i"   'image-forward-hscroll)
+
   (map!
    :map pdf-view-mode-map
    :m "n"   'evil-collection-pdf-view-next-line-or-next-page
    :m "e"   'evil-collection-pdf-view-previous-line-or-previous-page
+   :m "i"   'image-forward-hscroll
    ;; :m "gg"  'pdf-view-first-page
    ;; :m "G"   'pdf-view-last-page
-   :m "h"   'pdf-view-con
+   ;; :m "h"   'pdf-view-con
    :m "C-o" 'pdf-view-shrink
    :m "C-i" 'pdf-view-enlarge
    :m "C-u" 'pdf-view-scroll-down-or-previous-page
@@ -833,17 +871,19 @@ SCHEDULED: %^t
   (add-hook! 'pdf-tools-enabled-hook 'pdf-view-midnight-minor-mode))
 
 (setq pdf-annot-activate-created-annotations t)
+
 (after! pdf-tools
   (map! :map pdf-view-mode-map
     :m "h" 'pdf-annot-add-highlight-markup-annotation)
 
   ;; automatically annotate highlights
-  (setq pdf-annot-activate-created-annotations t))
+  ;; (setq pdf-annot-activate-created-annotations t)
+  )
 
-(with-eval-after-load 'pdf-view
-  (require 'pdf-continuous-scroll-mode))
+;; (with-eval-after-load 'pdf-view
+;;   (require 'pdf-continuous-scroll-mode))
 
-(after! org-noter
-  (setq org-noter-doc-split-fraction (0.6 . 0.4)))
+;; (after! org-noter
+;;   (setq org-noter-doc-split-fraction (0.6 . 0.4)))
 
 (setq avy-keys '(?a ?r ?s ?t ?d ?h ?n ?e ?i ?o))

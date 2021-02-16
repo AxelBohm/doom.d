@@ -198,7 +198,6 @@ I want a better one. However. this currently only works for ~find-file~ and not 
 #+END_SRC
 
 * config file
-
 ** quick access
 
 Configuring never stops. keep the config file close.
@@ -665,12 +664,9 @@ I don't use ~(~ or ~)~ in evil mode too much anyways.
 
 #+BEGIN_SRC emacs-lisp
 (map! :map org-mode-map
-   :n ")" 'org-next-visible-heading
-   :n "(" 'org-previous-visible-heading
-   :leader "g u" 'outline-up-heading)               ;; Go Up in hierarchy
+   :n "]" 'org-next-visible-heading
+   :n "[" 'org-previous-visible-heading)
 #+END_SRC
-
-By default ~g u~ is bound to ~evil-downcase~.
 
 *** archiving
 
@@ -709,7 +705,6 @@ Show all todos with state ~NEXT~.
 
 (map! :leader "o n" 'ab/open-agenda-next-tasks)
 #+END_SRC
-
 
 ** org capture
 
@@ -813,10 +808,11 @@ The above code, together with the follow shell command does the job.
 # emacsclient -c -F '(quote (name . "capture"))' -e '(activate-capture-frame)'
 # #+END_SRC
 
-For this to work the emacs server hast to be running.
+For this to work the emacs server hast to be running. (But only do if it's not yet running.)
 
 #+BEGIN_SRC emacs-lisp
-(server-start)
+(load "server")
+(unless (server-running-p) (server-start))
 #+END_SRC
 
 The other option would be to start emacs as a daemon. can even be started with systemd, see [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Emacs-Server.html][link]].
@@ -925,7 +921,24 @@ LaTeX specific keybindings.
 #+END_SRC
 ** company
 
+Enable company-bibtex.
+
 #+BEGIN_SRC emacs-lisp
+(add-to-list 'company-backends 'company-bibtex)
+(setq company-bibtex-bibliography
+  '("~/PhD/bibliography/bibfile.bib"))
+#+END_SRC
+
+but snippets are still not working... maybe with this:
+#+BEGIN_SRC emacs-lisp
+;; (add-hook! LaTeX-mode
+;;         :append
+;;         (set-company-backend! 'latex-mode
+;;  '(company-dabbrev :with company-yasnippet)))
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+
 ;; (add-hook! 'company-mode-hook :append
   ;; (when (eq major-mode 'latex-mode)
   ;;   (setq-local company-backends
@@ -945,6 +958,7 @@ LaTeX specific keybindings.
 ;; (after! latex
 ;;   (set-company-backend! 'latex-mode '(company-latex-commands :with company-yasnippet)))
 #+END_SRC
+
 ** matchit
 
 add some LaTeX keywords which are not included by ~evil-matchit~ by default.
@@ -1029,7 +1043,8 @@ how to set ivy-height as a function [[https://github.com/abo-abo/swiper/issues/1
 
   (defun bibtex-completion-pdf-open-with-zathura (entry)
     (let ((pdf (bibtex-completion-find-pdf entry)))
-      (call-process "zathura" nil 0 nil (car pdf))))
+      (call-process "zathura" nil 0 nil (car pdf)))
+      (kill-buffer "*doom*"))
 
   ;; (ivy-add-actions 'ivy-bibtex '(("o" ivy-bibtex-open-any "Open PDF, URL, or DOI")))
 
@@ -1112,12 +1127,6 @@ There is a bug in ~chk-tex~, see [[https://github.com/flycheck/flycheck/issues/1
 
 Fixing would be nice too, but apparently this is open, cf. [[https://github.com/flycheck/flycheck/issues/530][issue]].
 
-* R
-
-#+BEGIN_SRC emacs-lisp
-;; (use-package ess-smart-underscore
-;;   :after ess)
-#+END_SRC
 * python
 ** config
 #+BEGIN_SRC emacs-lisp
@@ -1126,10 +1135,33 @@ Fixing would be nice too, but apparently this is open, cf. [[https://github.com/
         :localleader "r p" 'run-python
                      "s s" 'python-shell-switch-to-shell
                      "s r" 'python-shell-send-region
+                     "r s" 'pyvenv-restart-python
                      ","   'python-shell-send-buffer     ; replace C-c C-c
                      "c a" 'conda-env-activate
         ))
 #+END_SRC
+
+When making changes in other buffers (not the one I'm sending) they are not registered. So I keep having to restart the python process. So I decided to put this in the run function
+
+#+BEGIN_SRC emacs-lisp
+(defun python-shell-start-and-send-buffer()
+  (interactive)
+  (run-python)
+  (evil-window-left)
+  (python-shell-send-buffer))
+
+(defun ab/restart-and-run-python()
+  "restart and run to make sure all changes are registered when running code"
+
+  (interactive)
+  ;; (pyvenv-restart-python)
+  (kill-process "Python")
+  (sleep-for 0.05)
+  (kill-buffer "*Python*")
+  (previous-window-any-frame)
+  (run-python))
+#+END_SRC
+
 
 ** fixes
 Supposed to fix the
@@ -1148,6 +1180,25 @@ How does emacs know which one is the right environment? I don't know..
   (conda-env-initialize-eshell)
   (conda-env-autoactivate-mode))
 #+END_SRC
+** linting
+
+Flycheck supports multiple checkers at once put only in a sequential fashion, see [[https://www.flycheck.org/en/latest/user/syntax-checkers.html#flycheck-checker-chains][flyckeck.org]]
+
+This is the correct solution for doom emacs according to [[https://github.com/hlissner/doom-emacs/issues/1530][github]].
+
+
+#+BEGIN_SRC emacs-lisp
+(defun my-flycheck-setup ()
+  (flycheck-add-next-checker 'lsp 'python-flake8))
+
+;; These MODE-local-vars-hook hooks are a Doom thing. They're executed after
+;; MODE-hook, on hack-local-variables-hook. Although `lsp!` is attached to
+;; python-mode-local-vars-hook, it should occur earlier than my-flycheck-setup
+;; this way:
+(add-hook 'python-mode-local-vars-hook #'my-flycheck-setup)
+#+END_SRC
+
+A general emacs solution was suggested on [[https://www.reddit.com/r/emacs/comments/gqymvz/how_to_force_flycheck_to_select_a_specific_syntax/][reddit]] but doesn't work for doom.
 
 * auto completion
 ** company
@@ -1397,7 +1448,7 @@ I'm so used to my ranger keybindings. Imitate those:
 
 * pdf
 
-** Navigattion
+** Navigation
 
 Navigate pdfs the way I'm used to.
 
@@ -1407,13 +1458,17 @@ Navigate pdfs the way I'm used to.
   ;; more fine-grained zooming
   (setq! pdf-view-resize-factor 1.1)
 
+  ;; (map! image-mode-map
+  ;;  :m "i"   'image-forward-hscroll)
+
   (map!
    :map pdf-view-mode-map
    :m "n"   'evil-collection-pdf-view-next-line-or-next-page
    :m "e"   'evil-collection-pdf-view-previous-line-or-previous-page
+   :m "i"   'image-forward-hscroll
    ;; :m "gg"  'pdf-view-first-page
    ;; :m "G"   'pdf-view-last-page
-   :m "h"   'pdf-view-con
+   ;; :m "h"   'pdf-view-con
    :m "C-o" 'pdf-view-shrink
    :m "C-i" 'pdf-view-enlarge
    :m "C-u" 'pdf-view-scroll-down-or-previous-page
@@ -1434,28 +1489,29 @@ automatically annotate highlights.
 
 #+BEGIN_SRC emacs-lisp
 (setq pdf-annot-activate-created-annotations t)
+
 (after! pdf-tools
   (map! :map pdf-view-mode-map
     :m "h" 'pdf-annot-add-highlight-markup-annotation)
 
   ;; automatically annotate highlights
-  (setq pdf-annot-activate-created-annotations t))
+  ;; (setq pdf-annot-activate-created-annotations t)
+  )
 #+END_SRC
 
-** via ~pdf-continuous-scroll-mode.el~
+** ~pdf-continuous-scroll-mode.el~
 
 #+BEGIN_SRC emacs-lisp
-(with-eval-after-load 'pdf-view
-  (require 'pdf-continuous-scroll-mode))
+;; (with-eval-after-load 'pdf-view
+;;   (require 'pdf-continuous-scroll-mode))
 #+END_SRC
 
 ** org-noter
 
 #+BEGIN_SRC emacs-lisp
-(after! org-noter
-  (setq org-noter-doc-split-fraction (0.6 . 0.4)))
+;; (after! org-noter
+;;   (setq org-noter-doc-split-fraction (0.6 . 0.4)))
 #+END_SRC
-
 
 * ~avy~
 
@@ -1466,3 +1522,4 @@ automatically annotate highlights.
 #+BEGIN_SRC emacs-lisp
 (setq avy-keys '(?a ?r ?s ?t ?d ?h ?n ?e ?i ?o))
 #+END_SRC
+
