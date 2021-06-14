@@ -2,8 +2,6 @@
 
 (setq doom-theme 'doom-sourcerer)
 
-(setq +evil--default-cursor-color "#ff1493")
-
 (remove-hook 'text-mode-hook #'hl-line-mode)
 
 (setq doom-font (font-spec :family "Terminus" :size 14))

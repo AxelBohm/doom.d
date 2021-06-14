@@ -15,13 +15,6 @@
 (setq doom-theme 'doom-sourcerer)
 #+END_SRC
 
-*** curser theme
-
-When not using ~hl-line-mode~ it can be helpful to have the curser more accentuated.
-
-#+BEGIN_SRC emacs-lisp
-(setq +evil--default-cursor-color "#ff1493")
-#+END_SRC
 *** hl-line
 
 Highlighting the current line is all nice and stuff but it looks off in org mode due to different sizes of headings.
