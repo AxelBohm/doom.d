@@ -43,8 +43,8 @@ Show line numbers to the left for better jumping.
 (consider the ace jump package which shows a letter for every line for more efficient jumping)
 
 #+BEGIN_SRC emacs-lisp
-(setq display-line-numbers-type 'relative)
-;; (setq display-line-numbers-type nil)
+;; (setq display-line-numbers-type 'relative)
+(setq display-line-numbers-type nil)
 #+END_SRC
 
 *** line truncation
@@ -56,15 +56,6 @@ stupid doom tries to truncate lines all the time which I don't like. This means 
 #+END_SRC
 
 I have still no idea how this relates to ~visual-line-mode~. Seems to do the same...
-
-*** pretty symbols
-
-Emacs ships default with =prettify-symbols mode=.
-
-#+BEGIN_SRC emacs-lisp
-(global-prettify-symbols-mode 1)
-#+END_SRC
-doesn't seem to do anything in doom
 
 *** opacity
 

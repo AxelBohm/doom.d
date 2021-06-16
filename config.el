@@ -8,12 +8,10 @@
 
 (show-paren-mode 1)
 
-(setq display-line-numbers-type 'relative)
-;; (setq display-line-numbers-type nil)
+;; (setq display-line-numbers-type 'relative)
+(setq display-line-numbers-type nil)
 
 (setq-default truncate-lines nil)
-
-(global-prettify-symbols-mode 1)
 
 (set-frame-parameter (selected-frame) 'alpha '(85 . 85))
 (add-to-list 'default-frame-alist '(alpha . (85 . 85)))
