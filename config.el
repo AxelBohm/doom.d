@@ -385,12 +385,6 @@
 
 (map! :map org-mode-map :leader "o d" 'ab/mark-done-and-archive)
 
-;; (after! org
-;;   (map! :map org-mode-map
-;;         :localleader
-;;         "s" 'org-schedule
-;;         "d" 'org-deadline))
-
 (defun ab/open-agenda-next-tasks  ()
   "show all tasks marked as NEXT"
   (interactive)

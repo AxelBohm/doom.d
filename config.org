@@ -667,17 +667,6 @@ So let's have a command that does both.
 #+END_SRC
 *** general
 
-These used to be default but got changed at some point.
-#+BEGIN_SRC emacs-lisp
-;; (after! org
-;;   (map! :map org-mode-map
-;;         :localleader
-;;         "s" 'org-schedule
-;;         "d" 'org-deadline))
-#+END_SRC
-
-This config complains about the fact that ~d~ is a prefix..
-
 Show all todos with state ~NEXT~.
 
 #+BEGIN_SRC emacs-lisp
