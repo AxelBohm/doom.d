@@ -658,14 +658,14 @@ SCHEDULED: %^t
   (conda-env-initialize-eshell)
   (conda-env-autoactivate-mode))
 
-(defun my-flycheck-setup ()
-  (flycheck-add-next-checker 'lsp 'python-flake8))
+;; (defun my-flycheck-setup ()
+;;   (flycheck-add-next-checker 'lsp 'python-flake8))
 
-;; These MODE-local-vars-hook hooks are a Doom thing. They're executed after
-;; MODE-hook, on hack-local-variables-hook. Although `lsp!` is attached to
-;; python-mode-local-vars-hook, it should occur earlier than my-flycheck-setup
-;; this way:
-(add-hook 'python-mode-local-vars-hook #'my-flycheck-setup)
+;; ;; These MODE-local-vars-hook hooks are a Doom thing. They're executed after
+;; ;; MODE-hook, on hack-local-variables-hook. Although `lsp!` is attached to
+;; ;; python-mode-local-vars-hook, it should occur earlier than my-flycheck-setup
+;; ;; this way:
+;; (add-hook 'python-mode-local-vars-hook #'my-flycheck-setup)
 
 (after! company
   :init
