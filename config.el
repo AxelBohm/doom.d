@@ -226,12 +226,12 @@
 (map! :leader "SPC" #'ab/switch-to-previous-buffer)
 
 (after! org
-  (setq org-hide-emphasis-markers nil
+  (setq org-hide-emphasis-markers nil            ;; I want those
         org-return-follows-link t
-        org-agenda-skip-scheduled-if-done t ;; don't show in agenda if done
+        org-agenda-skip-scheduled-if-done t      ;; don't show in agenda if done
         org-agenda-compact-blocks t
-        org-reverse-note-order t            ;; add new headings on top
-        org-tags-column 0                   ;; position of tags
+        org-reverse-note-order t                 ;; add new headings on top
+        org-tags-column 0                        ;; position of tags
         org-todo-keywords '((sequence "TODO(t)"
                                       "NEXT(n)"
                                       "WAITING(w)"
