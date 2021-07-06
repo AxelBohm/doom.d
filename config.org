@@ -783,8 +783,8 @@ The above code, together with the follow shell command does the job.
 For this to work the emacs server hast to be running. (But only do if it's not yet running.)
 
 #+BEGIN_SRC emacs-lisp
-(load "server")
-(unless (server-running-p) (server-start))
+;; (load "server")
+;; (unless (server-running-p) (server-start))
 #+END_SRC
 
 The other option would be to start emacs as a daemon. can even be started with systemd, see [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Emacs-Server.html][link]].

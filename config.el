@@ -454,8 +454,8 @@ SCHEDULED: %^t
     (switch-to-buffer (get-buffer-create "*scratch*"))
     (org-capture)))
 
-(load "server")
-(unless (server-running-p) (server-start))
+;; (load "server")
+;; (unless (server-running-p) (server-start))
 
 (after! org
   (advice-add 'counsel-org-capture :override #'org-capture))
