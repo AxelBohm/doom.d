@@ -840,12 +840,23 @@ I want pdfs to be opened in an external pdf viewer.
 #+END_SRC
 ** org-noter
 
-where to store the notes
+Keep plain text notes alongside my pdfs.
 
 #+BEGIN_SRC emacs-lisp
 (after! org-noter
   (setq! org-noter-notes-search-path '("~/PhD/bibliography/notes/")))
 #+END_SRC
+** org-roam
+
+#+BEGIN_SRC emacs-lisp
+(setq org-roam-directory "~/Private/org/org/roam")
+#+END_SRC
+
+
+#+BEGIN_SRC emacs-lisp
+(setq deft-directory "~/Private/org/org/roam")
+#+END_SRC
+
 
 * LaTeX
 ** general
