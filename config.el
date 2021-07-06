@@ -477,6 +477,10 @@ SCHEDULED: %^t
 (after! org-noter
   (setq! org-noter-notes-search-path '("~/PhD/bibliography/notes/")))
 
+(setq org-roam-directory "~/Private/org/org/roam")
+
+(setq deft-directory "~/Private/org/org/roam")
+
 (after! latex
   (setq tex-fontify-script t
         ;; automatically put braces after ^ and _
