@@ -570,9 +570,9 @@ SCHEDULED: %^t
 (after! bibtex-completion
   (setq! bibtex-completion-find-additional-pdfs t))
 
-;; (setq! +biblio-pdf-library-dir "~/Dropbox/papers"
-;;        +biblio-default-bibliography-files '("~/PhD/bibliography/bibfile.bib")
-;;        +biblio-notes-path "~/PhD/bibliography/notes/")
+(setq! +biblio-pdf-library-dir "~/Dropbox/papers"
+       +biblio-default-bibliography-files '("~/PhD/bibliography/bibfile.bib")
+       +biblio-notes-path "~/PhD/bibliography/notes/")
 
 (after! bibtex-completion
   (setq bibtex-completion-additional-search-fields '(tags)))

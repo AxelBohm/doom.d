@@ -613,7 +613,6 @@ copy tasks/notes from mobile.
 ;;     )
 #+END_SRC
 
-
 Quickly access the org index file.
 
 #+BEGIN_SRC emacs-lisp
@@ -976,6 +975,8 @@ evil-tex has very nice toggle commands but I can't remember them.
 
 * bibtex completion
 
+** config
+
 ~bibtex-completion~ configuration through the package itself (should work in vanilla emacs).
 
 #+BEGIN_SRC emacs-lisp
@@ -1002,9 +1003,9 @@ Note that for performance reasons, these additional files are only detected when
 Doom provides a way to configure ~bibtex-completion~ and ~org-ref~ at the same time through:
 
 #+BEGIN_SRC emacs-lisp
-;; (setq! +biblio-pdf-library-dir "~/Dropbox/papers"
-;;        +biblio-default-bibliography-files '("~/PhD/bibliography/bibfile.bib")
-;;        +biblio-notes-path "~/PhD/bibliography/notes/")
+(setq! +biblio-pdf-library-dir "~/Dropbox/papers"
+       +biblio-default-bibliography-files '("~/PhD/bibliography/bibfile.bib")
+       +biblio-notes-path "~/PhD/bibliography/notes/")
 #+END_SRC
 
 Use additional tags to find papers.
@@ -1013,7 +1014,6 @@ Use additional tags to find papers.
 (after! bibtex-completion
   (setq bibtex-completion-additional-search-fields '(tags)))
 #+END_SRC
-
 
 ** ivy-bibtex
 
