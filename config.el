@@ -598,7 +598,22 @@ SCHEDULED: %^t
    ("a" ivy-bibtex-add-PDF-attachment "Attach PDF to email")
    ("s" ivy-bibtex-show-entry "Show entry")
    ("z" bibtex-completion-pdf-open-with-zathura "Open PDF in zathura")
+   ;; ("c" ivy-bibtex-insert-link-to-file "Insert link to file") ;; this could make org-ref obsolete
    ("e" ivy-bibtex-edit-notes "Edit notes"))))
+
+;; (helm-add-action-to-source "Open PDF with zathura" 'bibtex-completion-pdf-open-with-zathura helm-source-bibtex 1)
+
+;; why does this not work??
+;; (after! org
+;;   (map! :localleader "l r" 'org-ref-helm-insert-cite-link))
+
+(map! :leader "o r" 'org-ref-helm-insert-cite-link)
+
+(setq reftex-default-bibliography '("~/PhD/bibliography/bibfile.bib"))
+
+(setq org-ref-bibliography-notes "~/PhD/bibliography/notes"
+      org-ref-default-bibliography '("~/PhD/bibliography/bibfile.bib")
+      org-ref-pdf-directory "~/Dropbox/papers")
 
 (after! yasnippet
   (setq yas-snippet-dirs '("~/.doom.d/snippets")
