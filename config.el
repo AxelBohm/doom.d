@@ -601,7 +601,7 @@ SCHEDULED: %^t
 
 (setq reftex-default-bibliography '("~/PhD/bibliography/bibfile.bib"))
 
-(setq org-ref-bibliography-notes "~/PhD/bibliography/notes"
+(setq org-ref-bibliography-notes "~/Private/org/org/roam"
       org-ref-default-bibliography '("~/PhD/bibliography/bibfile.bib")
       org-ref-pdf-directory "~/Dropbox/papers")
 
