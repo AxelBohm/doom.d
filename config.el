@@ -571,6 +571,11 @@ SCHEDULED: %^t
       (call-process "zathura" nil 0 nil (car pdf)))
       (kill-buffer "*doom*"))
 
+  (defun bibtex-completion-pdf-open-with-evince (entry)
+    (let ((pdf (bibtex-completion-find-pdf entry)))
+      (call-process "evince" nil 0 nil (car pdf)))
+      (kill-buffer "*doom*"))
+
   ;; (ivy-add-actions 'ivy-bibtex '(("o" ivy-bibtex-open-any "Open PDF, URL, or DOI")))
 
   ;; (setq ivy-bibtex-default-action 'ivy-bibtex-insert-key)

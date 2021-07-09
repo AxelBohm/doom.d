@@ -1010,6 +1010,11 @@ how to set ivy-height as a function [[https://github.com/abo-abo/swiper/issues/1
       (call-process "zathura" nil 0 nil (car pdf)))
       (kill-buffer "*doom*"))
 
+  (defun bibtex-completion-pdf-open-with-evince (entry)
+    (let ((pdf (bibtex-completion-find-pdf entry)))
+      (call-process "evince" nil 0 nil (car pdf)))
+      (kill-buffer "*doom*"))
+
   ;; (ivy-add-actions 'ivy-bibtex '(("o" ivy-bibtex-open-any "Open PDF, URL, or DOI")))
 
   ;; (setq ivy-bibtex-default-action 'ivy-bibtex-insert-key)
@@ -1022,6 +1027,7 @@ how to set ivy-height as a function [[https://github.com/abo-abo/swiper/issues/1
    ("a" ivy-bibtex-add-PDF-attachment "Attach PDF to email")
    ("s" ivy-bibtex-show-entry "Show entry")
    ("z" bibtex-completion-pdf-open-with-zathura "Open PDF in zathura")
+   ("E" bibtex-completion-pdf-open-with-evince "Open PDF in Evince")
    ;; ("c" ivy-bibtex-insert-link-to-file "Insert link to file") ;; this could make org-ref obsolete
    ("e" ivy-bibtex-edit-notes "Edit notes"))))
 #+END_SRC
