@@ -707,6 +707,9 @@ Check [[https://orgmode.org/manual/Template-expansion.html#Template-expansion][h
            (file+headline org-index-file "Inbox")
            "*** %?\n\n")
 
+          ;; no need for a separate `org-roam-capture` function or key-combo
+          ("r" "org-roam" entry
+           (function org-roam-capture))
 
           ("t" "Todo" entry
            (file+headline org-index-file "Inbox")
@@ -813,7 +816,9 @@ Keep plain text notes alongside my pdfs.
 
 #+BEGIN_SRC emacs-lisp
 (after! org-noter
-  (setq! org-noter-notes-search-path '("~/PhD/bibliography/notes/")))
+  (setq! org-noter-always-create-frame nil)
+  (setq! org-noter-notes-search-path '("~/Private/org/org/roam")))
+
 #+END_SRC
 ** org-roam
 

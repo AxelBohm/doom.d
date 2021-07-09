@@ -403,6 +403,9 @@
            (file+headline org-index-file "Inbox")
            "*** %?\n\n")
 
+          ;; no need for a separate `org-roam-capture` function or key-combo
+          ("r" "org-roam" entry
+           (function org-roam-capture))
 
           ("t" "Todo" entry
            (file+headline org-index-file "Inbox")
@@ -641,6 +644,7 @@ SCHEDULED: %^t
    ("a" ivy-bibtex-add-PDF-attachment "Attach PDF to email")
    ("s" ivy-bibtex-show-entry "Show entry")
    ("z" bibtex-completion-pdf-open-with-zathura "Open PDF in zathura")
+   ("E" bibtex-completion-pdf-open-with-evince "Open PDF in Evince")
    ;; ("c" ivy-bibtex-insert-link-to-file "Insert link to file") ;; this could make org-ref obsolete
    ("e" ivy-bibtex-edit-notes "Edit notes"))))
 
