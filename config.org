@@ -1495,20 +1495,6 @@ automatically annotate highlights.
   )
 #+END_SRC
 
-** ~pdf-continuous-scroll-mode.el~
-
-#+BEGIN_SRC emacs-lisp
-;; (with-eval-after-load 'pdf-view
-;;   (require 'pdf-continuous-scroll-mode))
-#+END_SRC
-
-** org-noter
-
-#+BEGIN_SRC emacs-lisp
-;; (after! org-noter
-;;   (setq org-noter-doc-split-fraction (0.6 . 0.4)))
-#+END_SRC
-
 * ~avy~
 
 ** keys being used :colemak:

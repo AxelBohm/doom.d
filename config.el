@@ -878,10 +878,4 @@ SCHEDULED: %^t
   ;; (setq pdf-annot-activate-created-annotations t)
   )
 
-;; (with-eval-after-load 'pdf-view
-;;   (require 'pdf-continuous-scroll-mode))
-
-;; (after! org-noter
-;;   (setq org-noter-doc-split-fraction (0.6 . 0.4)))
-
 (setq avy-keys '(?a ?r ?s ?t ?d ?h ?n ?e ?i ?o))
