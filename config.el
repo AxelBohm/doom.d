@@ -460,11 +460,64 @@ SCHEDULED: %^t
                (add-to-list 'org-file-apps '("\\.pdf\\'" . "zathura %s")))))
 
 (after! org-noter
-  (setq! org-noter-notes-search-path '("~/PhD/bibliography/notes/")))
+  (setq! org-noter-always-create-frame nil)
+  (setq! org-noter-notes-search-path '("~/Private/org/org/roam")))
 
 (setq org-roam-directory "~/Private/org/org/roam")
 
 (setq deft-directory "~/Private/org/org/roam")
+
+(setq org-roam-capture-templates
+      '(("d" "default" plain
+         (function org-roam--capture-get-point)
+         "%?"
+         :file-name "${slug}"
+         :head "#+TITLE: ${title}
+#+ROAM_ALIAS:
+#+CREATED: %(org-insert-time-stamp (current-time) t t)
+#+LAST_MODIFIED: %(org-insert-time-stamp (current-time) t t)
+
+- tags ::"
+         :unnarrowed t)))
+
+(after! org
+  (setq time-stamp-active t
+        time-stamp-line-limit 6
+        time-stamp-start "#\\+last_modified: [ \t]*"
+        time-stamp-end "$"
+        time-stamp-format "\[%Y-%02m-%02d %02H:%02M\]"
+        )
+  (add-hook 'write-file-hooks 'time-stamp))
+
+(use-package! org-roam-bibtex
+  :after org-roam
+  :hook (org-roam-mode . org-roam-bibtex-mode)
+  :config
+  (require 'org-ref)) ; optional: if Org Ref is not loaded anywhere else, load it here
+
+(setq orb-preformat-keywords
+      '("citekey" "title" "url" "author-or-editor" "keywords" "file")
+      orb-process-file-keyword t
+      orb-file-field-extensions '("pdf"))
+
+(setq orb-templates
+      '(("r" "ref" plain (function org-roam-capture--get-point) ""
+         :file-name "${citekey}"
+         :head "#+TITLE: ${citekey}: ${title}
+#+ROAM_KEY: ${ref}
+#+AUTHOR: ${author-or-editor}
+#+created: %(org-insert-time-stamp (current-time) t t)
+#+last_modified: %(org-insert-time-stamp (current-time) t t)
+
+- tags ::
+- keywords :: ${keywords}
+
+\n* ${title}
+:PROPERTIES:
+:CITEKEY: ${citekey}
+:AUTHOR: ${author-or-editor}
+:NOTER_DOCUMENT: ${file}
+:END:")))
 
 (after! latex
   (setq tex-fontify-script t
