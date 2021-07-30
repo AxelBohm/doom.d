@@ -107,25 +107,25 @@
        ;;(haskell +intero) ; a language that's lazier than I am
        ;;(java +meghanada) ; the poster child for carpal tunnel syndrome
        ;;javascript        ; all(hope(abandon(ye(who(enter(here))))))
-       ;;julia             ; a better, faster MATLAB
-       (latex             ; writing papers in Emacs has never been so fun
+       (julia +lsp)        ; a better, faster MATLAB
+       (latex              ; writing papers in Emacs has never been so fun
         +ref
         ;; +lsp            ; currently doesn't let me use reftex
         +latexmk)
-       markdown          ; writing docs for people to ignore
-       (org              ; organize your plain life in plain text
+       markdown            ; writing docs for people to ignore
+       (org                ; organize your plain life in plain text
         ; +dragndrop       ; drag & drop files/images into org buffers
         ; +ipython         ; ipython/jupyter support for babel
         ; +pandoc          ; export-with-pandoc support
-        ; +present        ; using org-mode for presentations
+        ; +present         ; using org-mode for presentations
         +roam
-        +noter           ; annotate pdfs
+        +noter             ; annotate pdfs
         +pretty)
        (python             ; beautiful is better than ugly
         +lsp
         +conda)
        ;;rust              ; Fe2O3.unwrap().unwrap().unwrap().unwrap()
-       (sh                ; she sells {ba,z,fi}sh shells on the C xor
+       (sh                 ; she sells {ba,z,fi}sh shells on the C xor
         +lsp)
 
        :email
