@@ -276,8 +276,8 @@
 (after! org
   (setq org-ellipsis " ..."))
 
-(after! org
-  (setq org-superstar-mode 1))
+;; (after! org
+;;   (setq org-superstar-mode 1))
 ;; (add-hook 'org-mode-hook (lambda () (org-superstar-mode 1)))
 
 (after! org

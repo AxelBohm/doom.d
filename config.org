@@ -488,8 +488,8 @@ configure the symbol for stuff hidden after heading.
 
 pretty stuff
 #+BEGIN_SRC emacs-lisp
-(after! org
-  (setq org-superstar-mode 1))
+;; (after! org
+;;   (setq org-superstar-mode 1))
 ;; (add-hook 'org-mode-hook (lambda () (org-superstar-mode 1)))
 #+END_SRC
 
