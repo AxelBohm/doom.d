@@ -692,7 +692,7 @@ SCHEDULED: %^t
 
 (after! python
   (map! :map python-mode-map
-        :localleader "r p" 'run-python
+        :localleader "r r" 'run-python
                      "s s" 'python-shell-switch-to-shell
                      "s r" 'python-shell-send-region
                      "r s" 'pyvenv-restart-python
@@ -732,6 +732,11 @@ SCHEDULED: %^t
 ;; ;; python-mode-local-vars-hook, it should occur earlier than my-flycheck-setup
 ;; ;; this way:
 ;; (add-hook 'python-mode-local-vars-hook #'my-flycheck-setup)
+
+(map! :map julia-mode-map
+    :localleader "r r"  'julia-repl
+                 ","    'julia-repl-send-buffer
+    )
 
 (after! company
   :init

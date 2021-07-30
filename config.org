@@ -1213,7 +1213,7 @@ Fixing would be nice too, but apparently this is open, cf. [[https://github.com/
 #+BEGIN_SRC emacs-lisp
 (after! python
   (map! :map python-mode-map
-        :localleader "r p" 'run-python
+        :localleader "r r" 'run-python
                      "s s" 'python-shell-switch-to-shell
                      "s r" 'python-shell-send-region
                      "r s" 'pyvenv-restart-python
@@ -1280,6 +1280,15 @@ This is the correct solution for doom emacs according to [[https://github.com/hl
 #+END_SRC
 
 A general emacs solution was suggested on [[https://www.reddit.com/r/emacs/comments/gqymvz/how_to_force_flycheck_to_select_a_specific_syntax/][reddit]] but doesn't work for doom.
+* julia
+
+#+BEGIN_SRC emacs-lisp
+(map! :map julia-mode-map
+    :localleader "r r"  'julia-repl
+                 ","    'julia-repl-send-buffer
+    )
+#+END_SRC
+
 
 * auto completion
 ** company
