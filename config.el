@@ -509,8 +509,8 @@ SCHEDULED: %^t
          :head "#+TITLE: ${citekey}: ${title}
 #+ROAM_KEY: ${ref}
 #+AUTHOR: ${author-or-editor}
-#+created: %(org-insert-time-stamp (current-time) t t)
-#+last_modified: %(org-insert-time-stamp (current-time) t t)
+#+CREATED: %(org-insert-time-stamp (current-time) t t)
+#+LAST_MODIFIED: %(org-insert-time-stamp (current-time) t t)
 
 - tags ::
 - keywords :: ${keywords}
