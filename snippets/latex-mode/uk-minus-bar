@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: uk-minus-bar
+# key: ukmb
+# --
+\bar{u}_{k-1}

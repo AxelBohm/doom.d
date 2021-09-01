@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: yk-plus-bar
+# key: ukpb
+# --
+\bar{u}_{k+1}
