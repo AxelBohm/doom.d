@@ -466,6 +466,72 @@ No instant spell checking.. Takes too long.
   (setq-hook! 'org-mode-hook +flyspell-immediately nil))
 #+END_SRC
 
+I have some reoccuring tasks/chores. These will be shown in the agenda multiple times. This is supposed to show them only once.
+#+BEGIN_SRC emacs-lisp
+(setq org-agenda-show-future-repeats 'next)
+#+END_SRC
+
+** agenda
+
+Create a custom view.
+
+#+BEGIN_SRC emacs-lisp
+(setq org-agenda-custom-commands
+      '(("n" todo "NEXT") ;; (1) (3) (4)
+        ;; ...other commands here
+        ))
+#+END_SRC
+
+I want a go-to GTD style agenda view with:
+- scheduled tasks for the day
+- deadlines
+- what to work on next
+- checking if the inbox is empty
+
+This setup is from here: https://www.labri.fr/perso/nrougier/GTD/index.html#org67cf0bc
+
+#+BEGIN_SRC emacs-lisp
+(setq org-agenda-custom-commands
+      '(("W" "Weekly Review"
+         ((agenda "" ((org-agenda-span 7))); review upcoming deadlines and appointments
+                                           ; type "l" in the agenda to review logged items
+          (todo "PROJECT") ; review all projects (assuming you use todo keywords to designate projects)
+          (todo "MAYBE") ; review someday/maybe items
+          (todo "WAITING"))) ; review waiting items
+
+         ;; ...other commands here
+
+        ("g" "Get Things Done (GTD)"
+         ((agenda ""
+                  ((org-agenda-span 1)
+                   (org-agenda-skip-function
+                    '(org-agenda-skip-entry-if 'deadline))
+                   (org-deadline-warning-days 0)))
+          (todo "NEXT"
+                ((org-agenda-skip-function
+                  '(org-agenda-skip-entry-if 'deadline))
+                 (org-agenda-prefix-format "  %i %-12:c [%e] ")
+                 (org-agenda-overriding-header "\nTasks\n")))
+          ;; (agenda nil
+          ;;         ((org-agenda-entry-types '(:deadline))
+          ;;          (org-agenda-format-date "")
+          ;;          (org-deadline-warning-days 21)
+          ;;          (org-agenda-skip-function
+          ;;           '(org-agenda-skip-entry-if 'notregexp "\\* NEXT"))
+          ;;          (org-agenda-overriding-header "\n Deadlines\n")))
+          (tags "inbox"
+                     ((org-agenda-prefix-format "  %?-12t% s")
+                      (org-agenda-overriding-header "\nInbox\n")))
+          (tags "CLOSED>=\"<today>\""
+                ((org-agenda-overriding-header "\nCompleted today\n")))))
+
+        ))
+#+END_SRC
+
+
+The weekly review is taken from [[https://orgmode.org/worg/org-tutorials/org-custom-agenda-commands.html][orgmode.org]]
+
+
 ** appearance
 
 heading size and color.
@@ -486,7 +552,6 @@ configure the symbol for stuff hidden after heading.
   (setq org-ellipsis " ..."))
 #+END_SRC
 
-
 ** structure and files
 
 Tell emacs where I store my org stuff.
@@ -499,18 +564,19 @@ Tell emacs where I store my org stuff.
     "Return the absolute address of an org file, given its relative name."
     (concat (file-name-as-directory org-directory) filename))
 
-  ;; (setq org-inbox-file "~/org/inbox.org")
+  (setq org-inbox-file "~/org/inbox.org")
   (setq org-index-file (org-file-path "index.org"))
-  (setq org-inbox-file "~/Dropbox/GTD/inbox.org")
+  ;; (setq org-inbox-file "~/Dropbox/GTD/inbox.org")
   (setq org-archive-location
         (concat (org-file-path "archive.org") "::* From %s")))
 #+END_SRC
 
-This sets the file from which the agenda is derived. All my todos are in the index file.
+This sets the file(s) from which the agenda is derived.
 
 #+BEGIN_SRC emacs-lisp
 (after! org
   (setq org-agenda-files (list org-index-file
+                               org-inbox-file
                                (org-file-path "Reference.org"))))
 #+END_SRC
 
@@ -524,7 +590,7 @@ By default org-agenda only shows one week starting last monday. I want two weeks
 
 #+BEGIN_SRC emacs-lisp
 (after! org
-  (setq org-agenda-span 14)
+  ;; (setq org-agenda-span 14)
   (setq org-agenda-start-on-weekday nil)
   (setq org-agenda-start-day "-0d"))
 #+END_SRC
@@ -689,7 +755,8 @@ Check [[https://orgmode.org/manual/Template-expansion.html#Template-expansion][h
 (after! org
   (setq org-capture-templates
         '(("l" "Link (with todo)" entry
-           (file+headline org-index-file "Inbox")
+           ;; (file+headline org-index-file "Inbox")
+           (file org-inbox-file)
            "*** TODO %^{task}
 :PROPERTIES:
 :CONTEXT: %A
@@ -698,7 +765,8 @@ Check [[https://orgmode.org/manual/Template-expansion.html#Template-expansion][h
 %?\n")
 
           ("n" "Note"  entry
-           (file+headline org-index-file "Inbox")
+           ;; (file+headline org-index-file "Inbox")
+           (file org-inbox-file)
            "*** %?\n\n")
 
           ;; no need for a separate `org-roam-capture` function or key-combo
@@ -706,8 +774,12 @@ Check [[https://orgmode.org/manual/Template-expansion.html#Template-expansion][h
            (function org-roam-capture))
 
           ("t" "Todo" entry
-           (file+headline org-index-file "Inbox")
-           "*** TODO %?\n"))))
+           ;; (file+headline org-index-file "Inbox")
+           (file org-inbox-file)
+           "*** TODO %?\n
+:Properties:
+:CREATED: %U
+:END:"))))
 #+END_SRC
 
 Scheduled task with notifier.
@@ -715,7 +787,8 @@ Scheduled task with notifier.
 #+BEGIN_SRC emacs-lisp
 (after! org (add-to-list 'org-capture-templates
           '("s" "Scheduled task"  entry
-           (file+headline org-index-file "Inbox")
+           ;; (file+headline org-index-file "Inbox")
+           (file org-inbox-file)
            "*** TODO %^{task}
 SCHEDULED: %^t
 :PROPERTIES:
@@ -901,7 +974,6 @@ Currently I only need one template, but I want more properties.
 #+END_SRC
 
 The later part provide integration with org-noter, see [[https://github.com/org-roam/org-roam-bibtex/blob/8d80bf980776df6ead53e917eb482ec8e309a1d7/doc/orb-manual.org][orb github]].
-
 
 
 
@@ -1282,7 +1354,6 @@ A general emacs solution was suggested on [[https://www.reddit.com/r/emacs/comme
                  ","    'julia-repl-send-buffer
     )
 #+END_SRC
-
 
 * auto completion
 ** company

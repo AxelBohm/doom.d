@@ -264,6 +264,49 @@
 (after! org
   (setq-hook! 'org-mode-hook +flyspell-immediately nil))
 
+(setq org-agenda-show-future-repeats 'next)
+
+(setq org-agenda-custom-commands
+      '(("n" todo "NEXT") ;; (1) (3) (4)
+        ;; ...other commands here
+        ))
+
+(setq org-agenda-custom-commands
+      '(("W" "Weekly Review"
+         ((agenda "" ((org-agenda-span 7))); review upcoming deadlines and appointments
+                                           ; type "l" in the agenda to review logged items
+          (todo "PROJECT") ; review all projects (assuming you use todo keywords to designate projects)
+          (todo "MAYBE") ; review someday/maybe items
+          (todo "WAITING"))) ; review waiting items
+
+         ;; ...other commands here
+
+        ("g" "Get Things Done (GTD)"
+         ((agenda ""
+                  ((org-agenda-span 1)
+                   (org-agenda-skip-function
+                    '(org-agenda-skip-entry-if 'deadline))
+                   (org-deadline-warning-days 0)))
+          (todo "NEXT"
+                ((org-agenda-skip-function
+                  '(org-agenda-skip-entry-if 'deadline))
+                 (org-agenda-prefix-format "  %i %-12:c [%e] ")
+                 (org-agenda-overriding-header "\nTasks\n")))
+          ;; (agenda nil
+          ;;         ((org-agenda-entry-types '(:deadline))
+          ;;          (org-agenda-format-date "")
+          ;;          (org-deadline-warning-days 21)
+          ;;          (org-agenda-skip-function
+          ;;           '(org-agenda-skip-entry-if 'notregexp "\\* NEXT"))
+          ;;          (org-agenda-overriding-header "\n Deadlines\n")))
+          (tags "inbox"
+                     ((org-agenda-prefix-format "  %?-12t% s")
+                      (org-agenda-overriding-header "\nInbox\n")))
+          (tags "CLOSED>=\"<today>\""
+                ((org-agenda-overriding-header "\nCompleted today\n")))))
+
+        ))
+
 ;; (after! org
 ;;   (custom-set-faces
 ;;    '(org-level-1 ((t (:inherit outline-1 :height 1.5))))
@@ -283,20 +326,21 @@
     "Return the absolute address of an org file, given its relative name."
     (concat (file-name-as-directory org-directory) filename))
 
-  ;; (setq org-inbox-file "~/org/inbox.org")
+  (setq org-inbox-file "~/org/inbox.org")
   (setq org-index-file (org-file-path "index.org"))
-  (setq org-inbox-file "~/Dropbox/GTD/inbox.org")
+  ;; (setq org-inbox-file "~/Dropbox/GTD/inbox.org")
   (setq org-archive-location
         (concat (org-file-path "archive.org") "::* From %s")))
 
 (after! org
   (setq org-agenda-files (list org-index-file
+                               org-inbox-file
                                (org-file-path "Reference.org"))))
 
 (after! org (setq org-startup-truncated 'nil))
 
 (after! org
-  (setq org-agenda-span 14)
+  ;; (setq org-agenda-span 14)
   (setq org-agenda-start-on-weekday nil)
   (setq org-agenda-start-day "-0d"))
 
@@ -387,7 +431,8 @@
 (after! org
   (setq org-capture-templates
         '(("l" "Link (with todo)" entry
-           (file+headline org-index-file "Inbox")
+           ;; (file+headline org-index-file "Inbox")
+           (file org-inbox-file)
            "*** TODO %^{task}
 :PROPERTIES:
 :CONTEXT: %A
@@ -396,7 +441,8 @@
 %?\n")
 
           ("n" "Note"  entry
-           (file+headline org-index-file "Inbox")
+           ;; (file+headline org-index-file "Inbox")
+           (file org-inbox-file)
            "*** %?\n\n")
 
           ;; no need for a separate `org-roam-capture` function or key-combo
@@ -404,12 +450,17 @@
            (function org-roam-capture))
 
           ("t" "Todo" entry
-           (file+headline org-index-file "Inbox")
-           "*** TODO %?\n"))))
+           ;; (file+headline org-index-file "Inbox")
+           (file org-inbox-file)
+           "*** TODO %?\n
+:Properties:
+:CREATED: %U
+:END:"))))
 
 (after! org (add-to-list 'org-capture-templates
           '("s" "Scheduled task"  entry
-           (file+headline org-index-file "Inbox")
+           ;; (file+headline org-index-file "Inbox")
+           (file org-inbox-file)
            "*** TODO %^{task}
 SCHEDULED: %^t
 :PROPERTIES:
