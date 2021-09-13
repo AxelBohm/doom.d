@@ -1,6 +1,6 @@
 # -*- mode: snippet -*-
-# name: alg
-# key: alg
+# name: algo
+# key: algo
 # --
 
 \begin{algo}[${1:name}]%

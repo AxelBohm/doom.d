@@ -1,7 +1,13 @@
 # -*- mode: snippet -*-
-# name: algorithmic
-# key: algorithmic
+# name: algorithmicx
+# key: alg
 # --
-\begin{algorithmic}
-$0
-\end{algorithmic}
+\begin{algorithm}[H]
+  \caption{name:$1}\label{label:$2}
+  \begin{algorithmic}[1]
+    \For{$0}
+    \State
+    \State
+    \Endfor
+  \end{algorithmic}
+\end{algorithm}

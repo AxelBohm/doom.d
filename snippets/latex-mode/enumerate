@@ -1,5 +1,7 @@
 # -*- mode: snippet -*-
-# name: rate
-# key: rate
+# name: enumerate
+# key: enum
 # --
-\mathcal{O}(k^{-$0})
+\begin{enumerate}
+  \item $0
+\end{enumerate}
