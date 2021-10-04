@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: align_label
+# key: all
+# --
+\begin{align}
+  \label{$0}
+  $1
+\end{align}

@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: textcolblue
+# key: tb
+# --
+\textcolor{blue}{$0}
