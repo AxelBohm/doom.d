@@ -1,5 +1,5 @@
 # -*- mode: snippet -*-
 # name: bigO
-# key: cO
+# key: co
 # --
 \mathcal{O}($0)
