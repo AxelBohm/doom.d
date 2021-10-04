@@ -609,7 +609,7 @@ SCHEDULED: %^t
 
 (add-to-list 'company-backends 'company-bibtex)
 (setq company-bibtex-bibliography
-  '("~/PhD/bibliography/bibfile.bib"))
+  '("~/academia/bibliography/bibfile.bib"))
 
 ;; (add-hook! LaTeX-mode
 ;;         :append
@@ -651,8 +651,8 @@ SCHEDULED: %^t
 
 (after! bibtex-completion
 
-  (setq! bibtex-completion-bibliography '("~/PhD/bibliography/bibfile.bib")
-         bibtex-completion-notes-path "~/PhD/bibliography/notes/"
+  (setq! bibtex-completion-bibliography '("~/academia/bibliography/bibfile.bib")
+         bibtex-completion-notes-path "~/academia/bibliography/notes/"
          bibtex-completion-library-path '("~/Dropbox/papers" )))
 
 (after! bibtex-completion

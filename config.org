@@ -1040,7 +1040,7 @@ Enable company-bibtex.
 #+BEGIN_SRC emacs-lisp
 (add-to-list 'company-backends 'company-bibtex)
 (setq company-bibtex-bibliography
-  '("~/PhD/bibliography/bibfile.bib"))
+  '("~/academia/bibliography/bibfile.bib"))
 #+END_SRC
 
 but snippets are still not working... maybe with this:
@@ -1117,8 +1117,8 @@ evil-tex has very nice toggle commands but I can't remember them.
 
 (after! bibtex-completion
 
-  (setq! bibtex-completion-bibliography '("~/PhD/bibliography/bibfile.bib")
-         bibtex-completion-notes-path "~/PhD/bibliography/notes/"
+  (setq! bibtex-completion-bibliography '("~/academia/bibliography/bibfile.bib")
+         bibtex-completion-notes-path "~/academia/bibliography/notes/"
          bibtex-completion-library-path '("~/Dropbox/papers" )))
 #+END_SRC
 
