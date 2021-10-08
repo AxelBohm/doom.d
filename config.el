@@ -659,8 +659,8 @@ SCHEDULED: %^t
   (setq! bibtex-completion-find-additional-pdfs t))
 
 (setq! +biblio-pdf-library-dir "~/Dropbox/papers"
-       +biblio-default-bibliography-files '("~/PhD/bibliography/bibfile.bib")
-       +biblio-notes-path "~/PhD/bibliography/notes/")
+       +biblio-default-bibliography-files '("~/academia/bibliography/bibfile.bib")
+       +biblio-notes-path "~/academia/bibliography/notes/")
 
 (after! bibtex-completion
   (setq bibtex-completion-additional-search-fields '(tags)))
@@ -703,10 +703,10 @@ SCHEDULED: %^t
 
 (map! :leader "o r" 'org-ref-helm-insert-cite-link)
 
-(setq reftex-default-bibliography '("~/PhD/bibliography/bibfile.bib"))
+(setq reftex-default-bibliography '("~/academia/bibliography/bibfile.bib"))
 
 (setq org-ref-bibliography-notes "~/Private/org/org/roam"
-      org-ref-default-bibliography '("~/PhD/bibliography/bibfile.bib")
+      org-ref-default-bibliography '("~/academia/bibliography/bibfile.bib")
       org-ref-pdf-directory "~/Dropbox/papers")
 
 (after! yasnippet

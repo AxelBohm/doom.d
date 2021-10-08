@@ -1136,8 +1136,8 @@ Doom provides a way to configure ~bibtex-completion~ and ~org-ref~ at the same t
 
 #+BEGIN_SRC emacs-lisp
 (setq! +biblio-pdf-library-dir "~/Dropbox/papers"
-       +biblio-default-bibliography-files '("~/PhD/bibliography/bibfile.bib")
-       +biblio-notes-path "~/PhD/bibliography/notes/")
+       +biblio-default-bibliography-files '("~/academia/bibliography/bibfile.bib")
+       +biblio-notes-path "~/academia/bibliography/notes/")
 #+END_SRC
 
 Use additional tags to find papers.
@@ -1203,10 +1203,10 @@ It would probably be more sensible to simply define a (helm/ivy)-bibtex command 
 
 (map! :leader "o r" 'org-ref-helm-insert-cite-link)
 
-(setq reftex-default-bibliography '("~/PhD/bibliography/bibfile.bib"))
+(setq reftex-default-bibliography '("~/academia/bibliography/bibfile.bib"))
 
 (setq org-ref-bibliography-notes "~/Private/org/org/roam"
-      org-ref-default-bibliography '("~/PhD/bibliography/bibfile.bib")
+      org-ref-default-bibliography '("~/academia/bibliography/bibfile.bib")
       org-ref-pdf-directory "~/Dropbox/papers")
 #+END_SRC
 
