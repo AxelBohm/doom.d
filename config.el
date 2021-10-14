@@ -509,25 +509,68 @@ SCHEDULED: %^t
                (delete '("\\.pdf\\'" . default) org-file-apps)
                (add-to-list 'org-file-apps '("\\.pdf\\'" . "zathura %s")))))
 
-(after! org-noter
-  (setq! org-noter-always-create-frame nil)
-  (setq! org-noter-notes-search-path '("~/Private/org/org/roam")))
+(setq org-noter-always-create-frame nil)
+(setq org-noter-notes-search-path org-roam-directory)
 
-(setq org-roam-directory "~/Private/org/org/roam")
+(setq org-roam-directory "~/org/roam")
 
-(setq deft-directory "~/Private/org/org/roam")
+(setq deft-recursive t)
+(setq deft-use-filter-string-for-filename t)
+(setq deft-default-extension "org")
+(setq deft-directory org-roam-directory)
+
+(defun cm/deft-parse-title (file contents)
+  "Parse the given FILE and CONTENTS and determine the title.
+  If `deft-use-filename-as-title' is nil, the title is taken to
+  be the first non-empty line of the FILE.  Else the base name of the FILE is
+  used as title."
+  (let ((begin (string-match "^#\\+[tT][iI][tT][lL][eE]: .*$" contents)))
+    (if begin
+        (string-trim (substring contents begin (match-end 0)) "#\\+[tT][iI][tT][lL][eE]: *" "[\n\t ]+")
+      (deft-base-filename file))))
+
+  (advice-add 'deft-parse-title :override #'cm/deft-parse-title)
+
+  (setq deft-strip-summary-regexp
+      (concat "\\("
+              "[\n\t]" ;; blank
+              "\\|^#\\+[[:alpha:]_]+:.*$" ;; org-mode metadata
+              "\\|^:PROPERTIES:\n\\(.+\n\\)+:END:\n"
+              "\\)"))
 
 (setq org-roam-capture-templates
-      '(("d" "default" plain
-         (function org-roam--capture-get-point)
-         "%?"
-         :file-name "${slug}"
-         :head "#+TITLE: ${title}
-#+ROAM_ALIAS:
-#+CREATED: %(org-insert-time-stamp (current-time) t t)
-#+LAST_MODIFIED: %(org-insert-time-stamp (current-time) t t)
+      '(
+        ("b" "bibliography reference" plain "%?"
+         :target
+         (file+head "${citekey}.org" "#+title: ${title}\n
+:PROPERTIES:
+#+ROAM_ALIASES:
+#+created: %(org-insert-time-stamp (current-time) t t)
+#+last_modified: %(org-insert-time-stamp (current-time) t t)
+:END:
 
-- tags ::"
+- tags ::
+
+
+
+\n* ${title}
+:PROPERTIES:
+:citekey: ${citekey}
+:author: ${author-or-editor}
+:noter_document: ${file}
+:END:")
+         :unnarrowed t)
+
+        ("d" "default" plain "%?"
+         :target
+         (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}
+:PROPERTIES:
+#+ROAM_ALIASES:
+#+created: %(org-insert-time-stamp (current-time) t t)
+#+last_modified: %(org-insert-time-stamp (current-time) t t)
+:END:
+
+- tags ::")
          :unnarrowed t)))
 
 (after! org
@@ -537,37 +580,40 @@ SCHEDULED: %^t
         time-stamp-end "$"
         time-stamp-format "\[%Y-%02m-%02d %02H:%02M\]"
         )
-  (add-hook 'write-file-hooks 'time-stamp))
+  ;; (add-hook 'write-file-hooks 'time-stamp)
+  )
 
 (use-package! org-roam-bibtex
   :after org-roam
-  :hook (org-roam-mode . org-roam-bibtex-mode)
   :config
   (require 'org-ref)) ; optional: if Org Ref is not loaded anywhere else, load it here
+
+(after! org-roam
+  (org-roam-bibtex-mode))
 
 (setq orb-preformat-keywords
       '("citekey" "title" "url" "author-or-editor" "keywords" "file")
       orb-process-file-keyword t
       orb-file-field-extensions '("pdf"))
 
-(setq orb-templates
-      '(("r" "ref" plain (function org-roam-capture--get-point) ""
-         :file-name "${citekey}"
-         :head "#+TITLE: ${citekey}: ${title}
-#+ROAM_KEY: ${ref}
-#+AUTHOR: ${author-or-editor}
-#+CREATED: %(org-insert-time-stamp (current-time) t t)
-#+LAST_MODIFIED: %(org-insert-time-stamp (current-time) t t)
+;; (setq orb-templates
+;;       '(("r" "ref" plain "%?"
+;;          :target
+;;          (file+head "${citekey}.org" "#+title: ${title}\n"))))
+;; #+roam_key: ${ref}
+;; #+author: ${author-or-editor}
+;; #+created: %(org-insert-time-stamp (current-time) t t)
+;; #+last_modified: %(org-insert-time-stamp (current-time) t t)
 
-- tags ::
-- keywords :: ${keywords}
+;; - tags ::
+;; - keywords :: ${keywords}
 
-\n* ${title}
-:PROPERTIES:
-:CITEKEY: ${citekey}
-:AUTHOR: ${author-or-editor}
-:NOTER_DOCUMENT: ${file}
-:END:")))
+;; \n* ${title}
+;; :propertIES:
+;; :citekey: ${citekey}
+;; :author: ${author-or-editor}
+;; :noter_document: ${file}
+;; :end:"))))
 
 (after! latex
   (setq tex-fontify-script t
@@ -652,7 +698,7 @@ SCHEDULED: %^t
 (after! bibtex-completion
 
   (setq! bibtex-completion-bibliography '("~/academia/bibliography/bibfile.bib")
-         bibtex-completion-notes-path "~/academia/bibliography/notes/"
+         bibtex-completion-notes-path org-roam-directory
          bibtex-completion-library-path '("~/Dropbox/papers" )))
 
 (after! bibtex-completion
@@ -660,7 +706,7 @@ SCHEDULED: %^t
 
 (setq! +biblio-pdf-library-dir "~/Dropbox/papers"
        +biblio-default-bibliography-files '("~/academia/bibliography/bibfile.bib")
-       +biblio-notes-path "~/academia/bibliography/notes/")
+       +biblio-notes-path org-roam-directory)
 
 (after! bibtex-completion
   (setq bibtex-completion-additional-search-fields '(tags)))
@@ -705,7 +751,7 @@ SCHEDULED: %^t
 
 (setq reftex-default-bibliography '("~/academia/bibliography/bibfile.bib"))
 
-(setq org-ref-bibliography-notes "~/Private/org/org/roam"
+(setq org-ref-bibliography-notes org-roam-directory
       org-ref-default-bibliography '("~/academia/bibliography/bibfile.bib")
       org-ref-pdf-directory "~/Dropbox/papers")
 
@@ -790,7 +836,7 @@ SCHEDULED: %^t
   (setq company-dabbrev-ignore-case nil
         company-idle-delay 0.2
         ;; Number the candidates (use M-1, M-2 etc to select completions).
-        company-show-numbers t
+        company-show-quick-access t
         company-tooltip-limit 7
         company-tooltip-minimum-width 40
         company-minimum-prefix-length 2)
