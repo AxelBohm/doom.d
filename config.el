@@ -340,7 +340,7 @@
 (after! org (setq org-startup-truncated 'nil))
 
 (after! org
-  ;; (setq org-agenda-span 14)
+  (setq org-agenda-span 14)
   (setq org-agenda-start-on-weekday nil)
   (setq org-agenda-start-day "-0d"))
 
@@ -747,13 +747,11 @@ SCHEDULED: %^t
 ;; (after! org
 ;;   (map! :localleader "l r" 'org-ref-helm-insert-cite-link))
 
+;; It seems like org-ref-helm disappeared automatically ivy is called
 (map! :leader "o r" 'org-ref-helm-insert-cite-link)
+;; (map! :localleader "i" 'org-ref-insert-link)
 
 (setq reftex-default-bibliography '("~/academia/bibliography/bibfile.bib"))
-
-(setq org-ref-bibliography-notes org-roam-directory
-      org-ref-default-bibliography '("~/academia/bibliography/bibfile.bib")
-      org-ref-pdf-directory "~/Dropbox/papers")
 
 (after! yasnippet
   (setq yas-snippet-dirs '("~/.doom.d/snippets")

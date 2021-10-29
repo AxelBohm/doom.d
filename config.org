@@ -586,11 +586,11 @@ By default org-mode does super ugly truncation of long lines (apparently because
 (after! org (setq org-startup-truncated 'nil))
 #+END_SRC
 
-By default org-agenda only shows one week starting last monday. I want two weeks starting today.
+By default org-agenda only shows one week starting last Monday. I want two weeks starting today.
 
 #+BEGIN_SRC emacs-lisp
 (after! org
-  ;; (setq org-agenda-span 14)
+  (setq org-agenda-span 14)
   (setq org-agenda-start-on-weekday nil)
   (setq org-agenda-start-day "-0d"))
 #+END_SRC
@@ -1245,7 +1245,7 @@ TODO: add "open in zathura"
 
 ** org-ref
 
-conveniently insert citations to org files. I mainly want this to be able to quickly open the pdf from the org file.
+Conveniently insert citations to org files. These citations can be used to open the corresponding pdf or notes.
 It would probably be more sensible to simply define a (helm/ivy)-bibtex command that inserts the link to the pdf instead if including a new package but ok..
 
 #+BEGIN_SRC emacs-lisp
@@ -1254,13 +1254,11 @@ It would probably be more sensible to simply define a (helm/ivy)-bibtex command 
 ;; (after! org
 ;;   (map! :localleader "l r" 'org-ref-helm-insert-cite-link))
 
+;; It seems like org-ref-helm disappeared automatically ivy is called
 (map! :leader "o r" 'org-ref-helm-insert-cite-link)
+;; (map! :localleader "i" 'org-ref-insert-link)
 
 (setq reftex-default-bibliography '("~/academia/bibliography/bibfile.bib"))
-
-(setq org-ref-bibliography-notes org-roam-directory
-      org-ref-default-bibliography '("~/academia/bibliography/bibfile.bib")
-      org-ref-pdf-directory "~/Dropbox/papers")
 #+END_SRC
 
 * snippets
