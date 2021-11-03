@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: uk_plus
+# key: ukp
+# --
+u_{k+1}
