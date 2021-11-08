@@ -894,7 +894,7 @@ Keep plain text notes alongside my pdfs.
 
 I keep my roam files in dropbox folder which causes problems with the database on different machines. Easiest solution is to just keep the database outside the synced folder. The location is chosen arbitrary
 #+BEGIN_SRC emacs-lisp
-(setq org-roam-db-location "~/.cache/")
+(setq org-roam-db-location "~/.cache/oarg-roam.db")
 #+END_SRC
 
 

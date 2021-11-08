@@ -514,7 +514,7 @@ SCHEDULED: %^t
 
 (setq org-roam-directory "~/org/roam")
 
-(setq org-roam-db-location "~/.cache/")
+(setq org-roam-db-location "~/.cache/oarg-roam.db")
 
 (setq deft-recursive t)
 (setq deft-use-filter-string-for-filename t)
