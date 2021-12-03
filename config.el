@@ -617,6 +617,11 @@ SCHEDULED: %^t
 ;; :noter_document: ${file}
 ;; :end:"))))
 
+(map! :leader
+      "o t s" 'org-timer-start-time
+      "o t p" 'org-timer-pause-or-continue
+)
+
 (after! latex
   (setq tex-fontify-script t
         ;; automatically put braces after ^ and _
