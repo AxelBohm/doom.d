@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: color-gray
+# key: tg
+# --
+\textcolor{gray}{$0}
