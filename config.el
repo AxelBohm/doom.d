@@ -836,6 +836,12 @@ SCHEDULED: %^t
                  ","    'julia-repl-send-buffer
     )
 
+(after! julia-mode
+  (add-hook 'julia-mode-hook #'rainbow-delimiters-mode-enable)
+  (add-hook! 'julia-mode-hook
+    (setq-local lsp-enable-folding t
+                lsp-folding-range-limit 100)))
+
 (after! company
   :init
   (setq company-dabbrev-ignore-case nil

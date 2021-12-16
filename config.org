@@ -1421,6 +1421,16 @@ A general emacs solution was suggested on [[https://www.reddit.com/r/emacs/comme
     )
 #+END_SRC
 
+This fix is necessary for lsp to work in julia:
+#+BEGIN_SRC emacs-lisp
+(after! julia-mode
+  (add-hook 'julia-mode-hook #'rainbow-delimiters-mode-enable)
+  (add-hook! 'julia-mode-hook
+    (setq-local lsp-enable-folding t
+                lsp-folding-range-limit 100)))
+#+END_SRC
+
+
 * auto completion
 ** company
 
