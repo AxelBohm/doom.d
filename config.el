@@ -617,10 +617,15 @@ SCHEDULED: %^t
 ;; :noter_document: ${file}
 ;; :end:"))))
 
-;; (map! :leader
-;;       "o t s" 'org-timer-start-time
-;;       "o t p" 'org-timer-pause-or-continue
-;; )
+(map! :leader "o t" nil)
+
+(map! :leader
+      (:prefix-map ("o" . "org/open")
+       (:prefix ("t" . "timer/terminal")
+        :desc "open terminal here" "h" #'+vterm/toggle
+        :desc "set timer" "s" #'org-timer-set-timer
+        :desc "pause or continue" "p" #'org-timer-pause-or-continue))
+)
 
 (after! latex
   (setq tex-fontify-script t

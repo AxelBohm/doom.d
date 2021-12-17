@@ -8,6 +8,12 @@
 (setq doom-localleader-key ",")
 #+END_SRC
 
+# Stop complaining about non-prefix keys
+
+# #+BEGIN_SRC emacs-lisp
+# (general-auto-unbind-keys)
+# #+END_SRC
+
 ** ui
 *** theme
 
@@ -1039,10 +1045,16 @@ The later part provide integration with org-noter, see [[https://github.com/org-
 ** org-timer
 
 #+BEGIN_SRC emacs-lisp
-;; (map! :leader
-;;       "o t s" 'org-timer-start-time
-;;       "o t p" 'org-timer-pause-or-continue
-;; )
+
+(map! :leader "o t" nil)
+
+(map! :leader
+      (:prefix-map ("o" . "org/open")
+       (:prefix ("t" . "timer/terminal")
+        :desc "open terminal here" "h" #'+vterm/toggle
+        :desc "set timer" "s" #'org-timer-set-timer
+        :desc "pause or continue" "p" #'org-timer-pause-or-continue))
+)
 #+END_SRC
 
 
