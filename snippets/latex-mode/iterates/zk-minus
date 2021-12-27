@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: zkm1
+# key: zkm
+# condition: 'auto
+# --
+z_{k-1}

@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: zk_plus
+# key: zkp
+# condition: 'auto
+# --
+z_{k+1}

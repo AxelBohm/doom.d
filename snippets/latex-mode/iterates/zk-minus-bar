@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: zk-minus-bar
+# key: zkmb
+# --
+\bar{z}_{k-1}

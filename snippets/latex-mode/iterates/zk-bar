@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: zk-bar
+# key: zkb
+# condition: 'auto
+# --
+\bar{z}_k
