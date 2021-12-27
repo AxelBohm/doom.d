@@ -620,12 +620,9 @@ SCHEDULED: %^t
 (map! :leader "o t" nil)
 
 (map! :leader
-      (:prefix-map ("o" . "org/open")
-       (:prefix ("t" . "timer/terminal")
-        :desc "open terminal here" "h" #'+vterm/toggle
-        :desc "set timer" "s" #'org-timer-set-timer
-        :desc "pause or continue" "p" #'org-timer-pause-or-continue))
-)
+      :desc "open terminal here" "o t h" #'+vterm/toggle
+      :desc "set timer" "o t s" #'org-timer-set-timer
+      :desc "pause or continue" "o t p" #'org-timer-pause-or-continue)
 
 (after! latex
   (setq tex-fontify-script t
@@ -755,13 +752,10 @@ SCHEDULED: %^t
 
 ;; (helm-add-action-to-source "Open PDF with zathura" 'bibtex-completion-pdf-open-with-zathura helm-source-bibtex 1)
 
-;; why does this not work??
-;; (after! org
-;;   (map! :localleader "l r" 'org-ref-helm-insert-cite-link))
-
-;; It seems like org-ref-helm disappeared automatically ivy is called
-(map! :leader "o r" 'org-ref-helm-insert-cite-link)
-;; (map! :localleader "i" 'org-ref-insert-link)
+(after! org
+(map! :localleader "i" nil)
+(map! :localleader
+      :desc "insert citation" "i" #'org-ref-insert-cite-link))
 
 (setq reftex-default-bibliography '("~/academia/bibliography/bibfile.bib"))
 

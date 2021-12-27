@@ -1044,17 +1044,15 @@ The later part provide integration with org-noter, see [[https://github.com/org-
 
 ** org-timer
 
-#+BEGIN_SRC emacs-lisp
+First we need to "unmap" leader o t which by default is `+vterm/toggle`.
 
+#+BEGIN_SRC emacs-lisp
 (map! :leader "o t" nil)
 
 (map! :leader
-      (:prefix-map ("o" . "org/open")
-       (:prefix ("t" . "timer/terminal")
-        :desc "open terminal here" "h" #'+vterm/toggle
-        :desc "set timer" "s" #'org-timer-set-timer
-        :desc "pause or continue" "p" #'org-timer-pause-or-continue))
-)
+      :desc "open terminal here" "o t h" #'+vterm/toggle
+      :desc "set timer" "o t s" #'org-timer-set-timer
+      :desc "pause or continue" "o t p" #'org-timer-pause-or-continue)
 #+END_SRC
 
 
@@ -1277,13 +1275,10 @@ It would probably be more sensible to simply define a (helm/ivy)-bibtex command 
 
 #+BEGIN_SRC emacs-lisp
 
-;; why does this not work??
-;; (after! org
-;;   (map! :localleader "l r" 'org-ref-helm-insert-cite-link))
-
-;; It seems like org-ref-helm disappeared automatically ivy is called
-(map! :leader "o r" 'org-ref-helm-insert-cite-link)
-;; (map! :localleader "i" 'org-ref-insert-link)
+(after! org
+(map! :localleader "i" nil)
+(map! :localleader
+      :desc "insert citation" "i" #'org-ref-insert-cite-link))
 
 (setq reftex-default-bibliography '("~/academia/bibliography/bibfile.bib"))
 #+END_SRC
