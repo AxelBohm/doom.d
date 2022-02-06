@@ -1421,12 +1421,32 @@ This is the correct solution for doom emacs according to [[https://github.com/hl
 A general emacs solution was suggested on [[https://www.reddit.com/r/emacs/comments/gqymvz/how_to_force_flycheck_to_select_a_specific_syntax/][reddit]] but doesn't work for doom.
 * julia
 
+
+send line doesn't really work. shift-enter would also be nice
+
 #+BEGIN_SRC emacs-lisp
 (map! :map julia-mode-map
     :localleader "r r"  'julia-repl
                  ","    'julia-repl-send-buffer
+                 "l"    'send-line
     )
 #+END_SRC
+
+use nice terminal instead of the default ansi
+#+BEGIN_SRC emacs-lisp
+(after! julia-repl
+  (julia-repl-set-terminal-backend 'vterm))
+#+END_SRC
+
+Define a minor mode to enable sending to julia-repl (taken from [[https://www.tquelch.com/posts/emacs-config/][here]]).
+#+BEGIN_SRC emacs-lisp
+(define-minor-mode julia-repl-interaction-mode
+  "Toggle keybinds to send lines to the julia-repl"
+  :keymap (let ((map (make-sparse-keymap)))
+          (define-key map (kbd "C-s") #'julia-repl-send-region-or-line)
+          map))
+#+END_SRC
+
 
 This fix is necessary for lsp to work in julia:
 #+BEGIN_SRC emacs-lisp

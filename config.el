@@ -833,7 +833,17 @@ SCHEDULED: %^t
 (map! :map julia-mode-map
     :localleader "r r"  'julia-repl
                  ","    'julia-repl-send-buffer
+                 "l"    'send-line
     )
+
+(after! julia-repl
+  (julia-repl-set-terminal-backend 'vterm))
+
+(define-minor-mode julia-repl-interaction-mode
+  "Toggle keybinds to send lines to the julia-repl"
+  :keymap (let ((map (make-sparse-keymap)))
+          (define-key map (kbd "C-s") #'julia-repl-send-region-or-line)
+          map))
 
 (after! julia-mode
   (add-hook 'julia-mode-hook #'rainbow-delimiters-mode-enable)
