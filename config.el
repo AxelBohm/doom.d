@@ -389,6 +389,7 @@
   )
 
 (map! :leader "i" #'ab/open-index-file)
+(map! :leader "o i" #'ab/open-index-file)
 
 (map! :map org-mode-map
         :localleader
@@ -452,7 +453,7 @@
           ("t" "Todo" entry
            ;; (file+headline org-index-file "Inbox")
            (file org-inbox-file)
-           "*** TODO %?\n
+           "*** TODO %?
 :Properties:
 :CREATED: %U
 :END:"))))

@@ -672,6 +672,7 @@ Quickly access the org index file.
   )
 
 (map! :leader "i" #'ab/open-index-file)
+(map! :leader "o i" #'ab/open-index-file)
 #+END_SRC
 
 *** navigation
@@ -782,7 +783,7 @@ Check [[https://orgmode.org/manual/Template-expansion.html#Template-expansion][h
           ("t" "Todo" entry
            ;; (file+headline org-index-file "Inbox")
            (file org-inbox-file)
-           "*** TODO %?\n
+           "*** TODO %?
 :Properties:
 :CREATED: %U
 :END:"))))
@@ -969,9 +970,9 @@ Extra properties for org-roam capture.
          :target
          (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}
 :PROPERTIES:
-,#+ROAM_ALIASES:
-,#+created: %(org-insert-time-stamp (current-time) t t)
-,#+last_modified: %(org-insert-time-stamp (current-time) t t)
+#+ROAM_ALIASES:
+#+created: %(org-insert-time-stamp (current-time) t t)
+#+last_modified: %(org-insert-time-stamp (current-time) t t)
 :END:
 
 - tags ::")

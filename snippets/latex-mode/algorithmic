@@ -8,6 +8,6 @@
     \For{$0}
     \State
     \State
-    \Endfor
+    \EndFor
   \end{algorithmic}
 \end{algorithm}
