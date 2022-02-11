@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: uk_plus_half
+# key: ukh
+# --
+u_{k+\frac12}
