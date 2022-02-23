@@ -834,7 +834,8 @@ SCHEDULED: %^t
 (map! :map julia-mode-map
     :localleader "r r"  'julia-repl
                  ","    'julia-repl-send-buffer
-                 "l"    'send-line
+                 "l"    'julia-repl-send-line
+                 "r l"  'julia-repl-send-line
     )
 
 (after! julia-repl
