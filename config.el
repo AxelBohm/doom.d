@@ -709,12 +709,12 @@ SCHEDULED: %^t
 
   (setq! bibtex-completion-bibliography '("~/academia/bibliography/bibfile.bib")
          bibtex-completion-notes-path org-roam-directory
-         bibtex-completion-library-path '("~/Dropbox/papers" )))
+         bibtex-completion-library-path '("~/ucloud/my_stuff/papers" )))
 
 (after! bibtex-completion
   (setq! bibtex-completion-find-additional-pdfs t))
 
-(setq! +biblio-pdf-library-dir "~/Dropbox/papers"
+(setq! +biblio-pdf-library-dir "~/ucloud/my_stuff/papers"
        +biblio-default-bibliography-files '("~/academia/bibliography/bibfile.bib")
        +biblio-notes-path org-roam-directory)
 

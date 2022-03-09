@@ -1198,7 +1198,7 @@ evil-tex has very nice toggle commands but I can't remember them.
 
   (setq! bibtex-completion-bibliography '("~/academia/bibliography/bibfile.bib")
          bibtex-completion-notes-path org-roam-directory
-         bibtex-completion-library-path '("~/Dropbox/papers" )))
+         bibtex-completion-library-path '("~/ucloud/my_stuff/papers" )))
 #+END_SRC
 
 You may store additional PDFs for a given entry, such as an annotated version of the original PDF, a file containing supplemental material, or chapter files.
@@ -1214,7 +1214,7 @@ Note that for performance reasons, these additional files are only detected when
 Doom provides a way to configure ~bibtex-completion~ and ~org-ref~ at the same time through:
 
 #+BEGIN_SRC emacs-lisp
-(setq! +biblio-pdf-library-dir "~/Dropbox/papers"
+(setq! +biblio-pdf-library-dir "~/ucloud/my_stuff/papers"
        +biblio-default-bibliography-files '("~/academia/bibliography/bibfile.bib")
        +biblio-notes-path org-roam-directory)
 #+END_SRC
