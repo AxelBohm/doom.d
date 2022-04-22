@@ -1429,7 +1429,7 @@ A general emacs solution was suggested on [[https://www.reddit.com/r/emacs/comme
 * julia
 
 
-send line doesn't really work. shift-enter would also be nice
+shift-enter would also be nice for send line
 
 #+BEGIN_SRC emacs-lisp
 (map! :map julia-mode-map
