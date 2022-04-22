@@ -267,38 +267,40 @@
 (setq org-agenda-show-future-repeats 'next)
 
 (setq org-agenda-custom-commands
-      '(("n" todo "NEXT") ;; (1) (3) (4)
-        ;; ...other commands here
-        ))
-
-(setq org-agenda-custom-commands
       '(("W" "Weekly Review"
-         ((agenda "" ((org-agenda-span 7))); review upcoming deadlines and appointments
+         ((agenda "" ((org-agenda-span 14))); review upcoming deadlines and appointments
                                            ; type "l" in the agenda to review logged items
           (todo "PROJECT") ; review all projects (assuming you use todo keywords to designate projects)
           (todo "MAYBE") ; review someday/maybe items
           (todo "WAITING"))) ; review waiting items
 
          ;; ...other commands here
+        ("n" todo "NEXT")
 
         ("g" "Get Things Done (GTD)"
          ((agenda ""
-                  ((org-agenda-span 1)
+                  (
+                   ;; (org-agenda-span 1)
                    (org-agenda-skip-function
                     '(org-agenda-skip-entry-if 'deadline))
+                   (org-agenda-overriding-header "Scheduled")
                    (org-deadline-warning-days 0)))
           (todo "NEXT"
                 ((org-agenda-skip-function
                   '(org-agenda-skip-entry-if 'deadline))
                  (org-agenda-prefix-format "  %i %-12:c [%e] ")
                  (org-agenda-overriding-header "\nTasks\n")))
-          ;; (agenda nil
-          ;;         ((org-agenda-entry-types '(:deadline))
-          ;;          (org-agenda-format-date "")
-          ;;          (org-deadline-warning-days 21)
-          ;;          (org-agenda-skip-function
-          ;;           '(org-agenda-skip-entry-if 'notregexp "\\* NEXT"))
-          ;;          (org-agenda-overriding-header "\n Deadlines\n")))
+          ;; dummy item just so I can get a header for the deadlines (see next item)
+          (todo "LALA"
+                ((org-agenda-overriding-header "\nDeadlines")))
+          (agenda ""
+                  ((org-agenda-entry-types '(:deadline))
+                   (org-agenda-format-date "")
+                   (org-agenda-show-all-dates nil)
+                   (org-deadline-warning-days 7)
+                   (org-agenda-skip-function
+                    '(org-agenda-skip-entry-if 'notregexp "\\* NEXT"))
+                   (org-agenda-overriding-header "Deadlines")))
           (tags "inbox"
                      ((org-agenda-prefix-format "  %?-12t% s")
                       (org-agenda-overriding-header "\nInbox\n")))
@@ -315,6 +317,10 @@
 ;;    '(org-level-4 ((t (:inherit outline-4 :height 1.0))))
 ;;    '(org-level-5 ((t (:inherit outline-5 :height 1.0))))
 ;;    ))
+(map! :leader "o g" (lambda ()
+             (interactive)
+             (org-agenda nil "g")))
+
 
 (after! org
   (setq org-ellipsis " ..."))
