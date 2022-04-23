@@ -278,29 +278,40 @@
         ("n" todo "NEXT")
 
         ("g" "Get Things Done (GTD)"
-         ((agenda ""
-                  (
-                   ;; (org-agenda-span 1)
-                   (org-agenda-skip-function
+         ((todo "LALA" ;; dummy item just so I can get a header for the deadlines (see next item)
+                ((org-agenda-overriding-header "\nScheduled\n")))
+          (agenda ""
+                  ((org-agenda-skip-function
                     '(org-agenda-skip-entry-if 'deadline))
-                   (org-agenda-overriding-header "Scheduled")
+                   (org-agenda-show-all-dates nil)
+                   (org-agenda-overriding-header "\nScheduled\n")  ;; not working
                    (org-deadline-warning-days 0)))
+          ;; (todo "LALA"
+          ;;       ((org-agenda-overriding-header "\nUpcoming\n")))
+          ;; (agenda ""
+          ;;         (
+          ;;          ;; (org-agenda-span 1)
+          ;;          (org-agenda-skip-function
+          ;;           '(org-agenda-skip-entry-if 'deadline))
+          ;;          (org-agenda-show-all-dates nil)
+          ;;          (org-agenda-overriding-header "\nScheduled\n")  ;; not working
+          ;;          (org-deadline-warning-days 0)))
           (todo "NEXT"
                 ((org-agenda-skip-function
                   '(org-agenda-skip-entry-if 'deadline))
                  (org-agenda-prefix-format "  %i %-12:c [%e] ")
                  (org-agenda-overriding-header "\nTasks\n")))
-          ;; dummy item just so I can get a header for the deadlines (see next item)
-          (todo "LALA"
+
+          (todo "LALA" ;; dummy item just so I can get a header for the deadlines (see next item)
                 ((org-agenda-overriding-header "\nDeadlines")))
-          (agenda ""
+          (agenda nil
                   ((org-agenda-entry-types '(:deadline))
                    (org-agenda-format-date "")
                    (org-agenda-show-all-dates nil)
-                   (org-deadline-warning-days 7)
-                   (org-agenda-skip-function
-                    '(org-agenda-skip-entry-if 'notregexp "\\* NEXT"))
-                   (org-agenda-overriding-header "Deadlines")))
+                   (org-deadline-warning-days 0)
+                   ;; (org-agenda-skip-function
+                   ;;  '(org-agenda-skip-entry-if 'notregexp "\\* NEXT"))
+                   (org-agenda-overriding-header "\nDeadlines\n"))) ;; not working
           (tags "inbox"
                      ((org-agenda-prefix-format "  %?-12t% s")
                       (org-agenda-overriding-header "\nInbox\n")))
