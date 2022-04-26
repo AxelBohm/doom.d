@@ -741,10 +741,16 @@ SCHEDULED: %^t
 
 ;; (helm-add-action-to-source "Open PDF with zathura" 'bibtex-completion-pdf-open-with-zathura helm-source-bibtex 1)
 
+(after! org-ref
+  (map! :localleader "i" nil)
+  (map! :map org-mode-map
+        :localleader
+        :desc "insert citation" "i" #'org-ref-insert-cite-link))
 (after! org
-(map! :localleader "i" nil)
-(map! :localleader
-      :desc "insert citation" "i" #'org-ref-insert-cite-link))
+  (map! :localleader "i" nil)
+  (map! :map org-mode-map
+        :localleader
+        :desc "insert citation" "i" #'org-ref-insert-cite-link))
 
 (setq reftex-default-bibliography '("~/academia/bibliography/bibfile.bib"))
 

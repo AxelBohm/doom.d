@@ -1254,11 +1254,16 @@ Conveniently insert citations to org files. These citations can be used to open 
 It would probably be more sensible to simply define a (helm/ivy)-bibtex command that inserts the link to the pdf instead if including a new package but ok..
 
 #+BEGIN_SRC emacs-lisp
-
+(after! org-ref
+  (map! :localleader "i" nil)
+  (map! :map org-mode-map
+        :localleader
+        :desc "insert citation" "i" #'org-ref-insert-cite-link))
 (after! org
-(map! :localleader "i" nil)
-(map! :localleader
-      :desc "insert citation" "i" #'org-ref-insert-cite-link))
+  (map! :localleader "i" nil)
+  (map! :map org-mode-map
+        :localleader
+        :desc "insert citation" "i" #'org-ref-insert-cite-link))
 
 (setq reftex-default-bibliography '("~/academia/bibliography/bibfile.bib"))
 #+END_SRC
