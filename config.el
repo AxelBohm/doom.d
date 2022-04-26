@@ -676,27 +676,6 @@ SCHEDULED: %^t
 (setq company-bibtex-bibliography
   '("~/academia/bibliography/bibfile.bib"))
 
-;; (add-hook! LaTeX-mode
-;;         :append
-;;         (set-company-backend! 'latex-mode
-;;  '(company-dabbrev :with company-yasnippet)))
-
-;; (add-hook! 'company-mode-hook :append
-  ;; (when (eq major-mode 'latex-mode)
-  ;;   (setq-local company-backends
-  ;;               (list (append '(company-reftex-labels company-reftex-citations)
-  ;;                             +latex--company-backends)))))
-
-;; (set-company-backend! 'company-reftex-labels  'company-reftex-citations
-;;   'company-ispell 'company-capf 'company-files
-;;   'company-files 'company-tide 'company-yasnippet)
-
-;; (set-company-backend! 'company-reftex-labels  'company-reftex-citations
-;;   'company-ispell 'company-capf 'company-files
-;;   'company-files 'company-tide 'company-yasnippet)
-;; (after! latex
-;;   (set-company-backend! 'latex-mode '(company-latex-commands :with company-yasnippet)))
-
 (eval-after-load 'evil-matchit-latex
   '(progn
      (push '("langle" nil "rangle") evilmi-latex-match-tags)))
