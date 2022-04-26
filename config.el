@@ -563,13 +563,9 @@ SCHEDULED: %^t
         ("b" "bibliography reference" plain "%?"
          :target
          (file+head "${citekey}.org" "#+title: ${title}\n
-:PROPERTIES:
-#+ROAM_ALIASES:
 #+created: %(org-insert-time-stamp (current-time) t t)
 #+last_modified: %(org-insert-time-stamp (current-time) t t)
-:END:
 
-- tags ::
 
 
 
@@ -584,23 +580,19 @@ SCHEDULED: %^t
         ("d" "default" plain "%?"
          :target
          (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}
-:PROPERTIES:
-#+ROAM_ALIASES:
 #+created: %(org-insert-time-stamp (current-time) t t)
 #+last_modified: %(org-insert-time-stamp (current-time) t t)
-:END:
-
-- tags ::")
+")
          :unnarrowed t)))
 
 (after! org
   (setq time-stamp-active t
-        time-stamp-line-limit 6
-        time-stamp-start "#\\+last_modified: [ \t]*"
+        time-stamp-line-limit 10
+        time-stamp-start "#\\+last_modified: [\t]*"
         time-stamp-end "$"
         time-stamp-format "\[%Y-%02m-%02d %02H:%02M\]"
         )
-  ;; (add-hook 'write-file-hooks 'time-stamp)
+  (add-hook 'write-file-hooks 'time-stamp)
   )
 
 (use-package! org-roam-bibtex
