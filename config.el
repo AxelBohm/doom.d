@@ -228,10 +228,14 @@
 (after! org
   (setq org-hide-emphasis-markers nil            ;; I want those
         org-return-follows-link t
+        ;; the follow two do not work for some reason and others seem to have the same problem
         org-agenda-skip-scheduled-if-done t      ;; don't show in agenda if done
+        org-agenda-skip-deadline-if-done  t
+        ;;
         org-agenda-compact-blocks t
         org-reverse-note-order t                 ;; add new headings on top
-        org-tags-column 0                        ;; position of tags
+        org-tags-column 0                        ;; position of tags (0 is to the left)
+        org-log-done 'time                       ;; add time when task was completed
         org-todo-keywords '((sequence "TODO(t)"
                                       "NEXT(n)"
                                       "WAITING(w)"
@@ -282,7 +286,7 @@
                 ((org-agenda-overriding-header "\nScheduled\n")))
           (agenda ""
                   ((org-agenda-skip-function
-                    '(org-agenda-skip-entry-if 'deadline))
+                    '(org-agenda-skip-entry-if 'deadline 'todo 'done))   ;; deadlines go in a different "section"
                    (org-agenda-show-all-dates nil)
                    (org-agenda-overriding-header "\nScheduled\n")  ;; not working
                    (org-deadline-warning-days 0)))
@@ -352,6 +356,7 @@
 (after! org
   (setq org-agenda-files (list org-index-file
                                org-inbox-file
+                               (org-file-path "archive.org") ;; I want to see also completed items
                                (org-file-path "Reference.org"))))
 
 (after! org (setq org-startup-truncated 'nil))
