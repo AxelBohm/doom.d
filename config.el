@@ -300,7 +300,7 @@
                 ((org-agenda-skip-function
                   '(org-agenda-skip-entry-if 'deadline))
                  (org-agenda-prefix-format "  %i %-12:c [%e] ")
-                 (org-agenda-overriding-header "\nTasks\n")))
+                 (org-agenda-overriding-header "\nNext Action\n")))
 
           (todo "LALA" ;; dummy item just so I can get a header for the deadlines (see next item)
                 ((org-agenda-overriding-header "\nDeadlines")))
