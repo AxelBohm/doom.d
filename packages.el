@@ -26,3 +26,4 @@
 
 (package! doom-quit :disable t)
 (package! doom-snippets :disable t)
+(package! elfeed-goodies :disable t)
