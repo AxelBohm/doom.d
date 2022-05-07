@@ -750,12 +750,12 @@ SCHEDULED: %^t
   (map! :localleader "i" nil)
   (map! :map org-mode-map
         :localleader
-        :desc "insert citation" "i" #'org-ref-insert-cite-link))
+        :desc "insert citation" "i" #'org-ref-cite-insert-helm))
 (after! org
   (map! :localleader "i" nil)
   (map! :map org-mode-map
         :localleader
-        :desc "insert citation" "i" #'org-ref-insert-cite-link))
+        :desc "insert citation" "i" #'org-ref-cite-insert-helm))
 
 (setq reftex-default-bibliography '("~/academia/bibliography/bibfile.bib"))
 

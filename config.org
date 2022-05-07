@@ -1265,15 +1265,17 @@ It would probably be more sensible to simply define a (helm/ivy)-bibtex command 
   (map! :localleader "i" nil)
   (map! :map org-mode-map
         :localleader
-        :desc "insert citation" "i" #'org-ref-insert-cite-link))
+        :desc "insert citation" "i" #'org-ref-cite-insert-helm))
 (after! org
   (map! :localleader "i" nil)
   (map! :map org-mode-map
         :localleader
-        :desc "insert citation" "i" #'org-ref-insert-cite-link))
+        :desc "insert citation" "i" #'org-ref-cite-insert-helm))
 
 (setq reftex-default-bibliography '("~/academia/bibliography/bibfile.bib"))
 #+END_SRC
+
+This opens a full screen helm buffer. Partial screen would be nicer! Is there an ivy option for this?
 
 * snippets
 
