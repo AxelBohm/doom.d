@@ -535,6 +535,11 @@ SCHEDULED: %^t
 
 (setq org-roam-db-location "~/.cache/oarg-roam.db")
 
+;; (after! org-roam
+;;   ;; Make the backlinks buffer easier to peruse by folding leaves by default.
+;;   (add-hook 'org-roam-buffer-postrender-functions #'magit-section-show-level-2)
+;; )
+
 (setq deft-recursive t)
 (setq deft-use-filter-string-for-filename t)
 (setq deft-default-extension "org")
