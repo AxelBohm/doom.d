@@ -737,7 +737,7 @@ SCHEDULED: %^t
  'ivy-bibtex
  '(("o" ivy-bibtex-open-any "Open PDF, URL, or DOI")
    ("i" ivy-bibtex-insert-key "Insert key")
-   ("a" ivy-bibtex-add-PDF-attachment "Attach PDF to email")
+   ;; ("a" ivy-bibtex-add-PDF-attachment "Attach PDF to email") ;; email not yet working
    ("s" ivy-bibtex-show-entry "Show entry")
    ("z" bibtex-completion-pdf-open-with-zathura "Open PDF in zathura")
    ("E" bibtex-completion-pdf-open-with-evince "Open PDF in Evince")
