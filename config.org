@@ -1063,7 +1063,6 @@ Currently I only need one template, but I want more properties.
 The later part provide integration with org-noter, see [[https://github.com/org-roam/org-roam-bibtex/blob/8d80bf980776df6ead53e917eb482ec8e309a1d7/doc/orb-manual.org][orb github]].
 
 
-
 ** org-timer
 
 First we need to "unmap" leader o t which by default is `+vterm/toggle`.
@@ -1135,7 +1134,7 @@ LaTeX specific keybindings.
 #+END_SRC
 ** company
 
-Enable company-bibtex.
+Enable company-bibtex for completion.
 
 #+BEGIN_SRC emacs-lisp
 (add-to-list 'company-backends 'company-bibtex)
@@ -1262,7 +1261,7 @@ TODO: add "open in zathura"
 
 ** org-ref
 
-Conveniently insert citations to org files. These citations can be used to open the corresponding pdf or notes.
+Conveniently insert citations in org files. These citations can be used to open the corresponding pdf or notes.
 It would probably be more sensible to simply define a (helm/ivy)-bibtex command that inserts the link to the pdf instead if including a new package but ok..
 
 #+BEGIN_SRC emacs-lisp
