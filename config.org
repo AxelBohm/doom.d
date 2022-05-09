@@ -1173,6 +1173,15 @@ evil-tex has very nice toggle commands but I can't remember them.
   ;; `ts` starts Toggle Surround
   (setq evil-tex-toggle-override-t t))
 #+END_SRC
+** XeTeX
+
+Add Xetex support (not working..)
+
+#+BEGIN_SRC emacs-lisp
+;; (after! latex
+;;     (add-to-list TeX-command-list '("XeLaTeX" "%`xelatex%(mode)%' %t" TeX-run-TeX nil t)))
+#+END_SRC
+
 
 * bibtex completion
 
