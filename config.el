@@ -1060,16 +1060,55 @@ SCHEDULED: %^t
 
 (map! :leader "e f" #'elfeed)
 
-;; (setq elfeed-feeds
-;;       '("http://export.arxiv.org/rss/math.OC"
-;;         "http://www.argmin.net/feed.xml"))
+(setq! elfeed-feeds
+      '("http://export.arxiv.org/api/query?search_query=cat:math.OC&start=0&max_results=300&sortBy=submittedDate&sortOrder=descending"
+        "http://www.argmin.net/feed.xml"))
+
+(defadvice elfeed-search-update (before nullprogram activate)
+  (let ((feed (elfeed-db-get-feed "http://export.arxiv.org/api/query?search_query=cat:math.OC&start=0&max_results=300&sortBy=submittedDate&sortOrder=descending")))
+    (setf (elfeed-feed-title feed) "arXiv optimization")))
+
+;; (map! :map elfeed-show-mode-map
+;;       :n "q" #'elfeed-search-quit-window)
+
+(after! elfeed
+  (map! :map elfeed-show-mode-map
+        :n "q" #'elfeed-search-quit-window))
+
+;; (evil-define-key 'normal elfeed-show-mode-map
+;;   (kbd "N" #'+rss/next) )
+
+
+(after! elfeed
+  (map! :map elfeed-search-mode-map
+        :n "N" #'+rss/next))
+
+(after! elfeed-show
+  (map! :map elfeed-search-mode-map
+        :n "N" #'+rss/next))
+
+(after! elfeed-show
+  (define-key! elfeed-show-mode-map
+    "N"     #'+rss/next
+    "E" #'+rss/previous))
+
+(map! :map elfeed-show-mode-map
+      :n "N" #'+rss/next)
+
+(after! elfeed
+  (map! :map elfeed-show-mode-map
+        :n "N" #'+rss/next))
 
 (add-hook! 'elfeed-search-mode-hook 'elfeed-update)
+
 (defun concatenate-authors (authors-list)
   "Given AUTHORS-LIST, list of plists; return string of all authors concatenated."
   (if (> (length authors-list) 1)
       (format "%s et al." (plist-get (nth 0 authors-list) :name))
     (plist-get (nth 0 authors-list) :name)))
+
+;; (setq! elfeed-search-date-format '("%y-%m-%d" 10 :left))
+;; (setq! elfeed-search-title-max-width 110)
 
 (defun my-search-print-fn (entry)
   "Print ENTRY to the buffer."
@@ -1095,45 +1134,88 @@ SCHEDULED: %^t
     ;; (insert entry-score " ")
     ))
 
-(defun robo/elfeed-entry-to-arxiv ()
-  "Fetch an arXiv paper into the local library from the current elfeed entry."
-  (interactive)
-  (let* ((link (elfeed-entry-link elfeed-show-entry))
-         (match-idx (string-match "arxiv.org/abs/\\([0-9.]*\\)" link))
-         (matched-arxiv-number (match-string 1 link)))
-    (when matched-arxiv-number
-      (message "Going to arXiv: %s" matched-arxiv-number)
-      (arxiv-get-pdf-add-bibtex-entry matched-arxiv-number +biblio-default-bibliography-files +biblio-pdf-library-dir))))
-
-(map! (:after elfeed
-       (:map elfeed-search-mode-map
-        :desc "Open entry" "m" #'elfeed-search-show-entry)
-       (:map elfeed-show-mode-map
-        :desc "Fetch arXiv paper to the local library" "a" #'robo/elfeed-entry-to-arxiv)))
-
 (setq! elfeed-search-print-entry-function #'my-search-print-fn)
-(setq! elfeed-search-date-format '("%y-%m-%d" 10 :left))
-(setq! elfeed-search-title-max-width 110)
-;; (setq! elfeed-feeds '("http://export.arxiv.org/api/query?search_query=cat:math.OC&start=0&max_results=100&sortBy=submittedDate&sortOrder=descending" "http://export.arxiv.org/api/query?search_query=cat:stat.ML&start=0&max_results=100&sortBy=submittedDate&sortOrder=descending" "http://export.arxiv.org/api/query?search_query=cat:cs.LG&start=0&max_results=100&sortBy=submittedDate&sortOrder=descending"))
-(setq! elfeed-search-filter "@2-week-ago +unread")
+;; (after! elfeed
+;;   (setq! elfeed-search-print-entry-function #'my-search-print-fn))
 
-(evil-define-key 'normal elfeed-show-mode-map
-  (kbd "N" #'+rss/next) )
+;; (defun robo/elfeed-entry-to-arxiv ()
+;;   "Fetch an arXiv paper into the local library from the current elfeed entry."
+;;   (interactive)
+;;   (let* ((link (elfeed-entry-link elfeed-show-entry))
+;;          (match-idx (string-match "arxiv.org/abs/\\([0-9.]*\\)" link))
+;;          (matched-arxiv-number (match-string 1 link)))
+;;     (when matched-arxiv-number
+;;       (message "Going to arXiv: %s" matched-arxiv-number)
+;;       (arxiv-get-pdf-add-bibtex-entry matched-arxiv-number +biblio-default-bibliography-files +biblio-pdf-library-dir))))
 
-(after! elfeed-show
-  (define-key! elfeed-show-mode-map
-    "N"     #'+rss/next
-    "E" #'+rss/previous))
+;; (map! (:after elfeed
+;;        (:map elfeed-search-mode-map
+;;         :desc "Open entry" "m" #'elfeed-search-show-entry)
+;;        (:map elfeed-show-mode-map
+;;         :desc "Fetch arXiv paper to the local library" "a" #'robo/elfeed-entry-to-arxiv)))
 
-(map! :map elfeed-show-mode-map
-      :n "q" #'elfeed-search-quit-window)
+;; (defun ab/concatenate-authors (authors-list)
+;;   "Given AUTHORS-LIST, list of plists; return string of all authors concatenated."
+;;   (mapconcat
+;;    (lambda (author) (plist-get author :name))
+;;    authors-list ", "))
 
-(map! :map elfeed-show-mode-map
-      :n "N" #'+rss/next)
+;; (defun my-search-print-fn (entry)
+;;   "Print ENTRY to the buffer."
+;;   (let* ((date (elfeed-search-format-date (elfeed-entry-date entry)))
+;; 	 (title (or (elfeed-meta entry :title)
+;; 		    (elfeed-entry-title entry) ""))
+;; 	 (title-faces (elfeed-search--faces (elfeed-entry-tags entry)))
+;; 	 (feed (elfeed-entry-feed entry))
+;; 	 (feed-title
+;; 	  (when feed
+;; 	    (or (elfeed-meta feed :title) (elfeed-feed-title feed))))
+;; 	 (entry-authors (ab/concatenate-authors
+;; 			 (elfeed-meta entry :authors)))
+;; 	 (tags (mapcar #'symbol-name (elfeed-entry-tags entry)))
+;; 	 (tags-str (mapconcat
+;; 		    (lambda (s) (propertize s 'face
+;; 					    'elfeed-search-tag-face))
+;; 		    tags ","))
+;; 	 (title-width (- (window-width) 10
+;; 			 elfeed-search-trailing-width))
+;; 	 (title-column (elfeed-format-column
+;; 			title (elfeed-clamp
+;; 			       elfeed-search-title-min-width
+;; 			       title-width
+;; 			       elfeed-search-title-max-width)
+;; 			:left))
+;; 	 (authors-width 135)
+;; 	 (authors-column (elfeed-format-column
+;; 			entry-authors (elfeed-clamp
+;; 			       elfeed-search-title-min-width
+;; 			       authors-width
+;; 			       131)
+;; 			:left)))
 
-(after! elfeed
-  (map! :map elfeed-show-mode-map
-        :n "N" #'+rss/next))
+;;     (insert (propertize date 'face 'elfeed-search-date-face) " ")
+
+;;     (insert (propertize title-column
+;; 			'face title-faces 'kbd-help title) " ")
+
+;;     (insert (propertize authors-column
+;; 			'face 'elfeed-search-date-face
+;; 			'kbd-help entry-authors) " ")
+
+;;     ;; (when feed-title
+;;     ;;   (insert (propertize entry-authors
+;;     ;; 'face 'elfeed-search-feed-face) " "))
+
+;;     (when entry-authors
+;;       (insert (propertize feed-title
+;; 			  'face 'elfeed-search-feed-face) " "))
+
+;;     ;; (when tags
+;;     ;;   (insert "(" tags-str ")"))
+
+;;     )
+;;   )
+;; (setq elfeed-search-print-entry-function #'my-search-print-fn)
 
 ;; (elfeed-score-load-score-file "~/.doom.d/elfeed.score") ; See the elfeed-score documentation for the score file syntax
 ;; (setq! elfeed-score-serde-score-file "~/.doom.d/elfeed.serde.score")
