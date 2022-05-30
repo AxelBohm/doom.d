@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: Cref
+# key: cr
+# --
+\Cref{$0}
