@@ -102,76 +102,101 @@
       "x"   #'counsel-M-x ;; no need to press *meta*
       "w"   #'save-buffer)
 
-(defgroup evil-colemak nil
-  "Basic key rebindings for evil-mode with the Colemak keyboard layout."
-  :prefix "evil-colemak-"
-  :group 'evil)
-
-(defcustom evil-colemak-char-jump-commands nil
-  "The set of commands to use for jumping to characters.
-        By default, the built-in evil commands evil-find-char (and
-        variations) are used"
-  :group 'evil-colemak
-  :type '(choice (const :tag "default" nil)))
-
-(defun evil-colemak--make-keymap ()
-  "Initialise the keymap baset on the current configuration."
-  (let ((keymap (make-sparse-keymap)))
-    (evil-define-key '(motion normal visual) keymap
-      "n" 'evil-next-visual-line
-      ;; "gn" 'evil-next-visual-line
-      ;; "gN" 'evil-next-visual-line
-      "e" 'evil-previous-visual-line
-      ;; "ge" 'evil-previous-visual-line
-      "E" 'evil-lookup
-      "i" 'evil-forward-char
-      "I" 'evil-end-of-line
-      "j" 'evil-forward-word-end
-      "J" 'evil-forward-WORD-end
-      "gj" 'evil-backward-word-end
-      "gJ" 'evil-backward-WORD-end
-      "k" 'evil-ex-search-next       ;; doom needs an "ex"
-      "K" 'evil-ex-search-previous   ;; doom needs an "ex"
-      "gk" 'evil-next-match
-      "gK" 'evil-previous-match
-      "zi" 'evil-scroll-column-right
-      "zI" 'evil-scroll-right)
-    (evil-define-key '(normal visual) keymap
-      "N" 'evil-join
-      "gN" 'evil-join-whitespace)
-    (evil-define-key 'normal keymap
-      "l" 'evil-insert
-      "L" 'evil-insert-line)
-    (evil-define-key 'visual keymap
-      "L" 'evil-insert)
-    (evil-define-key '(visual operator) keymap
-      "l" evil-inner-text-objects-map)
-    (evil-define-key 'operator keymap
-      "i" 'evil-forward-char)
-    keymap))
-
-(defvar evil-colemak-keymap
-  (evil-colemak--make-keymap)
-  "Keymap for evil-colemak-mode.")
-
-(defun evil-colemak-refresh-keymap ()
-  "Refresh the keymap using the current configuration."
-  (setq evil-colemak-keymap (evil-colemak--make-keymap)))
-
-      ;;;###autoload
-(define-minor-mode evil-colemak-mode
-  "Minor mode with evil-mode enhancements for the Colemak keyboard layout."
-  :keymap evil-colemak-keymap
-  :lighter " hnei")
-
-      ;;;###autoload
-(define-globalized-minor-mode global-evil-colemak-mode
-  evil-colemak-mode
-  (lambda () (evil-colemak-mode t))
-  "Global minor mode with evil-mode enhancements for the Colemak keyboard layout.")
-
 (after! evil
-  (global-evil-colemak-mode))
+  (define-key evil-visual-state-map "l" evil-inner-text-objects-map)
+  (define-key evil-operator-state-map "l" evil-inner-text-objects-map)
+  (map! :n "l" 'evil-insert
+        :n "L" 'evil-insert-line
+        :nv "h" 'evil-backward-char
+        :nv "i" 'evil-forward-char
+        :nv "n" 'evil-next-line
+        :nv "e" 'evil-previous-line
+        :nv "k" 'evil-forward-word-end
+        :n "N" 'evil-join
+        ;; :vo "l" evil-inner-text-objects-map
+        :nvo "j" 'evil-forward-word-end
+        :nvo "J" 'evil-forward-WORD-end))
+
+(after! magit
+  (map! :map magit-mode-map
+        :n "n" 'magit-next-line
+        :n "e" 'magit-previous-line))
+
+(map! :map org-agenda-mode-map
+      :m "n" 'org-agenda-next-line
+      :m "e" 'org-agenda-previous-line
+      )
+
+;; (defgroup evil-colemak nil
+;;   "Basic key rebindings for evil-mode with the Colemak keyboard layout."
+;;   :prefix "evil-colemak-"
+;;   :group 'evil)
+
+;; (defcustom evil-colemak-char-jump-commands nil
+;;   "The set of commands to use for jumping to characters.
+;;         By default, the built-in evil commands evil-find-char (and
+;;         variations) are used"
+;;   :group 'evil-colemak
+;;   :type '(choice (const :tag "default" nil)))
+
+;; (defun evil-colemak--make-keymap ()
+;;   "Initialise the keymap baset on the current configuration."
+;;   (let ((keymap (make-sparse-keymap)))
+;;     (evil-define-key '(motion normal visual) keymap
+;;       "n" 'evil-next-visual-line
+;;       ;; "gn" 'evil-next-visual-line
+;;       ;; "gN" 'evil-next-visual-line
+;;       "e" 'evil-previous-visual-line
+;;       ;; "ge" 'evil-previous-visual-line
+;;       "E" 'evil-lookup
+;;       "i" 'evil-forward-char
+;;       "I" 'evil-end-of-line
+;;       "j" 'evil-forward-word-end
+;;       "J" 'evil-forward-WORD-end
+;;       "gj" 'evil-backward-word-end
+;;       "gJ" 'evil-backward-WORD-end
+;;       "k" 'evil-ex-search-next       ;; doom needs an "ex"
+;;       "K" 'evil-ex-search-previous   ;; doom needs an "ex"
+;;       "gk" 'evil-next-match
+;;       "gK" 'evil-previous-match
+;;       "zi" 'evil-scroll-column-right
+;;       "zI" 'evil-scroll-right)
+;;     (evil-define-key '(normal visual) keymap
+;;       "N" 'evil-join
+;;       "gN" 'evil-join-whitespace)
+;;     (evil-define-key 'normal keymap
+;;       "l" 'evil-insert
+;;       "L" 'evil-insert-line)
+;;     (evil-define-key 'visual keymap
+;;       "L" 'evil-insert)
+;;     (evil-define-key '(visual operator) keymap
+;;       "l" evil-inner-text-objects-map)
+;;     (evil-define-key 'operator keymap
+;;       "i" 'evil-forward-char)
+;;     keymap))
+
+;; (defvar evil-colemak-keymap
+;;   (evil-colemak--make-keymap)
+;;   "Keymap for evil-colemak-mode.")
+
+;; (defun evil-colemak-refresh-keymap ()
+;;   "Refresh the keymap using the current configuration."
+;;   (setq evil-colemak-keymap (evil-colemak--make-keymap)))
+
+;;       ;;;###autoload
+;; (define-minor-mode evil-colemak-mode
+;;   "Minor mode with evil-mode enhancements for the Colemak keyboard layout."
+;;   :keymap evil-colemak-keymap
+;;   :lighter " hnei")
+
+;;       ;;;###autoload
+;; (define-globalized-minor-mode global-evil-colemak-mode
+;;   evil-colemak-mode
+;;   (lambda () (evil-colemak-mode t))
+;;   "Global minor mode with evil-mode enhancements for the Colemak keyboard layout.")
+
+;; (after! evil
+;;   (global-evil-colemak-mode))
 
 (with-eval-after-load 'evil-maps
   (define-key evil-window-map "n" 'evil-window-down)
@@ -194,6 +219,29 @@
 ;;         :mnvo "I" #'evil-org-end-of-line))
 ;; (add-hook 'evil-tex-mode-hook (lambda () (global-evil-colemak-mode)))
 ;; (add-hook 'LaTeX-mode-hook (lambda () (global-evil-colemak-mode)))
+
+;; (evil-collection-translate-key nil 'evil-motion-state-map
+;;   ;; colemak hnei is qwerty hjkl
+;;   "n" "j"
+;;   "e" "k"
+;;   "i" "l"
+;;   ;; add back nei
+;;   "j" "e"
+;;   "k" "n"
+;;   "l" "i")
+;; (defun my-hjkl-rotation (_mode mode-keymaps &rest _rest)
+;;   (evil-collection-translate-key 'normal mode-keymaps
+;;     "n" "j"
+;;     "e" "k"
+;;     "i" "l"
+;;     "j" "e"
+;;     "k" "n"
+;;     "l" "i"))
+
+;; ;; called after evil-collection makes its keybindings
+;; (add-hook 'evil-collection-setup-hook #'my-hjkl-rotation)
+
+;; (evil-collection-init)
 
 (after! evil
   (global-evil-matchit-mode))
@@ -1075,29 +1123,75 @@ SCHEDULED: %^t
   (map! :map elfeed-show-mode-map
         :n "q" #'elfeed-search-quit-window))
 
-;; (evil-define-key 'normal elfeed-show-mode-map
-;;   (kbd "N" #'+rss/next) )
-
-
 (after! elfeed
   (map! :map elfeed-search-mode-map
-        :n "N" #'+rss/next))
-
-(after! elfeed-show
-  (map! :map elfeed-search-mode-map
-        :n "N" #'+rss/next))
-
-(after! elfeed-show
-  (define-key! elfeed-show-mode-map
-    "N"     #'+rss/next
-    "E" #'+rss/previous))
+        :n "i" #'elfeed-search-show-entry))
 
 (map! :map elfeed-show-mode-map
-      :n "N" #'+rss/next)
+      :after elfeed-show
+      :n "h" #'elfeed-search-quit-window
+      :n "N" #'elfeed-show-next
+      :n "E" #'elfeed-show-prev
+      :n "y" #'elfeed-show-yank)
 
-(after! elfeed
-  (map! :map elfeed-show-mode-map
-        :n "N" #'+rss/next))
+;; (defun elfeed-search-show-entry-pre (&optional lines)
+;;   "Returns a function to scroll forward or back in the Elfeed
+;;   search results, displaying entries without switching to them."
+;;       (lambda (times)
+;;         (interactive "p")
+;;         (forward-line (* times (or lines 0)))
+;;         (recenter)
+;;         (call-interactively #'elfeed-search-show-entry)
+;;         (select-window (previous-window))
+;;         (unless elfeed-search-remain-on-entry (forward-line -1))))
+
+;; (after! elfeed
+;;   (define-key elfeed-search-mode-map (kbd "N") (elfeed-search-show-entry-pre +1))
+;;   (define-key elfeed-search-mode-map (kbd "E") (elfeed-search-show-entry-pre -1)))
+
+;; (map! :map elfeed-search-mode-map
+;;       :after elfeed-search
+;;       [remap kill-this-buffer] "q"
+;;       [remap kill-buffer] "q"
+;;       :n doom-leader-key nil
+;;       :n "q" #'+rss/quit
+;;       :n "e" #'elfeed-update
+;;       :n "r" #'elfeed-search-untag-all-unread
+;;       :n "u" #'elfeed-search-tag-all-unread
+;;       :n "s" #'elfeed-search-live-filter
+;;       :n "RET" #'elfeed-search-show-entry
+;;       :n "p" #'elfeed-show-pdf
+;;       :n "+" #'elfeed-search-tag-all
+;;       :n "-" #'elfeed-search-untag-all
+;;       :n "S" #'elfeed-search-set-filter
+;;       :n "b" #'elfeed-search-browse-url
+;;       :n "y" #'elfeed-search-yank)
+;; (after! evil
+
+;; (map! :map elfeed-show-mode-map
+;;       :after elfeed-show
+;;       [remap kill-this-buffer] "q"
+;;       [remap kill-buffer] "q"
+;;       :n doom-leader-key nil
+;;       :nm "q" #'+rss/delete-pane
+;;       :nm "o" #'ace-link-elfeed
+;;       :nm "RET" #'org-ref-elfeed-add
+;;       :nm "N" #'elfeed-show-next
+;;       :nm "E" #'elfeed-show-prev
+;;       :nm "p" #'elfeed-show-pdf
+;;       :nm "+" #'elfeed-show-tag
+;;       :nm "-" #'elfeed-show-untag
+;;       :nm "s" #'elfeed-show-new-live-search
+;;       :nm "y" #'elfeed-show-yank))
+
+;; (after! elfeed-search
+;;   (set-evil-initial-state! 'elfeed-search-mode 'normal))
+;; (after! elfeed-show-mode
+;;   (set-evil-initial-state! 'elfeed-show-mode   'normal))
+
+;; (after! evil-snipe
+;;   (push 'elfeed-show-mode   evil-snipe-disabled-modes)
+;;   (push 'elfeed-search-mode evil-snipe-disabled-modes))
 
 (add-hook! 'elfeed-search-mode-hook 'elfeed-update)
 
