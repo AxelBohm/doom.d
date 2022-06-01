@@ -748,7 +748,7 @@ SCHEDULED: %^t
 ;;     (add-to-list TeX-command-list '("XeLaTeX" "%`xelatex%(mode)%' %t" TeX-run-TeX nil t)))
 
 (map! :leader "b t" 'ivy-bibtex)
-(map! :leader "b a" 'biblio-arxiv-lookup)
+(map! :leader "b a" 'arxiv-lookup)
 
 (after! bibtex-completion
 

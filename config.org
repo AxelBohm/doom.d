@@ -1258,7 +1258,7 @@ Add Xetex support (not working..)
 
 #+BEGIN_SRC emacs-lisp
 (map! :leader "b t" 'ivy-bibtex)
-(map! :leader "b a" 'biblio-arxiv-lookup)
+(map! :leader "b a" 'arxiv-lookup)
 
 (after! bibtex-completion
 
