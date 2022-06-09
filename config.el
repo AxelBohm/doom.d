@@ -109,9 +109,10 @@
         :n "L" 'evil-insert-line
         :nv "h" 'evil-backward-char
         :nv "i" 'evil-forward-char
-        :nv "n" 'evil-next-line
-        :nv "e" 'evil-previous-line
-        :nv "k" 'evil-forward-word-end
+        :nv "n" 'evil-next-visual-line
+        :nv "e" 'evil-previous-visual-line
+        :nv "k" 'evil-ex-search-next
+        :nv "K" 'evil-ex-search-previous
         :n "N" 'evil-join
         ;; :vo "l" evil-inner-text-objects-map
         :nvo "j" 'evil-forward-word-end
