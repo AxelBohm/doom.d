@@ -993,13 +993,10 @@ I keep my roam files in dropbox folder which causes problems with the database o
 (setq org-roam-db-location "~/.cache/oarg-roam.db")
 #+END_SRC
 
-config from Henrik
-
+Start with backlink headings folded:
 #+BEGIN_SRC emacs-lisp
-;; (after! org-roam
-;;   ;; Make the backlinks buffer easier to peruse by folding leaves by default.
-;;   (add-hook 'org-roam-buffer-postrender-functions #'magit-section-show-level-2)
-;; )
+(after! magit
+(add-to-list 'magit-section-initial-visibility-alist (cons 'org-roam-node-section 'hide)))
 #+END_SRC
 
 
