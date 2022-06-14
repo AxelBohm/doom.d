@@ -275,7 +275,8 @@
 (map! :leader "SPC" #'ab/switch-to-previous-buffer)
 
 (after! org
-  (setq org-hide-emphasis-markers nil            ;; I want those
+  (setq +org-roam-auto-backlinks-buffer t
+        org-hide-emphasis-markers nil            ;; I want those
         org-return-follows-link t
         ;; the follow two do not work for some reason and others seem to have the same problem
         org-agenda-skip-scheduled-if-done t      ;; don't show in agenda if done
