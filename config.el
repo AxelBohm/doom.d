@@ -338,6 +338,7 @@
                   ((org-agenda-skip-function
                     '(org-agenda-skip-entry-if 'deadline 'todo 'done))   ;; deadlines go in a different "section"
                    (org-agenda-show-all-dates nil)
+                   (org-agenda-prefix-format "  [%e]  ")
                    (org-agenda-overriding-header "\nScheduled\n")  ;; not working
                    (org-deadline-warning-days 0)))
           ;; (todo "LALA"
@@ -353,7 +354,7 @@
           (todo "NEXT"
                 ((org-agenda-skip-function
                   '(org-agenda-skip-entry-if 'deadline))
-                 (org-agenda-prefix-format "  %i %-12:c [%e] ")
+                 (org-agenda-prefix-format "  %i %-12:c [%e]  ")
                  (org-agenda-overriding-header "\nNext Action\n")))
 
           (todo "LALA" ;; dummy item just so I can get a header for the deadlines (see next item)
@@ -361,13 +362,14 @@
           (agenda nil
                   ((org-agenda-entry-types '(:deadline))
                    (org-agenda-format-date "")
+                   (org-agenda-prefix-format "  [%e] ")
                    (org-agenda-show-all-dates nil)
                    (org-deadline-warning-days 0)
                    ;; (org-agenda-skip-function
                    ;;  '(org-agenda-skip-entry-if 'notregexp "\\* NEXT"))
                    (org-agenda-overriding-header "\nDeadlines\n"))) ;; not working
           (tags "inbox"
-                     ((org-agenda-prefix-format "  %?-12t% s")
+                     ((org-agenda-prefix-format "  %?-12t% s [%e]  ")
                       (org-agenda-overriding-header "\nInbox\n")))
           (tags "CLOSED>=\"<today>\""
                 ((org-agenda-overriding-header "\nCompleted today\n")))))
