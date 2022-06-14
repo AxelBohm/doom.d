@@ -503,10 +503,10 @@
            ;; (file+headline org-index-file "Inbox")
            (file org-inbox-file)
            "*** TODO %^{task}
-:PROPERTIES:
-:CONTEXT: %A
-:FILE: %F
-:END:
+:properties:
+:context: %A
+:file: %F
+:end:
 %?\n")
 
           ("n" "Note"  entry
@@ -522,9 +522,9 @@
            ;; (file+headline org-index-file "Inbox")
            (file org-inbox-file)
            "*** TODO %?
-:Properties:
-:CREATED: %U
-:END:"))))
+:properties:
+:created: %U
+:end:"))))
 
 (after! org (add-to-list 'org-capture-templates
           '("s" "Scheduled task"  entry
@@ -532,10 +532,10 @@
            (file org-inbox-file)
            "*** TODO %^{task}
 SCHEDULED: %^t
-:PROPERTIES:
-:CREATED: %U
+:properties:
+:created: %U
 :WILD_NOTIFIER_NOTIFY_BEFORE: %^{notify when?} 30 5
-:END:
+:end:
 %?\n
 ")))
 
@@ -609,7 +609,7 @@ SCHEDULED: %^t
       (concat "\\("
               "[\n\t]" ;; blank
               "\\|^#\\+[[:alpha:]_]+:.*$" ;; org-mode metadata
-              "\\|^:PROPERTIES:\n\\(.+\n\\)+:END:\n"
+              "\\|^:properties:\n\\(.+\n\\)+:END:\n"
               "\\)"))
 
 (setq org-roam-capture-templates
@@ -617,10 +617,11 @@ SCHEDULED: %^t
         ("b" "bibliography reference" plain "%?"
          :target
          (file+head "${citekey}.org"
-                    ":PROPERTIES:
+                    ":properties:
 :author: ${author-or-editor}
 :#+created: %(org-insert-time-stamp (current-time) t t)
 :#+last_modified: %(org-insert-time-stamp (current-time) t t)
+:end:
 #+title: ${title}\n
 ")
          :unnarrowed t)
@@ -628,10 +629,10 @@ SCHEDULED: %^t
         ("d" "default" plain "%?"
          :target
          (file+head "%<%Y%m%d%H%M%S>-${slug}.org"
-                    ":PROPERTIES:
+                    ":properties:
 :#+created: %(org-insert-time-stamp (current-time) t t)
 :#+last_modified: %(org-insert-time-stamp (current-time) t t)
-:END:
+:end:
 #+title: ${title}
 ")
          :unnarrowed t)))
@@ -672,7 +673,7 @@ SCHEDULED: %^t
 ;; - keywords :: ${keywords}
 
 ;; \n* ${title}
-;; :propertIES:
+;; :properties:
 ;; :citekey: ${citekey}
 ;; :author: ${author-or-editor}
 ;; :noter_document: ${file}

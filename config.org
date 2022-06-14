@@ -854,10 +854,10 @@ Check [[https://orgmode.org/manual/Template-expansion.html#Template-expansion][h
            ;; (file+headline org-index-file "Inbox")
            (file org-inbox-file)
            "*** TODO %^{task}
-:PROPERTIES:
-:CONTEXT: %A
-:FILE: %F
-:END:
+:properties:
+:context: %A
+:file: %F
+:end:
 %?\n")
 
           ("n" "Note"  entry
@@ -873,9 +873,9 @@ Check [[https://orgmode.org/manual/Template-expansion.html#Template-expansion][h
            ;; (file+headline org-index-file "Inbox")
            (file org-inbox-file)
            "*** TODO %?
-:Properties:
-:CREATED: %U
-:END:"))))
+:properties:
+:created: %U
+:end:"))))
 #+END_SRC
 
 Scheduled task with notifier.
@@ -887,10 +887,10 @@ Scheduled task with notifier.
            (file org-inbox-file)
            "*** TODO %^{task}
 SCHEDULED: %^t
-:PROPERTIES:
-:CREATED: %U
+:properties:
+:created: %U
 :WILD_NOTIFIER_NOTIFY_BEFORE: %^{notify when?} 30 5
-:END:
+:end:
 %?\n
 ")))
 #+END_SRC
@@ -1029,7 +1029,7 @@ Some obscure solution the get a reasonable preview taken from [[https://github.c
       (concat "\\("
               "[\n\t]" ;; blank
               "\\|^#\\+[[:alpha:]_]+:.*$" ;; org-mode metadata
-              "\\|^:PROPERTIES:\n\\(.+\n\\)+:END:\n"
+              "\\|^:properties:\n\\(.+\n\\)+:END:\n"
               "\\)"))
 #+END_SRC
 
@@ -1043,10 +1043,11 @@ Extra properties for org-roam capture.
         ("b" "bibliography reference" plain "%?"
          :target
          (file+head "${citekey}.org"
-                    ":PROPERTIES:
+                    ":properties:
 :author: ${author-or-editor}
 :#+created: %(org-insert-time-stamp (current-time) t t)
 :#+last_modified: %(org-insert-time-stamp (current-time) t t)
+:end:
 #+title: ${title}\n
 ")
          :unnarrowed t)
@@ -1054,10 +1055,10 @@ Extra properties for org-roam capture.
         ("d" "default" plain "%?"
          :target
          (file+head "%<%Y%m%d%H%M%S>-${slug}.org"
-                    ":PROPERTIES:
+                    ":properties:
 :#+created: %(org-insert-time-stamp (current-time) t t)
 :#+last_modified: %(org-insert-time-stamp (current-time) t t)
-:END:
+:end:
 #+title: ${title}
 ")
          :unnarrowed t)))
@@ -1115,7 +1116,7 @@ Currently I only need one template, but I want more properties.
 ;; - keywords :: ${keywords}
 
 ;; \n* ${title}
-;; :propertIES:
+;; :properties:
 ;; :citekey: ${citekey}
 ;; :author: ${author-or-editor}
 ;; :noter_document: ${file}
