@@ -616,26 +616,23 @@ SCHEDULED: %^t
       '(
         ("b" "bibliography reference" plain "%?"
          :target
-         (file+head "${citekey}.org" "#+title: ${title}\n
-#+created: %(org-insert-time-stamp (current-time) t t)
-#+last_modified: %(org-insert-time-stamp (current-time) t t)
-
-
-
-
-\n* ${title}
-:PROPERTIES:
-:citekey: ${citekey}
+         (file+head "${citekey}.org"
+                    ":PROPERTIES:
 :author: ${author-or-editor}
-:noter_document: ${file}
-:END:")
+:#+created: %(org-insert-time-stamp (current-time) t t)
+:#+last_modified: %(org-insert-time-stamp (current-time) t t)
+#+title: ${title}\n
+")
          :unnarrowed t)
 
         ("d" "default" plain "%?"
          :target
-         (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}
-#+created: %(org-insert-time-stamp (current-time) t t)
-#+last_modified: %(org-insert-time-stamp (current-time) t t)
+         (file+head "%<%Y%m%d%H%M%S>-${slug}.org"
+                    ":PROPERTIES:
+:#+created: %(org-insert-time-stamp (current-time) t t)
+:#+last_modified: %(org-insert-time-stamp (current-time) t t)
+:END:
+#+title: ${title}
 ")
          :unnarrowed t)))
 
