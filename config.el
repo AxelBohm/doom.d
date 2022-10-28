@@ -1,10 +1,11 @@
 (setq doom-localleader-key ",")
 
-(setq doom-theme 'doom-sourcerer)
+(setq doom-theme 'doom-opera-light)
 
 (remove-hook 'text-mode-hook #'hl-line-mode)
 
-(setq doom-font (font-spec :family "Terminus" :size 14))
+;;(setq doom-font (font-spec :family "Terminus" :size 14))
+;; (setq doom-font (font-spec :family "FiraCode-Regular" :size 24)
 
 (show-paren-mode 1)
 
