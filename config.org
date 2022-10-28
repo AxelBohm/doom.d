@@ -1057,7 +1057,8 @@ Some obscure solution the get a reasonable preview taken from [[https://github.c
       (concat "\\("
               "[\n\t]" ;; blank
               "\\|^#\\+[[:alpha:]_]+:.*$" ;; org-mode metadata
-              "\\|^:properties:\n\\(.+\n\\)+:END:\n"
+              "\\|^:properties:\n\\(.+\n\\)+:end:\n"
+              "\\|^:PROPERTIES:\n\\(.+\n\\)+:END:\n"
               "\\)"))
 #+END_SRC
 
@@ -1520,6 +1521,14 @@ This is the correct solution for doom emacs according to [[https://github.com/hl
 #+END_SRC
 
 A general emacs solution was suggested on [[https://www.reddit.com/r/emacs/comments/gqymvz/how_to_force_flycheck_to_select_a_specific_syntax/][reddit]] but doesn't work for doom.
+** unicode
+As julia, python allows for unicode characters but somehow entering them it is
+not as easy as in julia (where it is sufficient to time the texcode and "TAB").
+
+#+BEGIN_SRC emacs-lisp
+(setq default-input-method "TeX")
+#+END_SRC
+
 * julia
 
 
@@ -1868,9 +1877,16 @@ automatically annotate highlights.
 
 #+BEGIN_SRC emacs-lisp
 (setq! elfeed-feeds
-      '("http://export.arxiv.org/api/query?search_query=cat:math.OC&start=0&max_results=300&sortBy=submittedDate&sortOrder=descending"
-        "http://www.argmin.net/feed.xml"))
+      '(("http://export.arxiv.org/api/query?search_query=cat:math.OC&start=0&max_results=300&sortBy=submittedDate&sortOrder=descending" research)
+        ("http://www.argmin.net/feed.xml" blog)))
 #+END_SRC
+
+
+#+BEGIN_SRC emacs-lisp
+(after! elfeed
+  (setq elfeed-search-filter "@1-month-ago"))
+#+END_SRC
+
 
 
 rename the feeds

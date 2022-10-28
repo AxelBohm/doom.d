@@ -16,6 +16,9 @@
 ;; (unpin! org-roam)
 ;; When using bibtex-completion via the `biblio` module
 ;; (unpin! bibtex-completion helm-bibtex ivy-bibtex)
+(unpin! evil-tex)
+
+(package! elfeed-score)
 
 (package! gitconfig-mode
 	  :recipe (:host github :repo "magit/git-modes"

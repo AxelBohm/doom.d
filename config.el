@@ -630,7 +630,8 @@ SCHEDULED: %^t
       (concat "\\("
               "[\n\t]" ;; blank
               "\\|^#\\+[[:alpha:]_]+:.*$" ;; org-mode metadata
-              "\\|^:properties:\n\\(.+\n\\)+:END:\n"
+              "\\|^:properties:\n\\(.+\n\\)+:end:\n"
+              "\\|^:PROPERTIES:\n\\(.+\n\\)+:END:\n"
               "\\)"))
 
 (setq org-roam-capture-templates
@@ -903,6 +904,8 @@ SCHEDULED: %^t
 ;; ;; this way:
 ;; (add-hook 'python-mode-local-vars-hook #'my-flycheck-setup)
 
+(setq default-input-method "TeX")
+
 (map! :map julia-mode-map
     :localleader "r r"  'julia-repl
                  ","    'julia-repl-send-buffer
@@ -1130,8 +1133,11 @@ SCHEDULED: %^t
 (map! :leader "e f" #'elfeed)
 
 (setq! elfeed-feeds
-      '("http://export.arxiv.org/api/query?search_query=cat:math.OC&start=0&max_results=300&sortBy=submittedDate&sortOrder=descending"
-        "http://www.argmin.net/feed.xml"))
+      '(("http://export.arxiv.org/api/query?search_query=cat:math.OC&start=0&max_results=300&sortBy=submittedDate&sortOrder=descending" research)
+        ("http://www.argmin.net/feed.xml" blog)))
+
+(after! elfeed
+  (setq elfeed-search-filter "@1-month-ago"))
 
 (defadvice elfeed-search-update (before nullprogram activate)
   (let ((feed (elfeed-db-get-feed "http://export.arxiv.org/api/query?search_query=cat:math.OC&start=0&max_results=300&sortBy=submittedDate&sortOrder=descending")))
