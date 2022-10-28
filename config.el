@@ -609,9 +609,6 @@ SCHEDULED: %^t
 
 (setq org-roam-db-location "~/.cache/oarg-roam.db")
 
-(after! magit
-(add-to-list 'magit-section-initial-visibility-alist (cons 'org-roam-node-section 'hide)))
-
 (setq deft-recursive t)
 (setq deft-use-filter-string-for-filename t)
 (setq deft-default-extension "org")
