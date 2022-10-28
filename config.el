@@ -485,6 +485,24 @@
 
 (map! :map org-mode-map :leader "o d" 'ab/mark-done-and-archive)
 
+(defun ab/insert-url-as-org-link-fancy ()
+  "If there's a URL on the clipboard, insert it as an org-mode
+link in the form of [[url][*]], and leave point at *."
+  (interactive)
+  (let ((link (substring-no-properties (x-get-selection 'CLIPBOARD)))
+        (url  "\\(http[s]?://\\|www\\.\\)"))
+    (save-match-data
+      (if (string-match url link)
+          (progn
+            (insert (concat "[[" link "][]]"))
+            (backward-char 2)
+            (evil-insert)
+            )
+
+        (error "No URL on the clipboard")))))
+
+(map! :map org-mode-map :localleader "l u" 'ab/insert-url-as-org-link-fancy)
+
 (defun ab/open-agenda-next-tasks  ()
   "show all tasks marked as NEXT"
   (interactive)
