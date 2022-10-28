@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: fcolorbox
+# key: fcol
+# --
+\fcolorbox{white}{lightgray}{$0}

@@ -3,4 +3,4 @@
 # key: zkm
 # condition: 'auto
 # --
-z_{k-1}
+z^{k-1}
