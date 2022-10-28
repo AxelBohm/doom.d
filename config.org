@@ -187,6 +187,14 @@ I want a better one. However. this currently only works for ~find-file~ and not 
       :map counsel-find-file-map
       "M-RET" #'ivy-ffow-done)
 #+END_SRC
+** recent files
+
+When I kill emacs it doesn't remember which files I visited.
+This makes MRU files rather useless. So let's save them regularly while running.
+#+BEGIN_SRC emacs-lisp
+(run-at-time (current-time) 300 'recentf-save-list)
+#+END_SRC
+
 
 * config file
 ** quick access

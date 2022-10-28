@@ -71,6 +71,8 @@
       :map counsel-find-file-map
       "M-RET" #'ivy-ffow-done)
 
+(run-at-time (current-time) 300 'recentf-save-list)
+
 (defun ab/visit-emacs-config ()
   "go to emacs config file"
   (interactive)
