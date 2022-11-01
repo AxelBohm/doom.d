@@ -701,6 +701,34 @@ SCHEDULED: %^t
 ;; :noter_document: ${file}
 ;; :end:"))))
 
+(use-package! websocket
+  :after org-roam)
+
+(use-package! org-roam-ui
+  :after org-roam
+  ;; :commands org-roam-ui-open
+  ;; :hook (org-roam . org-roam-ui-mode)
+  :config
+  (require 'org-roam) ; in case autoloaded
+  (setq org-roam-ui-sync-theme t
+          org-roam-ui-follow t
+          org-roam-ui-update-on-save t
+          org-roam-ui-open-on-start t)
+  )
+
+;; (after! magit
+;; (add-to-list 'magit-section-initial-visibility-alist (cons 'org-roam-node-section 'hide)))
+
+(defun my/preview-fetcher ()
+  (let* ((elem (org-element-context))
+         (parent (org-element-property :parent elem)))
+    ;; TODO: alt handling for non-paragraph elements
+    (string-trim-right (buffer-substring-no-properties
+                        (org-element-property :begin parent)
+                        (org-element-property :end parent)))))
+
+(setq org-roam-preview-function #'my/preview-fetcher)
+
 (map! :leader "o t" nil)
 
 (map! :leader
@@ -1193,52 +1221,6 @@ SCHEDULED: %^t
 ;;   (define-key elfeed-search-mode-map (kbd "N") (elfeed-search-show-entry-pre +1))
 ;;   (define-key elfeed-search-mode-map (kbd "E") (elfeed-search-show-entry-pre -1)))
 
-;; (map! :map elfeed-search-mode-map
-;;       :after elfeed-search
-;;       [remap kill-this-buffer] "q"
-;;       [remap kill-buffer] "q"
-;;       :n doom-leader-key nil
-;;       :n "q" #'+rss/quit
-;;       :n "e" #'elfeed-update
-;;       :n "r" #'elfeed-search-untag-all-unread
-;;       :n "u" #'elfeed-search-tag-all-unread
-;;       :n "s" #'elfeed-search-live-filter
-;;       :n "RET" #'elfeed-search-show-entry
-;;       :n "p" #'elfeed-show-pdf
-;;       :n "+" #'elfeed-search-tag-all
-;;       :n "-" #'elfeed-search-untag-all
-;;       :n "S" #'elfeed-search-set-filter
-;;       :n "b" #'elfeed-search-browse-url
-;;       :n "y" #'elfeed-search-yank)
-;; (after! evil
-
-;; (map! :map elfeed-show-mode-map
-;;       :after elfeed-show
-;;       [remap kill-this-buffer] "q"
-;;       [remap kill-buffer] "q"
-;;       :n doom-leader-key nil
-;;       :nm "q" #'+rss/delete-pane
-;;       :nm "o" #'ace-link-elfeed
-;;       :nm "RET" #'org-ref-elfeed-add
-;;       :nm "N" #'elfeed-show-next
-;;       :nm "E" #'elfeed-show-prev
-;;       :nm "p" #'elfeed-show-pdf
-;;       :nm "+" #'elfeed-show-tag
-;;       :nm "-" #'elfeed-show-untag
-;;       :nm "s" #'elfeed-show-new-live-search
-;;       :nm "y" #'elfeed-show-yank))
-
-;; (after! elfeed-search
-;;   (set-evil-initial-state! 'elfeed-search-mode 'normal))
-;; (after! elfeed-show-mode
-;;   (set-evil-initial-state! 'elfeed-show-mode   'normal))
-
-;; (after! evil-snipe
-;;   (push 'elfeed-show-mode   evil-snipe-disabled-modes)
-;;   (push 'elfeed-search-mode evil-snipe-disabled-modes))
-
-(add-hook! 'elfeed-search-mode-hook 'elfeed-update)
-
 (defun concatenate-authors (authors-list)
   "Given AUTHORS-LIST, list of plists; return string of all authors concatenated."
   (if (> (length authors-list) 1)
@@ -1292,72 +1274,55 @@ SCHEDULED: %^t
 ;;        (:map elfeed-show-mode-map
 ;;         :desc "Fetch arXiv paper to the local library" "a" #'robo/elfeed-entry-to-arxiv)))
 
-;; (defun ab/concatenate-authors (authors-list)
-;;   "Given AUTHORS-LIST, list of plists; return string of all authors concatenated."
-;;   (mapconcat
-;;    (lambda (author) (plist-get author :name))
-;;    authors-list ", "))
+(use-package! elfeed-score
+  :after elfeed
+  :config
+  (elfeed-score-load-score-file "~/.doom.d/elfeed.score") ; See the elfeed-score documentation for the score file syntax
+  (elfeed-score-enable)
+  (define-key elfeed-search-mode-map "=" elfeed-score-map))
 
-;; (defun my-search-print-fn (entry)
-;;   "Print ENTRY to the buffer."
-;;   (let* ((date (elfeed-search-format-date (elfeed-entry-date entry)))
-;; 	 (title (or (elfeed-meta entry :title)
-;; 		    (elfeed-entry-title entry) ""))
-;; 	 (title-faces (elfeed-search--faces (elfeed-entry-tags entry)))
-;; 	 (feed (elfeed-entry-feed entry))
-;; 	 (feed-title
-;; 	  (when feed
-;; 	    (or (elfeed-meta feed :title) (elfeed-feed-title feed))))
-;; 	 (entry-authors (ab/concatenate-authors
-;; 			 (elfeed-meta entry :authors)))
-;; 	 (tags (mapcar #'symbol-name (elfeed-entry-tags entry)))
-;; 	 (tags-str (mapconcat
-;; 		    (lambda (s) (propertize s 'face
-;; 					    'elfeed-search-tag-face))
-;; 		    tags ","))
-;; 	 (title-width (- (window-width) 10
-;; 			 elfeed-search-trailing-width))
-;; 	 (title-column (elfeed-format-column
-;; 			title (elfeed-clamp
-;; 			       elfeed-search-title-min-width
-;; 			       title-width
-;; 			       elfeed-search-title-max-width)
-;; 			:left))
-;; 	 (authors-width 135)
-;; 	 (authors-column (elfeed-format-column
-;; 			entry-authors (elfeed-clamp
-;; 			       elfeed-search-title-min-width
-;; 			       authors-width
-;; 			       131)
-;; 			:left)))
+;; (map! :map elfeed-search-mode-map
+;;       :after elfeed-search
+;;       [remap kill-this-buffer] "q"
+;;       [remap kill-buffer] "q"
+;;       :n doom-leader-key nil
+;;       :n "q" #'+rss/quit
+;;       :n "e" #'elfeed-update
+;;       :n "r" #'elfeed-search-untag-all-unread
+;;       :n "u" #'elfeed-search-tag-all-unread
+;;       :n "s" #'elfeed-search-live-filter
+;;       :n "RET" #'elfeed-search-show-entry
+;;       :n "p" #'elfeed-show-pdf
+;;       :n "+" #'elfeed-search-tag-all
+;;       :n "-" #'elfeed-search-untag-all
+;;       :n "S" #'elfeed-search-set-filter
+;;       :n "b" #'elfeed-search-browse-url
+;;       :n "y" #'elfeed-search-yank)
+;; (after! evil
 
-;;     (insert (propertize date 'face 'elfeed-search-date-face) " ")
+;; (map! :map elfeed-show-mode-map
+;;       :after elfeed-show
+;;       [remap kill-this-buffer] "q"
+;;       [remap kill-buffer] "q"
+;;       :n doom-leader-key nil
+;;       :nm "q" #'+rss/delete-pane
+;;       :nm "o" #'ace-link-elfeed
+;;       :nm "RET" #'org-ref-elfeed-add
+;;       :nm "N" #'elfeed-show-next
+;;       :nm "E" #'elfeed-show-prev
+;;       :nm "p" #'elfeed-show-pdf
+;;       :nm "+" #'elfeed-show-tag
+;;       :nm "-" #'elfeed-show-untag
+;;       :nm "s" #'elfeed-show-new-live-search
+;;       :nm "y" #'elfeed-show-yank))
 
-;;     (insert (propertize title-column
-;; 			'face title-faces 'kbd-help title) " ")
+;; (after! elfeed-search
+;;   (set-evil-initial-state! 'elfeed-search-mode 'normal))
+;; (after! elfeed-show-mode
+;;   (set-evil-initial-state! 'elfeed-show-mode   'normal))
 
-;;     (insert (propertize authors-column
-;; 			'face 'elfeed-search-date-face
-;; 			'kbd-help entry-authors) " ")
-
-;;     ;; (when feed-title
-;;     ;;   (insert (propertize entry-authors
-;;     ;; 'face 'elfeed-search-feed-face) " "))
-
-;;     (when entry-authors
-;;       (insert (propertize feed-title
-;; 			  'face 'elfeed-search-feed-face) " "))
-
-;;     ;; (when tags
-;;     ;;   (insert "(" tags-str ")"))
-
-;;     )
-;;   )
-;; (setq elfeed-search-print-entry-function #'my-search-print-fn)
-
-;; (elfeed-score-load-score-file "~/.doom.d/elfeed.score") ; See the elfeed-score documentation for the score file syntax
-;; (setq! elfeed-score-serde-score-file "~/.doom.d/elfeed.serde.score")
-;; (elfeed-score-enable)
-;; (define-key elfeed-search-mode-map "=" elfeed-score-map)
+;; (after! evil-snipe
+;;   (push 'elfeed-show-mode   evil-snipe-disabled-modes)
+;;   (push 'elfeed-search-mode evil-snipe-disabled-modes))
 
 (setq avy-keys '(?a ?r ?s ?t ?d ?h ?n ?e ?i ?o))
