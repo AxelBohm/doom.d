@@ -1244,7 +1244,7 @@ SCHEDULED: %^t
          (title-column (elfeed-format-column
                         title 100
                         :left))
-         ;; (entry-score (elfeed-format-column (number-to-string (elfeed-score-scoring-get-score-from-entry entry)) 10 :left))
+         (entry-score (elfeed-format-column (number-to-string (elfeed-score-scoring-get-score-from-entry entry)) 10 :left))
          (authors-column (elfeed-format-column entry-authors 40 :left)))
     (insert (propertize date 'face 'elfeed-search-date-face) " ")
 
@@ -1252,12 +1252,12 @@ SCHEDULED: %^t
                         'face title-faces 'kbd-help title) " ")
     (insert (propertize authors-column
                         'kbd-help entry-authors) " ")
-    ;; (insert entry-score " ")
+    (insert entry-score " ")
     ))
 
 (setq! elfeed-search-print-entry-function #'my-search-print-fn)
-;; (after! elfeed
-;;   (setq! elfeed-search-print-entry-function #'my-search-print-fn))
+
+(add-hook! 'elfeed-search-mode-hook 'elfeed-update)
 
 ;; (defun robo/elfeed-entry-to-arxiv ()
 ;;   "Fetch an arXiv paper into the local library from the current elfeed entry."
