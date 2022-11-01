@@ -1972,7 +1972,6 @@ automatically annotate highlights.
 #+END_SRC
 
 default only shows 2 weeks. a little bit more is nice
-
 #+BEGIN_SRC emacs-lisp
 (after! elfeed
   (setq elfeed-search-filter "@1-month-ago"))
@@ -1989,18 +1988,13 @@ rename the feeds
 
 By default q only closes the buffer but leaves the window open....
 #+BEGIN_SRC emacs-lisp
-;; (map! :map elfeed-show-mode-map
-;;       :n "q" #'elfeed-search-quit-window)
-
 (after! elfeed
   (map! :map elfeed-show-mode-map
         :n "q" #'elfeed-search-quit-window))
 #+END_SRC
 
-
-not yet working
+VI keybindings
 #+BEGIN_SRC emacs-lisp
-
 (after! elfeed
   (map! :map elfeed-search-mode-map
         :n "i" #'elfeed-search-show-entry))
@@ -2014,23 +2008,6 @@ not yet working
 
 #+END_SRC
 
-#+BEGIN_SRC emacs-lisp
-;; (defun elfeed-search-show-entry-pre (&optional lines)
-;;   "Returns a function to scroll forward or back in the Elfeed
-;;   search results, displaying entries without switching to them."
-;;       (lambda (times)
-;;         (interactive "p")
-;;         (forward-line (* times (or lines 0)))
-;;         (recenter)
-;;         (call-interactively #'elfeed-search-show-entry)
-;;         (select-window (previous-window))
-;;         (unless elfeed-search-remain-on-entry (forward-line -1))))
-
-;; (after! elfeed
-;;   (define-key elfeed-search-mode-map (kbd "N") (elfeed-search-show-entry-pre +1))
-;;   (define-key elfeed-search-mode-map (kbd "E") (elfeed-search-show-entry-pre -1)))
-#+END_SRC
-
 ** style main window
 
 A helper function that gets the authors names.
@@ -2040,12 +2017,6 @@ A helper function that gets the authors names.
   (if (> (length authors-list) 1)
       (format "%s et al." (plist-get (nth 0 authors-list) :name))
     (plist-get (nth 0 authors-list) :name)))
-#+END_SRC
-
-date and width
-#+BEGIN_SRC emacs-lisp
-;; (setq! elfeed-search-date-format '("%y-%m-%d" 10 :left))
-;; (setq! elfeed-search-title-max-width 110)
 #+END_SRC
 
 Customize how the opened entries look (show things like title, author,...)
@@ -2080,7 +2051,7 @@ Customize how the opened entries look (show things like title, author,...)
 
 load new feeds when opened
 #+BEGIN_SRC emacs-lisp
-(add-hook! 'elfeed-search-mode-hook 'elfeed-update)
+;; (add-hook! 'elfeed-search-mode-hook 'elfeed-update)
 #+END_SRC
 
 
@@ -2118,74 +2089,6 @@ ranking based on keywords
 
 
 
-
-** attempt
-
-# #+BEGIN_SRC emacs-lisp
-# (defvar elfeed-show-mode-map
-#   (let ((map (make-sparse-keymap)))
-#     (prog1 map
-#       (suppress-keymap map)
-#       (define-key map "d" 'elfeed-show-save-enclosure)
-#       (define-key map "q" 'elfeed-kill-buffer)
-#       (define-key map "g" 'elfeed-show-refresh)
-#       (define-key map "n" 'elfeed-show-next)
-#       (define-key map "N" 'elfeed-show-next)
-#       (define-key map "p" 'elfeed-show-prev)
-#       (define-key map "s" 'elfeed-show-new-live-search)
-#       (define-key map "b" 'elfeed-show-visit)
-#       (define-key map "y" 'elfeed-show-yank)
-#       (define-key map "A" 'elfeed-show-add-enclosure-to-playlist)
-#       (define-key map "P" 'elfeed-show-play-enclosure)))
-#   "Keymap for `elfeed-show-mode'.")
-# #+END_SRC
-** tecosaur
-
-#+BEGIN_SRC emacs-lisp
-;; (map! :map elfeed-search-mode-map
-;;       :after elfeed-search
-;;       [remap kill-this-buffer] "q"
-;;       [remap kill-buffer] "q"
-;;       :n doom-leader-key nil
-;;       :n "q" #'+rss/quit
-;;       :n "e" #'elfeed-update
-;;       :n "r" #'elfeed-search-untag-all-unread
-;;       :n "u" #'elfeed-search-tag-all-unread
-;;       :n "s" #'elfeed-search-live-filter
-;;       :n "RET" #'elfeed-search-show-entry
-;;       :n "p" #'elfeed-show-pdf
-;;       :n "+" #'elfeed-search-tag-all
-;;       :n "-" #'elfeed-search-untag-all
-;;       :n "S" #'elfeed-search-set-filter
-;;       :n "b" #'elfeed-search-browse-url
-;;       :n "y" #'elfeed-search-yank)
-;; (after! evil
-
-;; (map! :map elfeed-show-mode-map
-;;       :after elfeed-show
-;;       [remap kill-this-buffer] "q"
-;;       [remap kill-buffer] "q"
-;;       :n doom-leader-key nil
-;;       :nm "q" #'+rss/delete-pane
-;;       :nm "o" #'ace-link-elfeed
-;;       :nm "RET" #'org-ref-elfeed-add
-;;       :nm "N" #'elfeed-show-next
-;;       :nm "E" #'elfeed-show-prev
-;;       :nm "p" #'elfeed-show-pdf
-;;       :nm "+" #'elfeed-show-tag
-;;       :nm "-" #'elfeed-show-untag
-;;       :nm "s" #'elfeed-show-new-live-search
-;;       :nm "y" #'elfeed-show-yank))
-
-;; (after! elfeed-search
-;;   (set-evil-initial-state! 'elfeed-search-mode 'normal))
-;; (after! elfeed-show-mode
-;;   (set-evil-initial-state! 'elfeed-show-mode   'normal))
-
-;; (after! evil-snipe
-;;   (push 'elfeed-show-mode   evil-snipe-disabled-modes)
-;;   (push 'elfeed-search-mode evil-snipe-disabled-modes))
-#+END_SRC
 
 * ~avy~
 

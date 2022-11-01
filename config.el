@@ -1188,9 +1188,6 @@ SCHEDULED: %^t
   (let ((feed (elfeed-db-get-feed "http://export.arxiv.org/api/query?search_query=cat:math.OC&start=0&max_results=300&sortBy=submittedDate&sortOrder=descending")))
     (setf (elfeed-feed-title feed) "arXiv optimization")))
 
-;; (map! :map elfeed-show-mode-map
-;;       :n "q" #'elfeed-search-quit-window)
-
 (after! elfeed
   (map! :map elfeed-show-mode-map
         :n "q" #'elfeed-search-quit-window))
@@ -1206,29 +1203,11 @@ SCHEDULED: %^t
       :n "E" #'elfeed-show-prev
       :n "y" #'elfeed-show-yank)
 
-;; (defun elfeed-search-show-entry-pre (&optional lines)
-;;   "Returns a function to scroll forward or back in the Elfeed
-;;   search results, displaying entries without switching to them."
-;;       (lambda (times)
-;;         (interactive "p")
-;;         (forward-line (* times (or lines 0)))
-;;         (recenter)
-;;         (call-interactively #'elfeed-search-show-entry)
-;;         (select-window (previous-window))
-;;         (unless elfeed-search-remain-on-entry (forward-line -1))))
-
-;; (after! elfeed
-;;   (define-key elfeed-search-mode-map (kbd "N") (elfeed-search-show-entry-pre +1))
-;;   (define-key elfeed-search-mode-map (kbd "E") (elfeed-search-show-entry-pre -1)))
-
 (defun concatenate-authors (authors-list)
   "Given AUTHORS-LIST, list of plists; return string of all authors concatenated."
   (if (> (length authors-list) 1)
       (format "%s et al." (plist-get (nth 0 authors-list) :name))
     (plist-get (nth 0 authors-list) :name)))
-
-;; (setq! elfeed-search-date-format '("%y-%m-%d" 10 :left))
-;; (setq! elfeed-search-title-max-width 110)
 
 (defun my-search-print-fn (entry)
   "Print ENTRY to the buffer."
@@ -1256,7 +1235,7 @@ SCHEDULED: %^t
 
 (setq! elfeed-search-print-entry-function #'my-search-print-fn)
 
-(add-hook! 'elfeed-search-mode-hook 'elfeed-update)
+;; (add-hook! 'elfeed-search-mode-hook 'elfeed-update)
 
 ;; (defun robo/elfeed-entry-to-arxiv ()
 ;;   "Fetch an arXiv paper into the local library from the current elfeed entry."
@@ -1280,49 +1259,5 @@ SCHEDULED: %^t
   (elfeed-score-load-score-file "~/.doom.d/elfeed.score") ; See the elfeed-score documentation for the score file syntax
   (elfeed-score-enable)
   (define-key elfeed-search-mode-map "=" elfeed-score-map))
-
-;; (map! :map elfeed-search-mode-map
-;;       :after elfeed-search
-;;       [remap kill-this-buffer] "q"
-;;       [remap kill-buffer] "q"
-;;       :n doom-leader-key nil
-;;       :n "q" #'+rss/quit
-;;       :n "e" #'elfeed-update
-;;       :n "r" #'elfeed-search-untag-all-unread
-;;       :n "u" #'elfeed-search-tag-all-unread
-;;       :n "s" #'elfeed-search-live-filter
-;;       :n "RET" #'elfeed-search-show-entry
-;;       :n "p" #'elfeed-show-pdf
-;;       :n "+" #'elfeed-search-tag-all
-;;       :n "-" #'elfeed-search-untag-all
-;;       :n "S" #'elfeed-search-set-filter
-;;       :n "b" #'elfeed-search-browse-url
-;;       :n "y" #'elfeed-search-yank)
-;; (after! evil
-
-;; (map! :map elfeed-show-mode-map
-;;       :after elfeed-show
-;;       [remap kill-this-buffer] "q"
-;;       [remap kill-buffer] "q"
-;;       :n doom-leader-key nil
-;;       :nm "q" #'+rss/delete-pane
-;;       :nm "o" #'ace-link-elfeed
-;;       :nm "RET" #'org-ref-elfeed-add
-;;       :nm "N" #'elfeed-show-next
-;;       :nm "E" #'elfeed-show-prev
-;;       :nm "p" #'elfeed-show-pdf
-;;       :nm "+" #'elfeed-show-tag
-;;       :nm "-" #'elfeed-show-untag
-;;       :nm "s" #'elfeed-show-new-live-search
-;;       :nm "y" #'elfeed-show-yank))
-
-;; (after! elfeed-search
-;;   (set-evil-initial-state! 'elfeed-search-mode 'normal))
-;; (after! elfeed-show-mode
-;;   (set-evil-initial-state! 'elfeed-show-mode   'normal))
-
-;; (after! evil-snipe
-;;   (push 'elfeed-show-mode   evil-snipe-disabled-modes)
-;;   (push 'elfeed-search-mode evil-snipe-disabled-modes))
 
 (setq avy-keys '(?a ?r ?s ?t ?d ?h ?n ?e ?i ?o))
