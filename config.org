@@ -1169,6 +1169,55 @@ First we need to "unmap" leader o t which by default is `+vterm/toggle`.
       :desc "pause or continue" "o t p" #'org-timer-pause-or-continue)
 #+END_SRC
 
+** importing bibtex entries
+
+There are (many!) different packages to do this.
+
+advantages of gscholar:
+- often knows if the paper is already published
+- gives directly the order I like of title, author, etc.
+
+advantages of ~org-ref-bibtex~ (which is think is from the ~org-ref~ package):
+- If the paper is really new (only a few days on arxiv), then gscholar usually doesn't know it yet
+- gives more information compared to gscholar like abstract.
+
+
+#+BEGIN_SRC emacs-lisp
+(use-package! gscholar-bibtex
+  :config
+  (gscholar-bibtex-source-on-off :off "IEEE Xplore")
+  (setq gscholar-bibtex-default-source "Google Scholar")
+  (setq gscholar-bibtex-database-file "~/academia/bibliography/bibfile.bib"))
+#+END_SRC
+
+convenient remaps:
+
+#+BEGIN_SRC emacs-lisp
+;; originally: buffer-save
+(map! :leader "b s" nil)
+;; originally: switch-buffer
+(map! :leader "b b" nil)
+
+(map! :leader
+      :desc "bibtex entry from arxiv" "b a" #'org-ref-bibtex-new-entry/arxiv-add-bibtex-entry-and-exit
+      :desc "bibtex entry from biblio" "b b" #'org-ref-bibtex-new-entry/biblio-lookup-and-exit
+      :desc "bibtex from google scholar" "b s" #'gscholar-bibtex)
+#+END_SRC
+
+~org-ref-bibtex-new-entry/arxiv-add-bibtex-entry-and-exit~ has the advantage of
+automatically using the arxiv ID from my clipboard compared to
+~biblio-arxiv-lookup~.
+
+#+BEGIN_SRC emacs-lisp
+;; (map! :leader "b a" 'arxiv-lookup)
+#+END_SRC
+
+Note that there is also [[https://github.com/yantar92/org-capture-ref][org-capture-ref]], which
+is inspired by org-ref, extending org-ref's idea to auto-retrieve BiBTeX from
+scientific paper links. Instead of limiting BiBTeX generation to research
+purposes (scientific articles and books), this package auto-generates BiBTeX for
+any possible web link (Youtube videos, blog posts, reddit threads, etc).
+
 
 * LaTeX
 ** general
@@ -1284,7 +1333,6 @@ Add Xetex support (not working..)
 
 #+BEGIN_SRC emacs-lisp
 (map! :leader "b t" 'ivy-bibtex)
-(map! :leader "b a" 'arxiv-lookup)
 
 (after! bibtex-completion
 

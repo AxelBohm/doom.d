@@ -708,6 +708,24 @@ SCHEDULED: %^t
       :desc "set timer" "o t s" #'org-timer-set-timer
       :desc "pause or continue" "o t p" #'org-timer-pause-or-continue)
 
+(use-package! gscholar-bibtex
+  :config
+  (gscholar-bibtex-source-on-off :off "IEEE Xplore")
+  (setq gscholar-bibtex-default-source "Google Scholar")
+  (setq gscholar-bibtex-database-file "~/academia/bibliography/bibfile.bib"))
+
+;; originally: buffer-save
+(map! :leader "b s" nil)
+;; originally: switch-buffer
+(map! :leader "b b" nil)
+
+(map! :leader
+      :desc "bibtex entry from arxiv" "b a" #'org-ref-bibtex-new-entry/arxiv-add-bibtex-entry-and-exit
+      :desc "bibtex entry from biblio" "b b" #'org-ref-bibtex-new-entry/biblio-lookup-and-exit
+      :desc "bibtex from google scholar" "b s" #'gscholar-bibtex)
+
+;; (map! :leader "b a" 'arxiv-lookup)
+
 (after! latex
   (setq tex-fontify-script t
         ;; automatically put braces after ^ and _
@@ -768,7 +786,6 @@ SCHEDULED: %^t
 ;;     (add-to-list TeX-command-list '("XeLaTeX" "%`xelatex%(mode)%' %t" TeX-run-TeX nil t)))
 
 (map! :leader "b t" 'ivy-bibtex)
-(map! :leader "b a" 'arxiv-lookup)
 
 (after! bibtex-completion
 
