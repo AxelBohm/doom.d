@@ -1224,7 +1224,7 @@ SCHEDULED: %^t
          (title-width (- (window-width) 10
                          elfeed-search-trailing-width))
          (title-column (elfeed-format-column
-                        title 100
+                        title 110
                         :left))
          (entry-score (elfeed-format-column (number-to-string (elfeed-score-scoring-get-score-from-entry entry)) 10 :left))
          (authors-column (elfeed-format-column entry-authors 40 :left)))
@@ -1238,6 +1238,7 @@ SCHEDULED: %^t
     ))
 
 (setq! elfeed-search-print-entry-function #'my-search-print-fn)
+(setq! elfeed-search-date-format '("%m-%d" 5 :left))
 
 (defun ab/elfeed-entry-to-arxiv ()
   "Fetch an arXiv paper into the local library from the current elfeed entry."

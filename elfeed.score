@@ -5,7 +5,7 @@
  ("title-or-content"
   ;; general stuff
   (:text "accerate" :title-value 30 :content-value 30 :type s)
-  (:text "(stochastic|adaptive|gradient|descent|SGD)" :title-value 30 :content-value 30 :type r)
+  (:text "(stochastic|adaptive|gradient|descent|SGD|finite-sum)" :title-value 30 :content-value 30 :type r)
   ;; min-max / VI
   (:text "GAN" :title-value 50 :content-value 30 :type s)
   (:text "gradient-descent-ascent" :title-value 50 :content-value 30 :type s)
