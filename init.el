@@ -89,7 +89,7 @@
        ;;gist              ; interacting with github gists
        (lookup           ; helps you navigate your code and documentation
         +docsets)        ; ...or in Dash docsets locally
-       lsp +eglot
+       lsp
        magit             ; a git porcelain for Emacs
        biblio              ; bibtex-completion
        ;;make              ; run make tasks from Emacs
