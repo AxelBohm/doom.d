@@ -1186,7 +1186,7 @@ SCHEDULED: %^t
         ("http://www.argmin.net/feed.xml" blog)))
 
 (after! elfeed
-  (setq elfeed-search-filter "@1-month-ago"))
+  (setq elfeed-search-filter "@1-month-ago +unread"))
 
 (defadvice elfeed-search-update (before nullprogram activate)
   (let ((feed (elfeed-db-get-feed "http://export.arxiv.org/api/query?search_query=cat:math.OC&start=0&max_results=300&sortBy=submittedDate&sortOrder=descending")))

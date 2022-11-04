@@ -1980,7 +1980,7 @@ load new feeds when opened
 default only shows 2 weeks. a little bit more is nice
 #+BEGIN_SRC emacs-lisp
 (after! elfeed
-  (setq elfeed-search-filter "@1-month-ago"))
+  (setq elfeed-search-filter "@1-month-ago +unread"))
 #+END_SRC
 
 rename the feeds
