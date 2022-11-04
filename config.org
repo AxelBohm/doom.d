@@ -10,9 +10,9 @@
 
 # Stop complaining about non-prefix keys
 
-# #+BEGIN_SRC emacs-lisp
-# (general-auto-unbind-keys)
-# #+END_SRC
+#+BEGIN_SRC emacs-lisp
+(general-auto-unbind-keys)
+#+END_SRC
 
 ** ui
 *** theme
@@ -192,7 +192,7 @@ I want a better one. However. this currently only works for ~find-file~ and not 
 When I kill emacs it doesn't remember which files I visited.
 This makes MRU files rather useless. So let's save them regularly while running.
 #+BEGIN_SRC emacs-lisp
-(run-at-time (current-time) 300 'recentf-save-list)
+;; (run-at-time (current-time) 300 'recentf-save-list)
 #+END_SRC
 
 

@@ -1,5 +1,7 @@
 (setq doom-localleader-key ",")
 
+(general-auto-unbind-keys)
+
 (setq doom-theme 'doom-opera-light)
 
 (remove-hook 'text-mode-hook #'hl-line-mode)
@@ -71,7 +73,7 @@
       :map counsel-find-file-map
       "M-RET" #'ivy-ffow-done)
 
-(run-at-time (current-time) 300 'recentf-save-list)
+;; (run-at-time (current-time) 300 'recentf-save-list)
 
 (defun ab/visit-emacs-config ()
   "go to emacs config file"
