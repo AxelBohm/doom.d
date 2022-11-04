@@ -827,7 +827,7 @@ SCHEDULED: %^t
   (setq! bibtex-completion-find-additional-pdfs t))
 
 (setq! +biblio-pdf-library-dir "~/ucloud/my_stuff/papers"
-       +biblio-default-bibliography-files '("~/academia/bibliography/bibfile.bib")
+       +biblio-default-bibliography-files "~/academia/bibliography/bibfile.bib"
        +biblio-notes-path org-roam-directory)
 
 (after! bibtex-completion
@@ -1179,6 +1179,8 @@ SCHEDULED: %^t
 
 (map! :leader "e f" #'elfeed)
 
+(add-hook! 'elfeed-search-mode-hook 'elfeed-update)
+
 (setq! elfeed-feeds
       '(("http://export.arxiv.org/api/query?search_query=cat:math.OC&start=0&max_results=300&sortBy=submittedDate&sortOrder=descending" research)
         ("http://www.argmin.net/feed.xml" blog)))
@@ -1237,23 +1239,26 @@ SCHEDULED: %^t
 
 (setq! elfeed-search-print-entry-function #'my-search-print-fn)
 
-;; (add-hook! 'elfeed-search-mode-hook 'elfeed-update)
+(defun ab/elfeed-entry-to-arxiv ()
+  "Fetch an arXiv paper into the local library from the current elfeed entry."
+  (interactive)
+  (let* ((link (elfeed-entry-link elfeed-show-entry))
+         (match-idx (string-match "arxiv.org/abs/\\([0-9.]*\\)" link))
+         (matched-arxiv-number (match-string 1 link)))
+    (when matched-arxiv-number
+      (message "Going to arXiv: %s" matched-arxiv-number)
+      (arxiv-get-pdf-add-bibtex-entry matched-arxiv-number +biblio-default-bibliography-files +biblio-pdf-library-dir))))
 
-;; (defun robo/elfeed-entry-to-arxiv ()
-;;   "Fetch an arXiv paper into the local library from the current elfeed entry."
-;;   (interactive)
-;;   (let* ((link (elfeed-entry-link elfeed-show-entry))
-;;          (match-idx (string-match "arxiv.org/abs/\\([0-9.]*\\)" link))
-;;          (matched-arxiv-number (match-string 1 link)))
-;;     (when matched-arxiv-number
-;;       (message "Going to arXiv: %s" matched-arxiv-number)
-;;       (arxiv-get-pdf-add-bibtex-entry matched-arxiv-number +biblio-default-bibliography-files +biblio-pdf-library-dir))))
+(map! (:after elfeed
+       (:map elfeed-search-mode-map
+        :desc "Fetch arXiv paper to the local library" "A" #'ab/elfeed-entry-to-arxiv)
+       (:map elfeed-show-mode-map
+        :desc "Fetch arXiv paper to the local library" "A" #'ab/elfeed-entry-to-arxiv)))
 
-;; (map! (:after elfeed
-;;        (:map elfeed-search-mode-map
-;;         :desc "Open entry" "m" #'elfeed-search-show-entry)
-;;        (:map elfeed-show-mode-map
-;;         :desc "Fetch arXiv paper to the local library" "a" #'robo/elfeed-entry-to-arxiv)))
+;; needs to be after, otherwise it gets overwritten
+(after! elfeed
+  (map! :map elfeed-show-mode-map
+        :n "A" #'ab/elfeed-entry-to-arxiv))
 
 (use-package! elfeed-score
   :after elfeed
