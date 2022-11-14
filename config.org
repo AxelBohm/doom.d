@@ -1081,6 +1081,33 @@ Extra properties for org-roam capture.
 ")
          :unnarrowed t)
 
+        ("y" "youtube video" plain "%?"
+         :target
+         (file+head "%<%Y%m%d%H%M%S>-${slug}.org"
+                    ":properties:
+:author:
+:#+created: %(org-insert-time-stamp (current-time) t t)
+:#+last_modified: %(org-insert-time-stamp (current-time) t t)
+:#+link:
+:end:
+#+title: youtube: ${title}\n
+")
+         :unnarrowed t)
+
+
+        ("r" "reading (book notes)" plain "%?"
+         :target
+         (file+head "%<%Y%m%d%H%M%S>-${slug}.org"
+                    ":properties:
+:author:
+:year:
+:#+created: %(org-insert-time-stamp (current-time) t t)
+:#+last_modified: %(org-insert-time-stamp (current-time) t t)
+:end:
+#+title: Book: ${title}\n
+")
+         :unnarrowed t)
+
         ("d" "default" plain "%?"
          :target
          (file+head "%<%Y%m%d%H%M%S>-${slug}.org"
