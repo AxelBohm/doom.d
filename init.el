@@ -118,6 +118,7 @@
         ; +ipython         ; ipython/jupyter support for babel
         ; +pandoc          ; export-with-pandoc support
         ; +present         ; using org-mode for presentations
+        +journal
         +roam2
         +noter             ; annotate pdfs
         +pretty)

@@ -783,6 +783,13 @@ SCHEDULED: %^t
 
 ;; (map! :leader "b a" 'arxiv-lookup)
 
+(after! org
+  (setq org-journal-date-prefix "#+title: "
+        org-journal-time-prefix "* "
+        org-journal-date-format "%A, %Y-%m-%d"
+        org-journal-file-format "%Y-%m-%d.org"
+  ))
+
 (after! latex
   (setq tex-fontify-script t
         ;; automatically put braces after ^ and _

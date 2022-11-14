@@ -1287,6 +1287,17 @@ scientific paper links. Instead of limiting BiBTeX generation to research
 purposes (scientific articles and books), this package auto-generates BiBTeX for
 any possible web link (Youtube videos, blog posts, reddit threads, etc).
 
+** journal
+
+#+BEGIN_SRC emacs-lisp
+(after! org
+  (setq org-journal-date-prefix "#+title: "
+        org-journal-time-prefix "* "
+        org-journal-date-format "%A, %Y-%m-%d"
+        org-journal-file-format "%Y-%m-%d.org"
+  ))
+#+END_SRC
+
 
 * LaTeX
 ** general
