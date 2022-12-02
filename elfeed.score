@@ -83,6 +83,7 @@
   (:text "Radu Ioan Bot" :value 200 :type w)
   (:text "Benoit Dherin" :value 200 :type w)
   (:text "David G.T. Barrett" :value 200 :type w)
+  (:text "Martin Jaggi" :value 150 :type w)
   (:text "Peter Richtárik" :value 150 :type w))
  ("feed")
  ("link")
