@@ -952,6 +952,9 @@ SCHEDULED: %^t
                      "c a" 'conda-env-activate
         ))
 
+(setq conda-anaconda-home (expand-file-name "~/.miniconda3"))
+(setq conda-env-home-directory (expand-file-name "~/.miniconda3"))
+
 (defun python-shell-start-and-send-buffer()
   (interactive)
   (run-python)

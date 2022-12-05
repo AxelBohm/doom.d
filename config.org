@@ -1589,6 +1589,9 @@ Fixing would be nice too, but apparently this is open, cf. [[https://github.com/
                      ","   'python-shell-send-buffer     ; replace C-c C-c
                      "c a" 'conda-env-activate
         ))
+
+(setq conda-anaconda-home (expand-file-name "~/.miniconda3"))
+(setq conda-env-home-directory (expand-file-name "~/.miniconda3"))
 #+END_SRC
 
 When making changes in other buffers (not the one I'm sending) they are not registered. So I keep having to restart the python process. So I decided to put this in the run function
