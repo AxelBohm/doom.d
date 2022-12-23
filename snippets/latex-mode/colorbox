@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: colorbox
+# key: cb
+# --
+\colorbox{yellow!40}{$0}

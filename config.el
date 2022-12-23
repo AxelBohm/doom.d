@@ -855,12 +855,12 @@ SCHEDULED: %^t
 
   (setq! bibtex-completion-bibliography '("~/academia/bibliography/bibfile.bib")
          bibtex-completion-notes-path org-roam-directory
-         bibtex-completion-library-path '("~/ucloud/my_stuff/papers" )))
+         bibtex-completion-library-path '("~/ucloud/my_stuff/papers/" )))
 
 (after! bibtex-completion
   (setq! bibtex-completion-find-additional-pdfs t))
 
-(setq! +biblio-pdf-library-dir "~/ucloud/my_stuff/papers"
+(setq! +biblio-pdf-library-dir "~/ucloud/my_stuff/papers/"
        +biblio-default-bibliography-files "~/academia/bibliography/bibfile.bib"
        +biblio-notes-path org-roam-directory)
 
@@ -1277,26 +1277,58 @@ SCHEDULED: %^t
 (setq! elfeed-search-print-entry-function #'my-search-print-fn)
 (setq! elfeed-search-date-format '("%m-%d" 5 :left))
 
-(defun ab/elfeed-entry-to-arxiv ()
+(defun ab/fetch-bibtex-and-paper-from-elfeed-entry ()
   "Fetch an arXiv paper into the local library from the current elfeed entry."
   (interactive)
   (let* ((link (elfeed-entry-link elfeed-show-entry))
          (match-idx (string-match "arxiv.org/abs/\\([0-9.]*\\)" link))
          (matched-arxiv-number (match-string 1 link)))
     (when matched-arxiv-number
-      (message "Going to arXiv: %s" matched-arxiv-number)
+      (message "Fetching pdf & bibtex entry from arXiv: %s" matched-arxiv-number)
       (arxiv-get-pdf-add-bibtex-entry matched-arxiv-number +biblio-default-bibliography-files +biblio-pdf-library-dir))))
 
 (map! (:after elfeed
        (:map elfeed-search-mode-map
-        :desc "Fetch arXiv paper to the local library" "A" #'ab/elfeed-entry-to-arxiv)
+        :desc "Fetch arXiv paper to the local library" "A" #'ab/fetch-bibtex-and-paper-from-elfeed-entry)
        (:map elfeed-show-mode-map
-        :desc "Fetch arXiv paper to the local library" "A" #'ab/elfeed-entry-to-arxiv)))
+        :desc "Fetch arXiv paper to the local library" "A" #'ab/fetch-bibtex-and-paper-from-elfeed-entry)))
 
 ;; needs to be after, otherwise it gets overwritten
 (after! elfeed
   (map! :map elfeed-show-mode-map
-        :n "A" #'ab/elfeed-entry-to-arxiv))
+        :n "A" #'ab/fetch-bibtex-and-paper-from-elfeed-entry))
+
+(defun ab/fetch-bibtex-from-elfeed-entry ()
+  "Fetch an arXiv paper into the local library from the current elfeed entry."
+  (interactive)
+  (let* ((link (elfeed-entry-link elfeed-show-entry))
+         (match-idx (string-match "arxiv.org/abs/\\([0-9.]*\\)" link))
+         (matched-arxiv-number (match-string 1 link)))
+    (when matched-arxiv-number
+      (message "Fetching bibtex entry from arXiv: %s" matched-arxiv-number)
+      (arxiv-add-bibtex-entry matched-arxiv-number +biblio-default-bibliography-files))))
+
+(map! (:after elfeed
+       (:map elfeed-search-mode-map
+        :desc "Fetch arXiv paper to the local library" "a" #'ab/fetch-bibtex-from-elfeed-entry)))
+
+;; needs to be after, otherwise it gets overwritten
+(after! elfeed
+  (map! :map elfeed-show-mode-map
+        :n "a" #'ab/fetch-bibtex-from-elfeed-entry))
+
+(defvar arxiv-entry-format-string "@article{%s,
+  journal = {CoRR},
+  title = {%s},
+  author = {%s},
+  archivePrefix = {arXiv},
+  year = {%s},
+  eprint = {%s},
+  primaryClass = {%s},
+  abstract = {%s},
+  url = {%s},
+}"
+  "Template for BibTeX entries of arXiv articles.")
 
 (use-package! elfeed-score
   :after elfeed

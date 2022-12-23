@@ -1418,7 +1418,7 @@ Add Xetex support (not working..)
 
   (setq! bibtex-completion-bibliography '("~/academia/bibliography/bibfile.bib")
          bibtex-completion-notes-path org-roam-directory
-         bibtex-completion-library-path '("~/ucloud/my_stuff/papers" )))
+         bibtex-completion-library-path '("~/ucloud/my_stuff/papers/" )))
 #+END_SRC
 
 You may store additional PDFs for a given entry, such as an annotated version of the original PDF, a file containing supplemental material, or chapter files.
@@ -1434,7 +1434,7 @@ Note that for performance reasons, these additional files are only detected when
 Doom provides a way to configure ~bibtex-completion~ and ~org-ref~ at the same time through:
 
 #+BEGIN_SRC emacs-lisp
-(setq! +biblio-pdf-library-dir "~/ucloud/my_stuff/papers"
+(setq! +biblio-pdf-library-dir "~/ucloud/my_stuff/papers/"
        +biblio-default-bibliography-files "~/academia/bibliography/bibfile.bib"
        +biblio-notes-path org-roam-directory)
 #+END_SRC
@@ -2009,6 +2009,7 @@ load new feeds when opened
 (add-hook! 'elfeed-search-mode-hook 'elfeed-update)
 #+END_SRC
 
+a similar config from a different website see [[https://cundy.me/post/elfeed/][here:]]
 
 ** set feeds
 
@@ -2097,31 +2098,73 @@ Customize how the opened entries look (show things like title, author,...)
 #+END_SRC
 ** add bibtex entry
 
+fetch pdf and bibtex entry.
+
 #+BEGIN_SRC emacs-lisp
-(defun ab/elfeed-entry-to-arxiv ()
+(defun ab/fetch-bibtex-and-paper-from-elfeed-entry ()
   "Fetch an arXiv paper into the local library from the current elfeed entry."
   (interactive)
   (let* ((link (elfeed-entry-link elfeed-show-entry))
          (match-idx (string-match "arxiv.org/abs/\\([0-9.]*\\)" link))
          (matched-arxiv-number (match-string 1 link)))
     (when matched-arxiv-number
-      (message "Going to arXiv: %s" matched-arxiv-number)
+      (message "Fetching pdf & bibtex entry from arXiv: %s" matched-arxiv-number)
       (arxiv-get-pdf-add-bibtex-entry matched-arxiv-number +biblio-default-bibliography-files +biblio-pdf-library-dir))))
 
 (map! (:after elfeed
        (:map elfeed-search-mode-map
-        :desc "Fetch arXiv paper to the local library" "A" #'ab/elfeed-entry-to-arxiv)
+        :desc "Fetch arXiv paper to the local library" "A" #'ab/fetch-bibtex-and-paper-from-elfeed-entry)
        (:map elfeed-show-mode-map
-        :desc "Fetch arXiv paper to the local library" "A" #'ab/elfeed-entry-to-arxiv)))
+        :desc "Fetch arXiv paper to the local library" "A" #'ab/fetch-bibtex-and-paper-from-elfeed-entry)))
 
 ;; needs to be after, otherwise it gets overwritten
 (after! elfeed
   (map! :map elfeed-show-mode-map
-        :n "A" #'ab/elfeed-entry-to-arxiv))
+        :n "A" #'ab/fetch-bibtex-and-paper-from-elfeed-entry))
 
 #+END_SRC
 
-a similiar config from a different website see [[https://cundy.me/post/elfeed/][here:]]
+fetch only bibtex entry
+
+#+BEGIN_SRC emacs-lisp
+(defun ab/fetch-bibtex-from-elfeed-entry ()
+  "Fetch an arXiv paper into the local library from the current elfeed entry."
+  (interactive)
+  (let* ((link (elfeed-entry-link elfeed-show-entry))
+         (match-idx (string-match "arxiv.org/abs/\\([0-9.]*\\)" link))
+         (matched-arxiv-number (match-string 1 link)))
+    (when matched-arxiv-number
+      (message "Fetching bibtex entry from arXiv: %s" matched-arxiv-number)
+      (arxiv-add-bibtex-entry matched-arxiv-number +biblio-default-bibliography-files))))
+
+(map! (:after elfeed
+       (:map elfeed-search-mode-map
+        :desc "Fetch arXiv paper to the local library" "a" #'ab/fetch-bibtex-from-elfeed-entry)))
+
+;; needs to be after, otherwise it gets overwritten
+(after! elfeed
+  (map! :map elfeed-show-mode-map
+        :n "a" #'ab/fetch-bibtex-from-elfeed-entry))
+
+#+END_SRC
+
+** formatting of arxive string
+
+#+BEGIN_SRC emacs-lisp
+(defvar arxiv-entry-format-string "@article{%s,
+  journal = {CoRR},
+  title = {%s},
+  author = {%s},
+  archivePrefix = {arXiv},
+  year = {%s},
+  eprint = {%s},
+  primaryClass = {%s},
+  abstract = {%s},
+  url = {%s},
+}"
+  "Template for BibTeX entries of arXiv articles.")
+#+END_SRC
+
 
 ** scoring
 
