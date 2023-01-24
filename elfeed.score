@@ -42,8 +42,8 @@
   ;; minus
   (:text "integer" :title-value -50 :content-value -30 :type s)
   (:text "LP" :title-value -50 :content-value -30 :type s)
-  (:text "quantum" :title-value -50 :content-value -30 :type s)
-  (:text "planning" :title-value -50 :content-value -30 :type s)
+  (:text "quantum" :title-value -100 :content-value -100 :type s)
+  (:text "planning" :title-value -50 :content-value -50 :type s)
   (:text "3D" :title-value -50 :content-value -30 :type s)
   (:text "real-time" :title-value -50 :content-value -30 :type s)
   (:text "pricing" :title-value -50 :content-value -30 :type s)
@@ -92,6 +92,8 @@
   (:text "multimodal" :title-value -50 :content-value -50 :type s)
   (:text "branch-and-bound" :title-value -50 :content-value -50 :type s)
   (:text "physics" :title-value -50 :content-value -50 :type s)
+  (:text "input-to-state" :title-value -50 :content-value -50 :type s)
+  (:text "eigenvalue" :title-value -50 :content-value -50 :type s)
   )
  ("tag")
  ("authors"
