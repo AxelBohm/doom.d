@@ -497,6 +497,12 @@ Switch back and forth between the two MRU buffers.
 =Your life in plain text=
 #+end_center
 
+This fixes a [[https://github.com/org-roam/org-roam/issues/2198][bug]] with org-roam links being displayed in literal form.
+Needs to come before any other org config.
+#+BEGIN_SRC emacs-lisp
+(setq org-fold-core-style 'overlays)
+#+END_SRC
+
 ** config
 
 Load org-mode plus some standard keybindings.

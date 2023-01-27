@@ -279,6 +279,8 @@
 
 (map! :leader "SPC" #'ab/switch-to-previous-buffer)
 
+(setq org-fold-core-style 'overlays)
+
 (after! org
   (setq +org-roam-auto-backlinks-buffer t
         org-hide-emphasis-markers nil            ;; I want those
