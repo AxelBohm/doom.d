@@ -2153,24 +2153,6 @@ fetch only bibtex entry
 
 #+END_SRC
 
-** formatting of arxive string
-
-#+BEGIN_SRC emacs-lisp
-(defvar arxiv-entry-format-string "@article{%s,
-  journal = {CoRR},
-  title = {%s},
-  author = {%s},
-  archivePrefix = {arXiv},
-  year = {%s},
-  eprint = {%s},
-  primaryClass = {%s},
-  abstract = {%s},
-  url = {%s},
-}"
-  "Template for BibTeX entries of arXiv articles.")
-#+END_SRC
-
-
 ** scoring
 
 ranking based on keywords

@@ -1318,19 +1318,6 @@ SCHEDULED: %^t
   (map! :map elfeed-show-mode-map
         :n "a" #'ab/fetch-bibtex-from-elfeed-entry))
 
-(defvar arxiv-entry-format-string "@article{%s,
-  journal = {CoRR},
-  title = {%s},
-  author = {%s},
-  archivePrefix = {arXiv},
-  year = {%s},
-  eprint = {%s},
-  primaryClass = {%s},
-  abstract = {%s},
-  url = {%s},
-}"
-  "Template for BibTeX entries of arXiv articles.")
-
 (use-package! elfeed-score
   :after elfeed
   :config
