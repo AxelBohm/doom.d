@@ -785,6 +785,49 @@ SCHEDULED: %^t
 
 ;; (map! :leader "b a" 'arxiv-lookup)
 
+(defvar arxiv-entry-format-string "@article{%s,
+  title={%s},
+  author={%s},
+  year={%s},
+  journal={arXiv preprint arXiv:%s},
+  primaryClass={%s},
+  abstract={%s},
+  url={%s},
+}"
+  "Template for BibTeX entries of arXiv articles.")
+
+(defun arxiv-get-bibtex-entry-via-arxiv-api (arxiv-number)
+  "Retrieve meta data for ARXIV-NUMBER.
+Returns a formatted BibTeX entry."
+  (with-current-buffer
+      (url-retrieve-synchronously (format "http://export.arxiv.org/api/query?id_list=%s" arxiv-number) t)
+    (let* ((parse-tree (libxml-parse-xml-region
+                        (progn (goto-char 0)
+                               (search-forward "<?xml ")
+                               (match-beginning 0))
+                        (point-max)))
+           (entry (assq 'entry parse-tree))
+           (authors (--map (nth 2 (nth 2 it))
+                           (--filter (and (listp it) (eq (car it) 'author)) entry)))
+           (year (format-time-string "%Y" (date-to-time (nth 2 (assq 'published entry)))))
+           (title (nth 2 (assq 'title entry)))
+           (names (arxiv-bibtexify-authors authors))
+           (category (cdar (nth 1 (assq 'primary_category entry))))
+           (abstract (s-trim (nth 2 (assq 'summary entry))))
+           (url (nth 2 (assq 'id entry)))
+           (temp-bibtex (format arxiv-entry-format-string "" title names year arxiv-number category abstract url))
+           (key (with-temp-buffer
+                  (insert temp-bibtex)
+		  (bibtex-mode)
+		  (bibtex-set-dialect (parsebib-find-bibtex-dialect) t)
+		  (org-ref-replace-nonascii)
+                  (bibtex-generate-autokey)))
+	   (doi (assq 'doi entry)))
+      (if doi
+	  (doi-utils-doi-to-bibtex-string (nth 2 doi))
+	;; no doi, so we fall back to the simple template
+	(format arxiv-entry-format-string key title names year arxiv-number category abstract url)))))
+
 (after! org
   (setq org-journal-date-prefix "#+title: "
         org-journal-time-prefix "* "
