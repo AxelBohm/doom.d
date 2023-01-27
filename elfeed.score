@@ -94,6 +94,8 @@
   (:text "physics" :title-value -50 :content-value -50 :type s)
   (:text "input-to-state" :title-value -50 :content-value -50 :type s)
   (:text "eigenvalue" :title-value -50 :content-value -50 :type s)
+  (:text "vector equlibrium" :title-value -50 :content-value -50 :type s)
+  (:text "vector equlibria" :title-value -50 :content-value -50 :type s)
   )
  ("tag")
  ("authors"
