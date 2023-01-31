@@ -1292,8 +1292,8 @@ Returns a formatted BibTeX entry."
 (defun concatenate-authors (authors-list)
   "Given AUTHORS-LIST, list of plists; return string of all authors concatenated."
   (if (> (length authors-list) 1)
-      (format "%s et al." (plist-get (nth 0 authors-list) :name))
-    (plist-get (nth 0 authors-list) :name)))
+      (format "%s. %s et al." (substring (plist-get (nth 0 authors-list) :name) 0 1) (car (last (s-split " " (plist-get (nth 0 authors-list) :name)))))
+    (format "%s. %s" (substring (plist-get (nth 0 authors-list) :name) 0 1) (car (last (s-split " " (plist-get (nth 0 authors-list) :name)))))))
 
 (defun my-search-print-fn (entry)
   "Print ENTRY to the buffer."
