@@ -1070,7 +1070,7 @@ Returns a formatted BibTeX entry."
         company-show-quick-access t
         company-tooltip-limit 7
         company-tooltip-minimum-width 40
-        company-minimum-prefix-length 2)
+        company-minimum-prefix-length 1)
   (add-hook 'after-init-hook 'global-company-mode)
   :config
   ;; Add yasnippet support for all company backends
