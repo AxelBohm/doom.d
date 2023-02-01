@@ -397,6 +397,11 @@
   (setq org-ellipsis " ..."))
 
 (after! org
+  (setq org-format-latex-options (plist-put org-format-latex-options :scale 2.5))
+  (add-hook 'org-mode-hook 'org-fragtog-mode)
+  )
+
+(after! org
   (setq org-directory "~/org")
 
   (defun org-file-path (filename)

@@ -664,6 +664,15 @@ configure the symbol for stuff hidden after heading.
   (setq org-ellipsis " ..."))
 #+END_SRC
 
+latex fragments
+#+BEGIN_SRC emacs-lisp
+(after! org
+  (setq org-format-latex-options (plist-put org-format-latex-options :scale 2.5))
+  (add-hook 'org-mode-hook 'org-fragtog-mode)
+  )
+#+END_SRC
+
+
 ** structure and files
 
 Tell emacs where I store my org stuff.

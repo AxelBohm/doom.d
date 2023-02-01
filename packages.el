@@ -35,3 +35,5 @@
 
 (package! gscholar-bibtex
   :recipe (:host github :repo "cute-jumper/gscholar-bibtex"))
+
+(package! org-fragtog)
