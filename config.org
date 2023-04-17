@@ -195,7 +195,6 @@ This makes MRU files rather useless. So let's save them regularly while running.
 ;; (run-at-time (current-time) 300 'recentf-save-list)
 #+END_SRC
 
-
 * config file
 ** quick access
 
@@ -1367,7 +1366,6 @@ TODO: I would like to have the ~key~ as in gscholar, i.e. last name of first aut
   ))
 #+END_SRC
 
-
 * LaTeX
 ** general
 
@@ -1472,7 +1470,6 @@ Add Xetex support (not working..)
 ;; (after! latex
 ;;     (add-to-list TeX-command-list '("XeLaTeX" "%`xelatex%(mode)%' %t" TeX-run-TeX nil t)))
 #+END_SRC
-
 
 * bibtex completion
 
@@ -1767,7 +1764,6 @@ This fix is necessary for lsp to work in julia:
     (setq-local lsp-enable-folding t
                 lsp-folding-range-limit 100)))
 #+END_SRC
-
 
 * auto completion
 ** company
@@ -2229,7 +2225,6 @@ ranking based on keywords
 #+END_SRC
 
 check [[https://www.unwoundstack.com/doc/elfeed-score/0.7.7/elfeed-score/title-Rules.html][this]] for an explanation on how the file syntax works.
-
 
 
 * ~avy~
