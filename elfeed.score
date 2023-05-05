@@ -133,6 +133,7 @@
  ("tag")
  ("authors"
   (:text "Simon Lacoste-Julien" :value 150 :type w)
+  (:text "Gauthier Gidel" :value 150 :type w)
   (:text "Michael I. Jordan" :value 150 :type w)
   (:text "Yura Malitsky" :value 300 :type w)
   (:text "Dmitriy Drusvyatskiy" :value 200 :type w)
