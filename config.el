@@ -670,6 +670,18 @@ SCHEDULED: %^t
 ")
          :unnarrowed t)
 
+        ("p" "podcast" plain "%?"
+         :target
+         (file+head "%<%Y%m%d%H%M%S>-${slug}.org"
+                    ":properties:
+:author:
+:#+created: %(org-insert-time-stamp (current-time) t t)
+:#+last_modified: %(org-insert-time-stamp (current-time) t t)
+:#+link:
+:end:
+#+title: podcast: ${title}\n
+")
+         :unnarrowed t)
 
         ("r" "reading (book notes)" plain "%?"
          :target
