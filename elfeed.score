@@ -141,6 +141,9 @@
   (:text "space" :title-value -50 :content-value -30 :type s)
   (:text "spaces" :title-value -50 :content-value -30 :type s)
   (:text "solvability" :title-value -50 :content-value -30 :type s)
+  (:text "zeroth order" :title-value -100 :content-value -100 :type s)
+  (:text "rational" :title-value -100 :content-value -70 :type s)
+  (:text "tropical" :title-value -100 :content-value -100 :type s)
   )
  ("tag")
  ("authors"
