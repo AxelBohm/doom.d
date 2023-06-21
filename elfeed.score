@@ -146,6 +146,7 @@
   (:text "tropical" :title-value -100 :content-value -100 :type s)
   (:text "ADMM" :title-value -200 :content-value -100 :type s)
   (:text "Bregman" :title-value -70 :content-value -50 :type s)
+  (:text "continuous-time" :title-value -100 :content-value -70 :type s)
   )
  ("tag")
  ("authors"
