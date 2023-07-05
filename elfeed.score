@@ -121,6 +121,7 @@
   (:text "vector equlibrium" :title-value -50 :content-value -50 :type s)
   (:text "vector equlibria" :title-value -50 :content-value -50 :type s)
   (:text "optimal transport" :title-value -50 :content-value -50 :type s)
+  (:text "optimal control" :title-value -70 :content-value -70 :type s)
   (:text "transport" :title-value -50 :content-value -50 :type s)
   (:text "greedy" :title-value -50 :content-value -50 :type s)
   (:text "Banach space" :title-value -50 :content-value -50 :type s)
