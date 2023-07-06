@@ -103,7 +103,7 @@
       "s h" #'evil-window-split
       "s v" #'evil-window-vsplit
       "e c" #'ab/visit-emacs-config
-      "r"   #'ab/visit-references
+      "o r" #'ab/visit-references
       "x"   #'counsel-M-x ;; no need to press *meta*
       "w"   #'save-buffer)
 
@@ -618,30 +618,14 @@ SCHEDULED: %^t
 
 (setq org-roam-db-location "~/.cache/oarg-roam.db")
 
-(setq deft-recursive t)
-(setq deft-use-filter-string-for-filename t)
-(setq deft-default-extension "org")
-(setq deft-directory org-roam-directory)
+(defun ab/org-roam-rg-search()
+ "Do counsel-rg on the org roam directory"
+ (interactive)
+ (counsel-rg nil org-roam-directory))
 
-(defun cm/deft-parse-title (file contents)
-  "Parse the given FILE and CONTENTS and determine the title.
-  If `deft-use-filename-as-title' is nil, the title is taken to
-  be the first non-empty line of the FILE.  Else the base name of the FILE is
-  used as title."
-  (let ((begin (string-match "^#\\+[tT][iI][tT][lL][eE]: .*$" contents)))
-    (if begin
-        (string-trim (substring contents begin (match-end 0)) "#\\+[tT][iI][tT][lL][eE]: *" "[\n\t ]+")
-      (deft-base-filename file))))
-
-  (advice-add 'deft-parse-title :override #'cm/deft-parse-title)
-
-  (setq deft-strip-summary-regexp
-      (concat "\\("
-              "[\n\t]" ;; blank
-              "\\|^#\\+[[:alpha:]_]+:.*$" ;; org-mode metadata
-              "\\|^:properties:\n\\(.+\n\\)+:end:\n"
-              "\\|^:PROPERTIES:\n\\(.+\n\\)+:END:\n"
-              "\\)"))
+(global-set-key (kbd "C-c rr") 'ab/org-roam-rg-search)
+(map! :leader "r r" #'ab/org-roam-rg-search)
+(map! :leader "n d" #'ab/org-roam-rg-search)
 
 (setq org-roam-capture-templates
       '(

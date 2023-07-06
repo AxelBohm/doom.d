@@ -252,7 +252,7 @@ Set the leader key and some very basic keybindings.
       "s h" #'evil-window-split
       "s v" #'evil-window-vsplit
       "e c" #'ab/visit-emacs-config
-      "r"   #'ab/visit-references
+      "o r" #'ab/visit-references
       "x"   #'counsel-M-x ;; no need to press *meta*
       "w"   #'save-buffer)
 #+END_SRC
@@ -1042,38 +1042,19 @@ I keep my roam files in dropbox folder which causes problems with the database o
 #+END_SRC
 
 
-*** deft
+*** search notes
 
-I only use ~deft~ for org-roam notes so the config goes here.
-#+BEGIN_SRC emacs-lisp
-(setq deft-recursive t)
-(setq deft-use-filter-string-for-filename t)
-(setq deft-default-extension "org")
-(setq deft-directory org-roam-directory)
-#+END_SRC
-
-Some obscure solution the get a reasonable preview taken from [[https://github.com/jrblevin/deft/issues/75#issuecomment-905031872][this github issue]].
+deft is too slow!!
 
 #+BEGIN_SRC emacs-lisp
-(defun cm/deft-parse-title (file contents)
-  "Parse the given FILE and CONTENTS and determine the title.
-  If `deft-use-filename-as-title' is nil, the title is taken to
-  be the first non-empty line of the FILE.  Else the base name of the FILE is
-  used as title."
-  (let ((begin (string-match "^#\\+[tT][iI][tT][lL][eE]: .*$" contents)))
-    (if begin
-        (string-trim (substring contents begin (match-end 0)) "#\\+[tT][iI][tT][lL][eE]: *" "[\n\t ]+")
-      (deft-base-filename file))))
+(defun ab/org-roam-rg-search()
+ "Do counsel-rg on the org roam directory"
+ (interactive)
+ (counsel-rg nil org-roam-directory))
 
-  (advice-add 'deft-parse-title :override #'cm/deft-parse-title)
-
-  (setq deft-strip-summary-regexp
-      (concat "\\("
-              "[\n\t]" ;; blank
-              "\\|^#\\+[[:alpha:]_]+:.*$" ;; org-mode metadata
-              "\\|^:properties:\n\\(.+\n\\)+:end:\n"
-              "\\|^:PROPERTIES:\n\\(.+\n\\)+:END:\n"
-              "\\)"))
+(global-set-key (kbd "C-c rr") 'ab/org-roam-rg-search)
+(map! :leader "r r" #'ab/org-roam-rg-search)
+(map! :leader "n d" #'ab/org-roam-rg-search)
 #+END_SRC
 
 *** capture templates
