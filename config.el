@@ -637,7 +637,7 @@ SCHEDULED: %^t
 :#+created: %(org-insert-time-stamp (current-time) t t)
 :#+last_modified: %(org-insert-time-stamp (current-time) t t)
 :end:
-#+title: ${title}\n
+#+title: ${title}\n#+citations:\n\n\n* abstract\n\n* drawback\n\n* quotes\n\n* discovered\n\n
 ")
          :unnarrowed t)
 
