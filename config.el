@@ -474,6 +474,17 @@
 (map! :leader "i" #'ab/open-index-file)
 (map! :leader "o i" #'ab/open-index-file)
 
+(defvar mybibfile "~/academia/bibliography/bibfile.bib" "some comment")
+
+(defun ab/open-bibfile ()
+  "Open the master org TODO list."
+  (interactive)
+  (find-file "~/academia/bibliography/bibfile.bib"))
+
+
+(map! :leader "o b" #'ab/open-bibfile)
+(map! :leader "b f" #'ab/open-bibfile)
+
 (map! :map org-mode-map
         :localleader
         "g h" 'org-previous-visible-heading      ;; Go Heading of current section
@@ -791,7 +802,6 @@ SCHEDULED: %^t
   author={%s},
   year={%s},
   journal={arXiv preprint arXiv:%s},
-  primaryClass={%s},
   abstract={%s},
   url={%s},
 }"
@@ -816,7 +826,7 @@ Returns a formatted BibTeX entry."
            (category (cdar (nth 1 (assq 'primary_category entry))))
            (abstract (s-trim (nth 2 (assq 'summary entry))))
            (url (nth 2 (assq 'id entry)))
-           (temp-bibtex (format arxiv-entry-format-string "" title names year arxiv-number category abstract url))
+           (temp-bibtex (format arxiv-entry-format-string "" title names year arxiv-number abstract url))
            (key (with-temp-buffer
                   (insert temp-bibtex)
 		  (bibtex-mode)
@@ -827,7 +837,7 @@ Returns a formatted BibTeX entry."
       (if doi
 	  (doi-utils-doi-to-bibtex-string (nth 2 doi))
 	;; no doi, so we fall back to the simple template
-	(format arxiv-entry-format-string key title names year arxiv-number category abstract url)))))
+	(format arxiv-entry-format-string key title names year arxiv-number abstract url)))))
 
 (after! org
   (setq org-journal-date-prefix "#+title: "
