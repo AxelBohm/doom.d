@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: colt
+# key: colt
+# --
+  booktitle    = {Conference on Learning Theory},

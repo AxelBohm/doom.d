@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: icml
+# key: icml
+# --
+ booktitle    = {International Conference on Machine Learning},

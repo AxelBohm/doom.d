@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: neurips
+# key: neurips
+# --
+  booktitle    = {Advances in Neural Information Processing Systems},
