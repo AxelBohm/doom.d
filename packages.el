@@ -36,4 +36,5 @@
 (package! gscholar-bibtex
   :recipe (:host github :repo "cute-jumper/gscholar-bibtex"))
 
+;; inline latex
 (package! org-fragtog)
