@@ -474,17 +474,6 @@
 (map! :leader "i" #'ab/open-index-file)
 (map! :leader "o i" #'ab/open-index-file)
 
-(defvar mybibfile "~/academia/bibliography/bibfile.bib" "some comment")
-
-(defun ab/open-bibfile ()
-  "Open the master org TODO list."
-  (interactive)
-  (find-file "~/academia/bibliography/bibfile.bib"))
-
-
-(map! :leader "o b" #'ab/open-bibfile)
-(map! :leader "b f" #'ab/open-bibfile)
-
 (map! :map org-mode-map
         :localleader
         "g h" 'org-previous-visible-heading      ;; Go Heading of current section
@@ -779,66 +768,6 @@ SCHEDULED: %^t
       :desc "set timer" "o t s" #'org-timer-set-timer
       :desc "pause or continue" "o t p" #'org-timer-pause-or-continue)
 
-(use-package! gscholar-bibtex
-  :config
-  (gscholar-bibtex-source-on-off :off "IEEE Xplore")
-  (setq gscholar-bibtex-default-source "Google Scholar")
-  (setq gscholar-bibtex-database-file "~/academia/bibliography/bibfile.bib"))
-
-;; originally: buffer-save
-(map! :leader "b s" nil)
-;; originally: switch-buffer
-(map! :leader "b b" nil)
-
-(map! :leader
-      :desc "bibtex entry from arxiv" "b a" #'org-ref-bibtex-new-entry/arxiv-add-bibtex-entry-and-exit
-      :desc "bibtex entry from biblio" "b b" #'org-ref-bibtex-new-entry/biblio-lookup-and-exit
-      :desc "bibtex from google scholar" "b s" #'gscholar-bibtex)
-
-;; (map! :leader "b a" 'arxiv-lookup)
-
-(defvar arxiv-entry-format-string "@article{%s,
-  title={%s},
-  author={%s},
-  year={%s},
-  journal={arXiv preprint arXiv:%s},
-  abstract={%s},
-  url={%s},
-}"
-  "Template for BibTeX entries of arXiv articles.")
-
-(defun arxiv-get-bibtex-entry-via-arxiv-api (arxiv-number)
-  "Retrieve meta data for ARXIV-NUMBER.
-Returns a formatted BibTeX entry."
-  (with-current-buffer
-      (url-retrieve-synchronously (format "http://export.arxiv.org/api/query?id_list=%s" arxiv-number) t)
-    (let* ((parse-tree (libxml-parse-xml-region
-                        (progn (goto-char 0)
-                               (search-forward "<?xml ")
-                               (match-beginning 0))
-                        (point-max)))
-           (entry (assq 'entry parse-tree))
-           (authors (--map (nth 2 (nth 2 it))
-                           (--filter (and (listp it) (eq (car it) 'author)) entry)))
-           (year (format-time-string "%Y" (date-to-time (nth 2 (assq 'published entry)))))
-           (title (nth 2 (assq 'title entry)))
-           (names (arxiv-bibtexify-authors authors))
-           (category (cdar (nth 1 (assq 'primary_category entry))))
-           (abstract (s-trim (nth 2 (assq 'summary entry))))
-           (url (nth 2 (assq 'id entry)))
-           (temp-bibtex (format arxiv-entry-format-string "" title names year arxiv-number abstract url))
-           (key (with-temp-buffer
-                  (insert temp-bibtex)
-		  (bibtex-mode)
-		  (bibtex-set-dialect (parsebib-find-bibtex-dialect) t)
-		  (org-ref-replace-nonascii)
-                  (bibtex-generate-autokey)))
-	   (doi (assq 'doi entry)))
-      (if doi
-	  (doi-utils-doi-to-bibtex-string (nth 2 doi))
-	;; no doi, so we fall back to the simple template
-	(format arxiv-entry-format-string key title names year arxiv-number abstract url)))))
-
 (after! org
   (setq org-journal-date-prefix "#+title: "
         org-journal-time-prefix "* "
@@ -904,71 +833,6 @@ Returns a formatted BibTeX entry."
 
 ;; (after! latex
 ;;     (add-to-list TeX-command-list '("XeLaTeX" "%`xelatex%(mode)%' %t" TeX-run-TeX nil t)))
-
-(map! :leader "b t" 'ivy-bibtex)
-
-(after! bibtex-completion
-
-  (setq! bibtex-completion-bibliography '("~/academia/bibliography/bibfile.bib")
-         bibtex-completion-notes-path org-roam-directory
-         bibtex-completion-library-path '("~/ucloud/my_stuff/papers/" )))
-
-(after! bibtex-completion
-  (setq! bibtex-completion-find-additional-pdfs t))
-
-(setq! +biblio-pdf-library-dir "~/ucloud/my_stuff/papers/"
-       +biblio-default-bibliography-files "~/academia/bibliography/bibfile.bib"
-       +biblio-notes-path org-roam-directory)
-
-(after! bibtex-completion
-  (setq bibtex-completion-additional-search-fields '(tags)))
-
-(after! ivy-bibtex
-
-  (setq ivy-height 30) ;; this is actually a general ivy configuration
-
-  (defun bibtex-completion-pdf-open-with-zathura (entry)
-    (let ((pdf (bibtex-completion-find-pdf entry)))
-      (call-process "zathura" nil 0 nil (car pdf)))
-      (kill-buffer "*doom*"))
-
-  (defun bibtex-completion-pdf-open-with-evince (entry)
-    (let ((pdf (bibtex-completion-find-pdf entry)))
-      (call-process "evince" nil 0 nil (car pdf)))
-      (+workspace/close-window-or-workspace)
-      ;; (kill-buffer "*doom*")
-      )
-
-  ;; (ivy-add-actions 'ivy-bibtex '(("o" ivy-bibtex-open-any "Open PDF, URL, or DOI")))
-
-  ;; (setq ivy-bibtex-default-action 'ivy-bibtex-insert-key)
-
-;; the default action list is too long and there is no (obvious) way to remove entries so I start from scratch
-(ivy-set-actions
- 'ivy-bibtex
- '(("o" ivy-bibtex-open-any "Open PDF, URL, or DOI")
-   ("i" ivy-bibtex-insert-key "Insert key")
-   ;; ("a" ivy-bibtex-add-PDF-attachment "Attach PDF to email") ;; email not yet working
-   ("s" ivy-bibtex-show-entry "Show entry")
-   ("z" bibtex-completion-pdf-open-with-zathura "Open PDF in zathura")
-   ("E" bibtex-completion-pdf-open-with-evince "Open PDF in Evince")
-   ;; ("c" ivy-bibtex-insert-link-to-file "Insert link to file") ;; this could make org-ref obsolete
-   ("e" ivy-bibtex-edit-notes "Edit notes"))))
-
-;; (helm-add-action-to-source "Open PDF with zathura" 'bibtex-completion-pdf-open-with-zathura helm-source-bibtex 1)
-
-(after! org-ref
-  (map! :localleader "i" nil)
-  (map! :map org-mode-map
-        :localleader
-        :desc "insert citation" "i" #'org-ref-cite-insert-helm))
-(after! org
-  (map! :localleader "i" nil)
-  (map! :map org-mode-map
-        :localleader
-        :desc "insert citation" "i" #'org-ref-cite-insert-helm))
-
-(setq reftex-default-bibliography '("~/academia/bibliography/bibfile.bib"))
 
 (after! yasnippet
   (setq yas-snippet-dirs '("~/.doom.d/snippets")
@@ -1378,5 +1242,154 @@ Returns a formatted BibTeX entry."
   (elfeed-score-load-score-file "~/.doom.d/elfeed.score") ; See the elfeed-score documentation for the score file syntax
   (elfeed-score-enable)
   (define-key elfeed-search-mode-map "=" elfeed-score-map))
+
+(defvar mybibfile "~/academia/bibliography/bibfile.bib" "some comment")
+
+(defun ab/open-bibfile ()
+  "Open the master org TODO list."
+  (interactive)
+  (find-file "~/academia/bibliography/bibfile.bib"))
+
+
+(map! :leader "o b" #'ab/open-bibfile)
+(map! :leader "b f" #'ab/open-bibfile)
+
+(use-package! gscholar-bibtex
+  :config
+  (gscholar-bibtex-source-on-off :off "IEEE Xplore")
+  (setq gscholar-bibtex-default-source "Google Scholar")
+  (setq gscholar-bibtex-database-file "~/academia/bibliography/bibfile.bib"))
+
+;; originally: buffer-save
+(map! :leader "b s" nil)
+;; originally: switch-buffer
+(map! :leader "b b" nil)
+
+(map! :leader
+      :desc "bibtex entry from arxiv" "b a" #'org-ref-bibtex-new-entry/arxiv-add-bibtex-entry-and-exit
+      :desc "bibtex entry from biblio" "b b" #'org-ref-bibtex-new-entry/biblio-lookup-and-exit
+      :desc "bibtex from google scholar" "b s" #'gscholar-bibtex)
+
+;; (map! :leader "b a" 'arxiv-lookup)
+
+(defvar arxiv-entry-format-string "\n@article{%s,
+  title        = {%s},
+  author       = {%s},
+  year         = {%s},
+  journal      = {arXiv preprint arXiv:%s},
+  class        = {%s},
+  abstract     = {%s},
+  url          = {%s},
+  tags         = {}
+}"
+  "Template for BibTeX entries of arXiv articles.")
+
+(defun arxiv-get-bibtex-entry-via-arxiv-api (arxiv-number)
+  "Retrieve meta data for ARXIV-NUMBER.
+Returns a formatted BibTeX entry."
+  (with-current-buffer
+      (url-retrieve-synchronously (format "http://export.arxiv.org/api/query?id_list=%s" arxiv-number) t)
+    (let* ((parse-tree (libxml-parse-xml-region
+                        (progn (goto-char 0)
+                               (search-forward "<?xml ")
+                               (match-beginning 0))
+                        (point-max)))
+           (entry (assq 'entry parse-tree))
+           (authors (--map (nth 2 (nth 2 it))
+                           (--filter (and (listp it) (eq (car it) 'author)) entry)))
+           (year (format-time-string "%Y" (date-to-time (nth 2 (assq 'published entry)))))
+           (title (nth 2 (assq 'title entry)))
+           (names (arxiv-bibtexify-authors authors))
+           (category (cdar (nth 1 (assq 'primary_category entry))))
+           (abstract (s-trim (nth 2 (assq 'summary entry))))
+           (url (nth 2 (assq 'id entry)))
+           (temp-bibtex (format arxiv-entry-format-string "" title names year arxiv-number category abstract url))
+           (key (with-temp-buffer
+                  (insert temp-bibtex)
+		  (bibtex-mode)
+		  (bibtex-set-dialect (parsebib-find-bibtex-dialect) t)
+		  (org-ref-replace-nonascii)
+                  (bibtex-generate-autokey)))
+	   (doi (assq 'doi entry)))
+      (if doi
+	  (doi-utils-doi-to-bibtex-string (nth 2 doi))
+	;; no doi, so we fall back to the simple template
+	(format arxiv-entry-format-string key title names year arxiv-number category abstract url)))))
+
+(map! :leader "b t" 'ivy-bibtex)
+
+(after! bibtex-completion
+
+  (setq! bibtex-completion-bibliography '("~/academia/bibliography/bibfile.bib")
+         bibtex-completion-notes-path org-roam-directory
+         bibtex-completion-library-path '("~/ucloud/my_stuff/papers/" )))
+
+(after! bibtex-completion
+  (setq! bibtex-completion-find-additional-pdfs t))
+
+(setq! +biblio-pdf-library-dir "~/ucloud/my_stuff/papers/"
+       +biblio-default-bibliography-files "~/academia/bibliography/bibfile.bib"
+       +biblio-notes-path org-roam-directory)
+
+(after! bibtex-completion
+  (setq bibtex-completion-additional-search-fields '(tags)))
+
+(after! ivy-bibtex
+
+  (setq ivy-height 30) ;; this is actually a general ivy configuration
+
+  (defun bibtex-completion-pdf-open-with-zathura (entry)
+    (let ((pdf (bibtex-completion-find-pdf entry)))
+      (call-process "zathura" nil 0 nil (car pdf)))
+      (kill-buffer "*doom*"))
+
+  (defun bibtex-completion-pdf-open-with-evince (entry)
+    (let ((pdf (bibtex-completion-find-pdf entry)))
+      (call-process "evince" nil 0 nil (car pdf)))
+      (+workspace/close-window-or-workspace)
+      ;; (kill-buffer "*doom*")
+      )
+
+  ;; (ivy-add-actions 'ivy-bibtex '(("o" ivy-bibtex-open-any "Open PDF, URL, or DOI")))
+
+  ;; (setq ivy-bibtex-default-action 'ivy-bibtex-insert-key)
+
+;; the default action list is too long and there is no (obvious) way to remove entries so I start from scratch
+(ivy-set-actions
+ 'ivy-bibtex
+ '(("o" ivy-bibtex-open-any "Open PDF, URL, or DOI")
+   ("i" ivy-bibtex-insert-key "Insert key")
+   ;; ("a" ivy-bibtex-add-PDF-attachment "Attach PDF to email") ;; email not yet working
+   ("s" ivy-bibtex-show-entry "Show entry")
+   ("z" bibtex-completion-pdf-open-with-zathura "Open PDF in zathura")
+   ("E" bibtex-completion-pdf-open-with-evince "Open PDF in Evince")
+   ;; ("c" ivy-bibtex-insert-link-to-file "Insert link to file") ;; this could make org-ref obsolete
+   ("e" ivy-bibtex-edit-notes "Edit notes"))))
+
+;; (helm-add-action-to-source "Open PDF with zathura" 'bibtex-completion-pdf-open-with-zathura helm-source-bibtex 1)
+
+(after! org-ref
+  (map! :localleader "i" nil)
+  (map! :map org-mode-map
+        :localleader
+        :desc "insert citation" "i" #'org-ref-cite-insert-helm))
+(after! org
+  (map! :localleader "i" nil)
+  (map! :map org-mode-map
+        :localleader
+        :desc "insert citation" "i" #'org-ref-cite-insert-helm))
+
+(setq reftex-default-bibliography '("~/academia/bibliography/bibfile.bib"))
+
+;; (add-hook 'bibtex-mode-hook
+;;           (lambda ()
+;;              (add-hook 'after-save-hook 'a-test-save-hook nil 'make-it-local)))
+(defun ab/bibtex-tidy ()
+  "Tidy bibfile after saving."
+  (when (eq major-mode 'bibtex-mode)
+    (shell-command-to-string
+     (format "bibtex-tidy --align=13 --blank-lines --no-escape -m %s" buffer-file-name))))
+
+(add-hook 'after-save-hook #'ab/bibtex-tidy)
 
 (setq avy-keys '(?a ?r ?s ?t ?d ?h ?n ?e ?i ?o))
