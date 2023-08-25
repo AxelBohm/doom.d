@@ -194,6 +194,12 @@ This makes MRU files rather useless. So let's save them regularly while running.
 #+BEGIN_SRC emacs-lisp
 ;; (run-at-time (current-time) 300 'recentf-save-list)
 #+END_SRC
+** mac os
+
+#+BEGIN_SRC emacs-lisp
+(setq mac-command-modifier 'control)
+#+END_SRC
+
 
 * config file
 ** quick access

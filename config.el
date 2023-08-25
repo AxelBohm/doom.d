@@ -75,6 +75,8 @@
 
 ;; (run-at-time (current-time) 300 'recentf-save-list)
 
+(setq mac-command-modifier 'control)
+
 (defun ab/visit-emacs-config ()
   "go to emacs config file"
   (interactive)
