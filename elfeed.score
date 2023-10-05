@@ -4,7 +4,8 @@
  ("content")
  ("title-or-content"
   ;; general stuff
-  (:text "accelerate" :title-value 100 :content-value 40 :type s)
+  (:text "accelerate" :title-value 100 :content-value 50 :type s)
+  (:text "acceleration" :title-value 100 :content-value 50 :type s)
   (:text "stochastic" :title-value 30 :content-value 30 :type s)
   (:text "adaptive" :title-value 100 :content-value 40 :type s)
   (:text "gradient" :title-value 30 :content-value 30 :type s)
@@ -17,7 +18,7 @@
   (:text "Polyak" :title-value 50 :content-value 50 :type s)
   (:text "regularization" :title-value 50 :content-value 50 :type s)
   (:text "implicit" :title-value 30 :content-value 30 :type s)
-  (:text "implicit bias" :title-value 50 :content-value 30 :type s)
+  (:text "implicit bias" :title-value 70 :content-value 50 :type s)
   (:text "generalization" :title-value 50 :content-value 50 :type s)
   (:text "reshuffling" :title-value 100 :content-value 50 :type s)
   (:text "without-replacement" :title-value 50 :content-value 40 :type s)
@@ -152,6 +153,8 @@
   )
  ("tag")
  ("authors"
+  (:text "Jason M. Altschuler" :value 150 :type w)
+  (:text "Benjamin Grimmer" :value 150 :type w)
   (:text "Nathan Srebro" :value 150 :type w)
   (:text "Suriya Gunasekar" :value 150 :type w)
   (:text "Ziwei Ji" :value 150 :type w)
