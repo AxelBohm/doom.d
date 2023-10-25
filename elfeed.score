@@ -150,6 +150,12 @@
   (:text "ADMM" :title-value -200 :content-value -100 :type s)
   (:text "Bregman" :title-value -70 :content-value -50 :type s)
   (:text "continuous-time" :title-value -100 :content-value -70 :type s)
+  (:text "data-driven" :title-value -100 :content-value -70 :type s)
+  (:text "observer" :title-value -100 :content-value -70 :type s)
+  (:text "temporal difference" :title-value -100 :content-value -70 :type s)
+  (:text "bilevel" :title-value -100 :content-value -70 :type s)
+  (:text "alternating direction method of multiplier" :title-value -100 :content-value -70 :type s)
+  (:text "cosparse" :title-value -100 :content-value -70 :type s)
   )
  ("tag")
  ("authors"
