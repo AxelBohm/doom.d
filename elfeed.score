@@ -163,6 +163,7 @@
   (:text "PDE" :title-value -100 :content-value -70 :type s)
   (:text "semi-infinite" :title-value -100 :content-value -70 :type s)
   (:text "mixed-binary" :title-value -100 :content-value -70 :type s)
+  (:text "cutting-plane" :title-value -100 :content-value -70 :type s)
   )
  ("tag")
  ("authors"
