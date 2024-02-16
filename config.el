@@ -879,6 +879,12 @@ SCHEDULED: %^t
 (setq conda-anaconda-home (expand-file-name "~/.miniconda3"))
 (setq conda-env-home-directory (expand-file-name "~/.miniconda3"))
 
+(if (equal system-type 'darwin)
+    (progn
+        (setq conda-anaconda-home "/opt/homebrew/Caskroom/miniconda/base")
+        (setq conda-env-home-directory "/opt/homebrew/Caskroom/miniconda/base")
+))
+
 (defun python-shell-start-and-send-buffer()
   (interactive)
   (run-python)
