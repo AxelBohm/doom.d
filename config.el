@@ -743,7 +743,7 @@ SCHEDULED: %^t
   ;; :commands org-roam-ui-open
   ;; :hook (org-roam . org-roam-ui-mode)
   :config
-  (require 'org-roam) ; in case autoloaded
+  ;; (require 'org-roam) ; in case autoloaded
   (setq org-roam-ui-sync-theme t
           org-roam-ui-follow t
           org-roam-ui-update-on-save t
