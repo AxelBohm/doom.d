@@ -2,7 +2,7 @@
 
 (general-auto-unbind-keys)
 
-(setq doom-theme 'doom-opera-light)
+(setq doom-theme 'doom-tomorrow-day)
 
 (remove-hook 'text-mode-hook #'hl-line-mode)
 

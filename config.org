@@ -18,7 +18,7 @@
 *** theme
 
 #+BEGIN_SRC emacs-lisp
-(setq doom-theme 'doom-opera-light)
+(setq doom-theme 'doom-tomorrow-day)
 #+END_SRC
 
 *** hl-line
