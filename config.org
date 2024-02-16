@@ -98,6 +98,12 @@ highlight keywords like TODO/FIXME/NOTE/DEPRECATED/HACK/REVIEW.
 #+BEGIN_SRC emacs-lisp
 (add-hook 'after-init-hook 'global-hl-todo-mode)
 #+END_SRC
+*** mac Os
+transparent title bar
+#+BEGIN_SRC emacs-lisp
+(add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
+#+END_SRC
+
 
 ** general behavior
 

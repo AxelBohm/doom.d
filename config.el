@@ -36,6 +36,8 @@
 
 (add-hook 'after-init-hook 'global-hl-todo-mode)
 
+(add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
+
 (setq evil-split-window-below t
       evil-vsplit-window-right t)
 
