@@ -13,8 +13,7 @@
 (package! helm-bibtex)
 (package! org-roam-bibtex
   :recipe (:host github :repo "org-roam/org-roam-bibtex"))
-(package! org-roam-ui :recipe (:host github :repo "org-roam/org-roam-ui" :files ("*.el" "out")) :pin "9474a254390b1e42488a1801fed5826b32a8030b")
-(package! websocket :pin "82b370602fa0158670b1c6c769f223159affce9b") ; dependency of `org-roam-ui'
+(package! org-roam-ui)
 (unpin! org-roam)
 ;; When using bibtex-completion via the `biblio` module
 ;; (unpin! bibtex-completion helm-bibtex ivy-bibtex)
