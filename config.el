@@ -679,8 +679,8 @@ SCHEDULED: %^t
 :year:
 :#+created: %(org-insert-time-stamp (current-time) t t)
 :#+last_modified: %(org-insert-time-stamp (current-time) t t)
-:#+started_reading:
-:#+finished_reading:
+:started_reading:
+:finished_reading:
 :end:\n#+title: ${title}\n#+subtitle: \n\n\n* discovered\n
 ")
          :unnarrowed t)
