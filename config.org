@@ -1234,6 +1234,8 @@ I no longer need this as I was able to reduce the amount of text shown per
 heading via the next code chunk:
 
 Only show the paragraph in which the (back)link occurs
+(taken from this [[https://github.com/org-roam/org-roam/issues/1934#issuecomment-979735048][github issue]])
+
 #+BEGIN_SRC emacs-lisp
 (defun my/preview-fetcher ()
   (let* ((elem (org-element-context))
@@ -1245,6 +1247,16 @@ Only show the paragraph in which the (back)link occurs
 
 (setq org-roam-preview-function #'my/preview-fetcher)
 #+END_SRC
+
+backlinks are not clickable (pretty sure they were in org-roam v1)
+[[https://github.com/org-roam/org-roam/issues/1732][this github issue]] is still open but some people said this helped:
+
+#+BEGIN_SRC emacs-lisp
+;; (global-page-break-lines-mode 0)
+#+END_SRC
+
+not for me though..
+
 
 
 ** org-timer

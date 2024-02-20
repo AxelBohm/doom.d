@@ -766,6 +766,8 @@ SCHEDULED: %^t
 
 (setq org-roam-preview-function #'my/preview-fetcher)
 
+;; (global-page-break-lines-mode 0)
+
 (map! :leader "o t" nil)
 
 (map! :leader
