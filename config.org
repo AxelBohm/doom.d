@@ -1506,15 +1506,28 @@ Warning.
 (after! python
   (setq python-shell-completion-native-enable nil))
 #+END_SRC
+
 ** conda
 
 I automatically want the right conda environment activated when editing a python file.
 How does emacs know which one is the right environment? I don't know..
+
+This solution made switching to random buffers super slow because it would always activate the base env even if the file was ~.org~.
 #+BEGIN_SRC emacs-lisp
-(after! conda
-  (conda-env-initialize-eshell)
-  (conda-env-autoactivate-mode))
+;; (after! conda
+;;   (conda-env-initialize-eshell)
+;;   (conda-env-autoactivate-mode))
 #+END_SRC
+
+This is the autoactivation solution given by the ~conda.el~ git repo:
+
+#+BEGIN_SRC emacs-lisp
+;; (add-to-hook 'find-file-hook (lambda () (when (bound-and-true-p conda-project-env-path)
+;;                                             (conda-env-activate-for-buffer))))
+#+END_SRC
+
+lol. this gives an error..
+
 ** linting
 
 Flycheck supports multiple checkers at once put only in a sequential fashion, see [[https://www.flycheck.org/en/latest/user/syntax-checkers.html#flycheck-checker-chains][flyckeck.org]]

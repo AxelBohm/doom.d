@@ -908,9 +908,12 @@ SCHEDULED: %^t
 (after! python
   (setq python-shell-completion-native-enable nil))
 
-(after! conda
-  (conda-env-initialize-eshell)
-  (conda-env-autoactivate-mode))
+;; (after! conda
+;;   (conda-env-initialize-eshell)
+;;   (conda-env-autoactivate-mode))
+
+;; (add-to-hook 'find-file-hook (lambda () (when (bound-and-true-p conda-project-env-path)
+;;                                             (conda-env-activate-for-buffer))))
 
 ;; (defun my-flycheck-setup ()
 ;;   (flycheck-add-next-checker 'lsp 'python-flake8))
