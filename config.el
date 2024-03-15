@@ -397,13 +397,48 @@
    'user
    `(org-document-title ((t (:height 1.5 :underline nil))))))
 
+;; (after! org
+;;   (custom-set-faces!
+;;     '(org-level-1 :height 1.3 :weight extrabold )
+;;     '(org-level-2 :height 1.2 :weight bold )
+;;     '(org-level-3 :height 1.1 :weight regular )
+;;     ))
+
 (after! org
   (setq org-ellipsis " ..."))
+
+(defun org-mode-remove-stars ()
+  (font-lock-add-keywords
+   nil
+   '(("^\\*+ "
+      (0
+       (prog1 nil
+         (put-text-property (match-beginning 0) (match-end 0)
+                            'invisible t)))))))
+
+;; (add-hook! 'org-mode-hook #'org-mode-remove-stars)
 
 (after! org
   (setq org-format-latex-options (plist-put org-format-latex-options :scale 2.5))
   (add-hook 'org-mode-hook 'org-fragtog-mode)
   )
+
+(after! org
+(setq org-emphasis-alist
+        '(("*" (bold))
+          ("/" italic)
+          ("_" underline)
+          ("=" redd)
+          ("~" code)
+          ("+" (:strike-through t)))))
+
+(after! org
+  (defface redd
+    '((((class color) (min-colors 88) (background light))
+      :foreground "red"))
+    "Red."
+    :group 'basic-faces)
+)
 
 (after! org
   (setq org-directory "~/org")
@@ -630,6 +665,18 @@ SCHEDULED: %^t
 (global-set-key (kbd "C-c rr") 'ab/org-roam-rg-search)
 (map! :leader "r r" #'ab/org-roam-rg-search)
 (map! :leader "n d" #'ab/org-roam-rg-search)
+
+;; (defun org-roam-buffer-setup ()
+;;   "Function to make org-roam-buffer more pretty."
+;;   (progn
+;;     (setq-local olivetti-body-width 44)
+;;     (variable-pitch-mode 1)
+;;     (olivetti-mode 1)
+
+;;   (set-face-background 'magit-section-highlight (face-background 'default))))
+
+;; (after! org-roam
+;;   (add-hook! 'org-roam-mode-hook #'org-roam-buffer-setup))
 
 (setq org-roam-capture-templates
       '(

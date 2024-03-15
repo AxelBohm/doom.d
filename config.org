@@ -91,6 +91,7 @@ Make emacs opaque (when running compton).
   ;;     (doom-modeline-set-modeline 'myline 'default)))
   )
 #+END_SRC
+
 *** hl-todo
 
 highlight keywords like TODO/FIXME/NOTE/DEPRECATED/HACK/REVIEW.
@@ -98,6 +99,7 @@ highlight keywords like TODO/FIXME/NOTE/DEPRECATED/HACK/REVIEW.
 #+BEGIN_SRC emacs-lisp
 (add-hook 'after-init-hook 'global-hl-todo-mode)
 #+END_SRC
+
 *** mac Os
 transparent title bar
 #+BEGIN_SRC emacs-lisp
@@ -659,7 +661,7 @@ Quick access to GTD view.
              (org-agenda nil "g")))
 #+END_SRC
 
-** appearance
+** appearance / ui
 
 Title size.
 #+BEGIN_SRC emacs-lisp
@@ -669,13 +671,50 @@ Title size.
    `(org-document-title ((t (:height 1.5 :underline nil))))))
 #+END_SRC
 
+
+*** headings
+
+sizes of headings. I'm still experimenting with this. most of the time I find it
+distracting.. especially when there are many headings like in my config file.
+The other problem is that it removes every color from the theme.
+
+#+BEGIN_SRC emacs-lisp
+;; (after! org
+;;   (custom-set-faces!
+;;     '(org-level-1 :height 1.3 :weight extrabold )
+;;     '(org-level-2 :height 1.2 :weight bold )
+;;     '(org-level-3 :height 1.1 :weight regular )
+;;     ))
+#+END_SRC
+
 configure the symbol for stuff hidden after heading.
+
 #+BEGIN_SRC emacs-lisp
 (after! org
   (setq org-ellipsis " ..."))
 #+END_SRC
 
-latex fragments
+remove stars completely
+
+#+BEGIN_SRC emacs-lisp
+(defun org-mode-remove-stars ()
+  (font-lock-add-keywords
+   nil
+   '(("^\\*+ "
+      (0
+       (prog1 nil
+         (put-text-property (match-beginning 0) (match-end 0)
+                            'invisible t)))))))
+
+;; (add-hook! 'org-mode-hook #'org-mode-remove-stars)
+#+END_SRC
+
+This takes some getting used to. but in combination with different org-level sizes it's kinda nice.
+
+*** latex fragments
+
+by default they're too small
+
 #+BEGIN_SRC emacs-lisp
 (after! org
   (setq org-format-latex-options (plist-put org-format-latex-options :scale 2.5))
@@ -683,6 +722,28 @@ latex fragments
   )
 #+END_SRC
 
+*** custom faces
+
+I want to be able to do some kind of custom highlighting, so ~=~ becomes red.
+
+#+BEGIN_SRC emacs-lisp
+(after! org
+(setq org-emphasis-alist
+        '(("*" (bold))
+          ("/" italic)
+          ("_" underline)
+          ("=" redd)
+          ("~" code)
+          ("+" (:strike-through t)))))
+
+(after! org
+  (defface redd
+    '((((class color) (min-colors 88) (background light))
+      :foreground "red"))
+    "Red."
+    :group 'basic-faces)
+)
+#+END_SRC
 
 ** structure and files
 
@@ -1070,6 +1131,26 @@ deft is too slow!!
 (map! :leader "r r" #'ab/org-roam-rg-search)
 (map! :leader "n d" #'ab/org-roam-rg-search)
 #+END_SRC
+
+*** ui
+
+copied from here: https://github.com/tefkah/doom-emacs-config
+require olivetti package installed
+
+#+BEGIN_SRC emacs-lisp
+;; (defun org-roam-buffer-setup ()
+;;   "Function to make org-roam-buffer more pretty."
+;;   (progn
+;;     (setq-local olivetti-body-width 44)
+;;     (variable-pitch-mode 1)
+;;     (olivetti-mode 1)
+
+;;   (set-face-background 'magit-section-highlight (face-background 'default))))
+
+;; (after! org-roam
+;;   (add-hook! 'org-roam-mode-hook #'org-roam-buffer-setup))
+#+END_SRC
+
 
 *** capture templates
 
