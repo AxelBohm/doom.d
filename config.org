@@ -1127,7 +1127,11 @@ synced folder. The location is chosen arbitrary
 
 *** search notes
 
-deft is too slow!!
+deft has great formatting but is too slow!!
+
+**** counsel
+
+~counsel-rg~ is lightening fast but the *formatting* is atrocious.
 
 #+BEGIN_SRC emacs-lisp
 (defun ab/org-roam-rg-search()
