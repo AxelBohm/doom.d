@@ -1207,6 +1207,7 @@ SCHEDULED: %^t
 
 (setq! elfeed-feeds
       '(("http://export.arxiv.org/api/query?search_query=cat:math.OC&start=0&max_results=300&sortBy=submittedDate&sortOrder=descending" research)
+        ("https://gradientscience.org/feed.xml" blog)
         ("http://www.argmin.net/feed.xml" blog)))
 
 (after! elfeed
