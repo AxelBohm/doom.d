@@ -749,6 +749,10 @@ I want to be able to do some kind of custom highlighting, so ~=~ becomes red.
 )
 #+END_SRC
 
+see also [[https://emacs.stackexchange.com/questions/44081/how-to-tweak-org-emphasis-alist-to-put-e-g-neon-yellow-over-bold-or-italic][stackexchange]]
+
+[[https://protesilaos.com/codelog/2022-01-05-custom-face-org-emphasis-alist/][this]] I haven't checked out yet
+
 ** structure and files
 
 Tell emacs where I store my org stuff.
