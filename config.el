@@ -286,8 +286,8 @@
 (setq org-fold-core-style 'overlays)
 
 (after! org
-  (setq +org-roam-auto-backlinks-buffer t
-        org-hide-emphasis-markers nil            ;; I want those
+  (setq +org-roam-auto-backlinks-buffer t        ;; show backlinks (why is this not default on??)
+        org-hide-emphasis-markers t              ;; still not sure if I like them or not
         org-return-follows-link t
         ;; the follow two do not work for some reason and others seem to have the same problem
         org-agenda-skip-scheduled-if-done t      ;; don't show in agenda if done
@@ -428,9 +428,13 @@
         '(("*" (bold))
           ("/" italic)
           ("_" underline)
-          ("=" redd)
+          ;; ("=" redd)
+          ("=" (:background "#FFFF00" :foreground "black"))
           ("~" code)
-          ("+" (:strike-through t)))))
+          ("!"  (:foreground "yellow"))
+          ;; ("+" (:strike-through t))
+          ("+" (:background "deep sky blue" :foreground "MidnightBlue"))
+)))
 
 (after! org
   (defface redd
