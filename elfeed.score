@@ -259,6 +259,10 @@
   (:text "diffusion" :title-value -100 :content-value -100 :type s)
   (:text "Navier-Stokes equation" :title-value -200 :content-value -100 :type s)
   (:text "inexact oracle" :title-value -200 :content-value -100 :type s)
+  (:text "progressive hedging" :title-value -100 :content-value -70 :type s)
+  (:text "conjugate gradient" :title-value -100 :content-value -70 :type s)
+  (:text "conjugate subgradient" :title-value -100 :content-value -70 :type s)
+  (:text "PDHG" :title-value -100 :content-value -70 :type s)
   )
  ("tag")
  ("authors"
