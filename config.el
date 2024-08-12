@@ -1213,10 +1213,6 @@ SCHEDULED: %^t
 (after! elfeed
   (setq elfeed-search-filter "@1-month-ago +unread"))
 
-(defadvice elfeed-search-update (before nullprogram activate)
-  (let ((feed (elfeed-db-get-feed "http://export.arxiv.org/api/query?search_query=cat:math.OC&start=0&max_results=300&sortBy=submittedDate&sortOrder=descending")))
-    (setf (elfeed-feed-title feed) "arXiv optimization")))
-
 (after! elfeed
   (map! :map elfeed-show-mode-map
         :n "q" #'elfeed-search-quit-window))
