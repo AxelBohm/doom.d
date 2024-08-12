@@ -1314,7 +1314,7 @@ SCHEDULED: %^t
 (defvar mybibfile "~/academia/bibliography/bibfile.bib" "some comment")
 
 (defun ab/open-bibfile ()
-  "Open the master org TODO list."
+  "Open central bibfile."
   (interactive)
   (find-file "~/academia/bibliography/bibfile.bib"))
 

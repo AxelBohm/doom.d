@@ -2157,7 +2157,7 @@ check [[https://www.unwoundstack.com/doc/elfeed-score/0.7.7/elfeed-score/title-R
 (defvar mybibfile "~/academia/bibliography/bibfile.bib" "some comment")
 
 (defun ab/open-bibfile ()
-  "Open the master org TODO list."
+  "Open central bibfile."
   (interactive)
   (find-file "~/academia/bibliography/bibfile.bib"))
 
