@@ -274,6 +274,8 @@
   (:text "knapsack" :title-value -50 :content-value -20 :type s)
   (:text "linear programming" :title-value -50 :content-value -20 :type s)
   (:text "management" :title-value -50 :content-value -20 :type s)
+  (:text "kinetic" :title-value -50 :content-value -20 :type s)
+  (:text "piecewise" :title-value -50 :content-value -20 :type s)
 
   )
  ("tag")
