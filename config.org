@@ -2014,13 +2014,12 @@ default only shows 2 weeks. a little bit more is nice
   (setq elfeed-search-filter "@1-month-ago +unread"))
 #+END_SRC
 
-I cannot recall what the purpose of this is
-# rename the feeds
-# #+BEGIN_SRC emacs-lisp
-# (defadvice elfeed-search-update (before nullprogram activate)
-#   (let ((feed (elfeed-db-get-feed "http://export.arxiv.org/api/query?search_query=cat:math.OC&start=0&max_results=3000&sortBy=submittedDate&sortOrder=descending")))
-#     (setf (elfeed-feed-title feed) "arXiv optimization")))
-# #+END_SRC
+rename the feeds (shown under the "feed" field when opening item from said feed)
+#+BEGIN_SRC emacs-lisp
+(defadvice elfeed-search-update (before nullprogram activate)
+  (let ((feed (elfeed-db-get-feed "http://export.arxiv.org/api/query?search_query=cat:math.OC&start=0&max_results=300&sortBy=submittedDate&sortOrder=descending")))
+    (setf (elfeed-feed-title feed) "arXiv optimization")))
+#+END_SRC
 
 ** keybindings
 
