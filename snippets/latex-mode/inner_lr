@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: inner
+# key: lrin
+# --
+\left\langle $0 \right\rangle
