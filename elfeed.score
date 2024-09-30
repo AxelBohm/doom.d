@@ -33,6 +33,8 @@
   (:text "logistic regression" :title-value 100 :content-value 70 :type s)
   (:text "separable data" :title-value 100 :content-value 70 :type s)
   (:text "margin" :title-value 100 :content-value 70 :type s)
+  (:text "saddle point evasion" :title-value 70 :content-value 50 :type s)
+  (:text "local minima" :title-value 70 :content-value 50 :type s)
   ;;
   ;; min-max / VI
   ;; ;;
@@ -288,6 +290,8 @@
   (:text "model-free" :title-value -50 :content-value -20 :type s)
   (:text "in-context" :title-value -50 :content-value -20 :type s)
   (:text "multi-level" :title-value -50 :content-value -20 :type s)
+  (:text "online residual learning" :title-value -100 :content-value -70 :type s)
+  (:text "offline experts" :title-value -100 :content-value -70 :type s)
 
   )
  ("tag")
