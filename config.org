@@ -867,8 +867,9 @@ Quickly access the org index file.
   (find-file org-index-file)
   )
 
-(map! :leader "i" #'ab/open-index-file)
+;; (map! :leader "i" #'ab/open-index-file)
 (map! :leader "o i" #'ab/open-index-file)
+(map! :leader "i i" #'ab/open-index-file)
 #+END_SRC
 
 *** navigation

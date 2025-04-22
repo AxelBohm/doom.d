@@ -514,8 +514,9 @@
   (find-file org-index-file)
   )
 
-(map! :leader "i" #'ab/open-index-file)
+;; (map! :leader "i" #'ab/open-index-file)
 (map! :leader "o i" #'ab/open-index-file)
+(map! :leader "i i" #'ab/open-index-file)
 
 (map! :map org-mode-map
         :localleader
