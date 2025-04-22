@@ -1206,8 +1206,12 @@ SCHEDULED: %^t
 (add-hook! 'elfeed-search-mode-hook 'elfeed-update)
 
 (setq! elfeed-feeds
-      '(("http://export.arxiv.org/api/query?search_query=cat:math.OC&start=0&max_results=300&sortBy=submittedDate&sortOrder=descending" research)
+      '(
+        ;; ("http://export.arxiv.org/api/query?search_query=cat:math.OC&start=0&max_results=300&sortBy=submittedDate&sortOrder=descending" research)
+        ("https://www.blogger.com/feeds/6616959642391988608/posts/default")
+        ("https://scottgrannis.blogspot.com/")
         ("https://gradientscience.org/feed.xml" blog)
+        ("https://investors.shift4.com/news-events/presentations/rss" shift4)
         ("http://www.argmin.net/feed.xml" blog)))
 
 (after! elfeed
