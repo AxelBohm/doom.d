@@ -650,10 +650,16 @@ SCHEDULED: %^t
         alert-default-style 'libnotify))
 
 (after! org
-  (add-hook 'org-mode-hook
-            '(lambda ()
-               (delete '("\\.pdf\\'" . default) org-file-apps)
-               (add-to-list 'org-file-apps '("\\.pdf\\'" . "zathura %s")))))
+        (setq org-file-apps
+        '(("\\.pdf\\'" . (lambda (file link)
+                                (if (y-or-n-p "Open with evince? ")
+                                (start-process "evince" nil "evince" file)
+                                (start-process "zathura" nil "zathura" file)))))))
+
+  ;; (add-hook 'org-mode-hook
+  ;;           '(lambda ()
+  ;;              (delete '("\\.pdf\\'" . default) org-file-apps)
+  ;;              (add-to-list 'org-file-apps '("\\.pdf\\'" . "zathura %s")))))
 
 (setq org-noter-always-create-frame nil)
 (setq org-noter-notes-search-path org-roam-directory)

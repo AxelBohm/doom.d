@@ -1098,10 +1098,16 @@ I want pdfs to be opened in an external pdf viewer.
 
 #+BEGIN_SRC emacs-lisp
 (after! org
-  (add-hook 'org-mode-hook
-            '(lambda ()
-               (delete '("\\.pdf\\'" . default) org-file-apps)
-               (add-to-list 'org-file-apps '("\\.pdf\\'" . "zathura %s")))))
+        (setq org-file-apps
+        '(("\\.pdf\\'" . (lambda (file link)
+                                (if (y-or-n-p "Open with evince? ")
+                                (start-process "evince" nil "evince" file)
+                                (start-process "zathura" nil "zathura" file)))))))
+
+  ;; (add-hook 'org-mode-hook
+  ;;           '(lambda ()
+  ;;              (delete '("\\.pdf\\'" . default) org-file-apps)
+  ;;              (add-to-list 'org-file-apps '("\\.pdf\\'" . "zathura %s")))))
 #+END_SRC
 ** org-noter
 
