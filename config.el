@@ -1472,3 +1472,16 @@ Returns a formatted BibTeX entry."
 (add-hook 'after-save-hook #'ab/bibtex-tidy)
 
 (setq avy-keys '(?a ?r ?s ?t ?d ?h ?n ?e ?i ?o))
+
+(defun my/gptel-api-key ()
+  "Return GPT API key from `pass` entry Tech/chatgpt-openai."
+  (let* ((out (shell-command-to-string "pass show Tech/chatgpt-openai"))
+         (case-fold-search t))
+    (when (string-match "^api_key:[ \t]*\\([^ \t\r\n]+\\)" out)
+      (match-string 1 out))))
+
+(use-package! gptel
+  :config
+  (setq! gptel-api-key #'my/gptel-api-key)
+  (setq! gptel-model "gpt-4o-mini")
+  )

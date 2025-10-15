@@ -31,9 +31,13 @@
 (package! doom-quit :disable t)
 (package! doom-snippets :disable t)
 (package! elfeed-goodies :disable t)
+(disable-packages! ws-butler)
 
 (package! gscholar-bibtex
   :recipe (:host github :repo "cute-jumper/gscholar-bibtex"))
 
 ;; inline latex
 (package! org-fragtog)
+
+;; LLM in emacs
+(package! gptel :recipe (:nonrecursive t))
