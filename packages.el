@@ -14,7 +14,7 @@
 (package! org-roam-bibtex
   :recipe (:host github :repo "org-roam/org-roam-bibtex"))
 (package! org-roam-ui)
-(unpin! org-roam)
+;; (unpin! org-roam)
 ;; When using bibtex-completion via the `biblio` module
 ;; (unpin! bibtex-completion helm-bibtex ivy-bibtex)
 (unpin! evil-tex)
@@ -41,3 +41,6 @@
 
 ;; LLM in emacs
 (package! gptel :recipe (:nonrecursive t))
+
+
+(package! visual-fill-column)
