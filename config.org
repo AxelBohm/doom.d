@@ -1545,7 +1545,7 @@ Remove those warnings:
 (after! flycheck
 ;;(flycheck-display-errors-delay .3)
 ;;(setq-default flycheck-disabled-checkers '(tex-chktex)))
-  (map! :leader "a" 'flycheck-next-error))
+  (map! :leader "y" 'flycheck-next-error))
 #+END_SRC
 
 There is a bug in ~chk-tex~, see [[https://github.com/flycheck/flycheck/issues/1214][issue]]. They also describe possible workarounds.
@@ -1938,6 +1938,25 @@ I'm so used to my ranger keybindings. Imitate those:
 #+BEGIN_SRC emacs-lisp
 (map! :map dired-mode
       "h" 'dired-up-directory)
+#+END_SRC
+
+
+Open PDFs in Evince when pressing RET in dired
+
+#+BEGIN_SRC emacs-lisp
+(defun my/dired-open-or-evince ()
+  (interactive)
+  (let ((f (dired-get-file-for-visit)))
+    (if (and (file-regular-p f)
+             (string-match-p "\\.pdf\\'" (downcase f)))
+        (start-process "evince" nil "evince" f)
+      (dired-find-file))))
+
+(after! dired
+  (map! :map dired-mode-map
+        :n [return] #'my/dired-open-or-evince
+        :n "RET"    #'my/dired-open-or-evince))
+
 #+END_SRC
 
 * pdf
@@ -2433,3 +2452,34 @@ Run the ~bibtex-tidy~ script, see [[https://github.com/FlamingTempura/bibtex-tid
 #+END_SRC
 
 
+#+BEGIN_SRC emacs-lisp
+(defun my/gptel-region-plus-prompt ()
+  "Send selected text and a custom prompt to GPT."
+  (interactive)
+  (unless (use-region-p)
+    (user-error "No region selected"))
+  (let ((text (buffer-substring-no-properties (region-beginning) (region-end)))
+        (extra (read-string "Prompt: ")))
+    (gptel-send (concat text "\n\n" extra))))
+
+;; new AI/GPT prefix under SPC a
+(map! :leader
+      (:prefix ("a" . "AI / GPT")
+       :desc "Region → prompt" "g" #'my/gptel-region-plus-prompt
+       :desc "Chat"           "c" #'gptel
+       :desc "Send region"    "r" #'gptel-send))
+#+END_SRC
+
+
+#+BEGIN_SRC emacs-lisp
+;; Make RET send in gptel-menu buffers, regardless of Doom/Evil org bindings
+(after! gptel
+;;   (define-key gptel-menu-mode-map (kbd "RET") #'gptel-menu-send)
+;;   (define-key gptel-menu-mode-map (kbd "C-m") #'gptel-menu-send)
+;;   (define-key gptel-menu-mode-map (kbd "C-c C-c") #'gptel-menu-send))
+
+;; (with-eval-after-load 'evil
+;;   (evil-define-key 'normal gptel-menu-mode-map (kbd "RET") #'gptel-menu-send)
+;;   (evil-define-key 'insert gptel-menu-mode-map (kbd "RET") #'gptel-menu-send)
+;;   (evil-define-key 'visual gptel-menu-mode-map (kbd "RET") #'gptel-menu-send))
+#+END_SRC

@@ -925,7 +925,7 @@ SCHEDULED: %^t
 (after! flycheck
 ;;(flycheck-display-errors-delay .3)
 ;;(setq-default flycheck-disabled-checkers '(tex-chktex)))
-  (map! :leader "a" 'flycheck-next-error))
+  (map! :leader "y" 'flycheck-next-error))
 
 (after! python
   (map! :map python-mode-map
@@ -1173,6 +1173,19 @@ SCHEDULED: %^t
 
 (map! :map dired-mode
       "h" 'dired-up-directory)
+
+(defun my/dired-open-or-evince ()
+  (interactive)
+  (let ((f (dired-get-file-for-visit)))
+    (if (and (file-regular-p f)
+             (string-match-p "\\.pdf\\'" (downcase f)))
+        (start-process "evince" nil "evince" f)
+      (dired-find-file))))
+
+(after! dired
+  (map! :map dired-mode-map
+        :n [return] #'my/dired-open-or-evince
+        :n "RET"    #'my/dired-open-or-evince))
 
 (after! pdf-tools
 
@@ -1485,3 +1498,30 @@ Returns a formatted BibTeX entry."
   (setq! gptel-api-key #'my/gptel-api-key)
   (setq! gptel-model "gpt-4o-mini")
   )
+
+(defun my/gptel-region-plus-prompt ()
+  "Send selected text and a custom prompt to GPT."
+  (interactive)
+  (unless (use-region-p)
+    (user-error "No region selected"))
+  (let ((text (buffer-substring-no-properties (region-beginning) (region-end)))
+        (extra (read-string "Prompt: ")))
+    (gptel-send (concat text "\n\n" extra))))
+
+;; new AI/GPT prefix under SPC a
+(map! :leader
+      (:prefix ("a" . "AI / GPT")
+       :desc "Region → prompt" "g" #'my/gptel-region-plus-prompt
+       :desc "Chat"           "c" #'gptel
+       :desc "Send region"    "r" #'gptel-send))
+
+;; Make RET send in gptel-menu buffers, regardless of Doom/Evil org bindings
+(after! gptel
+;;   (define-key gptel-menu-mode-map (kbd "RET") #'gptel-menu-send)
+;;   (define-key gptel-menu-mode-map (kbd "C-m") #'gptel-menu-send)
+;;   (define-key gptel-menu-mode-map (kbd "C-c C-c") #'gptel-menu-send))
+
+;; (with-eval-after-load 'evil
+;;   (evil-define-key 'normal gptel-menu-mode-map (kbd "RET") #'gptel-menu-send)
+;;   (evil-define-key 'insert gptel-menu-mode-map (kbd "RET") #'gptel-menu-send)
+;;   (evil-define-key 'visual gptel-menu-mode-map (kbd "RET") #'gptel-menu-send))
