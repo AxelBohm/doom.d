@@ -1,0 +1,14 @@
+# -*- mode: snippet -*-
+# name: table_business
+# uuid:
+# key: table
+# condition: t
+# --
+
+
+|              | 2019 | 2020 | 2021 | 2022 | 2023 | 2024 | 2025 |
+|--------------+------+------+------+------+------+------+------|
+| revenue      |      |      |      |      |      |      |      |
+| gross profit |      |      |      |      |      |      |      |
+| net income   |      |      |      |      |      |      |      |
+| FCF          |      |      |      |      |      |      |      |

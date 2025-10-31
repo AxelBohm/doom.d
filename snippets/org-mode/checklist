@@ -1,0 +1,27 @@
+# -*- mode: snippet -*-
+# name: investing checklist
+# uuid:
+# key: checklist
+# condition: t
+# --
+
+- [ ] management
+- [ ] ROIC
+- [ ] do I understand it
+- [ ] reinvestment opportunity
+- [ ] moat
+- [ ] margin of safety
+- [ ] price paid
+- [ ] differentiated view
+- [ ] risk / reward
+- [ ] bull thesis
+- [ ] bear thesis
+- [ ] is it a no brainer
+- [ ] debt
+- [ ] sharecount
+- [ ] catalyst
+- [ ] can I sleep well at night
+- [ ] willing to make it a 10% position
+- [ ] happy to hold for 10 years
+- [ ] well-calibrated confidence
+- [ ] anticipated regret
