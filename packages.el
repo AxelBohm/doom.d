@@ -29,7 +29,7 @@
 			 :files ("gitignore-mode.el")))
 
 (package! doom-quit :disable t)
-(package! doom-snippets :disable t)
+; (package! doom-snippets :disable t)
 (package! elfeed-goodies :disable t)
 (disable-packages! ws-butler)
 
@@ -41,6 +41,5 @@
 
 ;; LLM in emacs
 (package! gptel :recipe (:nonrecursive t))
-
 
 (package! visual-fill-column)
