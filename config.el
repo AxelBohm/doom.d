@@ -38,6 +38,10 @@
 
 (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
 
+(when (boundp 'mac-ignore-accessibility)
+  ;; Avoid emacs-mac crashes in the AppKit accessibility keymap path.
+  (setq mac-ignore-accessibility t))
+
 (setq evil-split-window-below t
       evil-vsplit-window-right t)
 
@@ -670,10 +674,31 @@ SCHEDULED: %^t
 
 (setq org-roam-db-location "~/.cache/oarg-roam.db")
 
-(defun ab/org-roam-rg-search()
- "Do counsel-rg on the org roam directory"
- (interactive)
- (counsel-rg nil org-roam-directory))
+(defun ab/org-roam-rg-search (query)
+  "Search Org-roam notes with ripgrep in a stable grep buffer."
+  (interactive
+   (list (read-string "Search org-roam: " (thing-at-point 'symbol t))))
+  (unless (executable-find "rg")
+    (user-error "rg is not installed"))
+  (let* ((default-directory (file-truename
+                             (file-name-as-directory
+                              (expand-file-name org-roam-directory))))
+         (command (mapconcat
+                   #'identity
+                   (list (shell-quote-argument (executable-find "rg"))
+                         "--line-number"
+                         "--column"
+                         "--no-heading"
+                         "--color=never"
+                         "--smart-case"
+                         "--glob"
+                         (shell-quote-argument "*.org")
+                         "--"
+                         (shell-quote-argument query)
+                         ".")
+                   " ")))
+    (compilation-start command 'grep-mode
+                       (lambda (_) "*org-roam search*"))))
 
 (global-set-key (kbd "C-c rr") 'ab/org-roam-rg-search)
 (map! :leader "r r" #'ab/org-roam-rg-search)

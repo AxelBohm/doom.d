@@ -106,6 +106,15 @@ transparent title bar
 (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
 #+END_SRC
 
+Ignore macOS accessibility queries. This avoids repeated emacs-mac crashes in
+the AppKit accessibility keymap path while searching Org-roam notes.
+
+#+BEGIN_SRC emacs-lisp
+(when (boundp 'mac-ignore-accessibility)
+  ;; Avoid emacs-mac crashes in the AppKit accessibility keymap path.
+  (setq mac-ignore-accessibility t))
+#+END_SRC
+
 
 ** general behavior
 
@@ -1139,15 +1148,38 @@ synced folder. The location is chosen arbitrary
 
 deft has great formatting but is too slow!!
 
-**** counsel
+**** ripgrep
 
-~counsel-rg~ is lightening fast but the *formatting* is atrocious.
+Use ripgrep in a normal grep buffer. The live ~counsel-rg~ minibuffer UI is nice
+when it works, but it has repeatedly triggered native macOS Emacs hangs in this
+setup.
 
 #+BEGIN_SRC emacs-lisp
-(defun ab/org-roam-rg-search()
- "Do counsel-rg on the org roam directory"
- (interactive)
- (counsel-rg nil org-roam-directory))
+(defun ab/org-roam-rg-search (query)
+  "Search Org-roam notes with ripgrep in a stable grep buffer."
+  (interactive
+   (list (read-string "Search org-roam: " (thing-at-point 'symbol t))))
+  (unless (executable-find "rg")
+    (user-error "rg is not installed"))
+  (let* ((default-directory (file-truename
+                             (file-name-as-directory
+                              (expand-file-name org-roam-directory))))
+         (command (mapconcat
+                   #'identity
+                   (list (shell-quote-argument (executable-find "rg"))
+                         "--line-number"
+                         "--column"
+                         "--no-heading"
+                         "--color=never"
+                         "--smart-case"
+                         "--glob"
+                         (shell-quote-argument "*.org")
+                         "--"
+                         (shell-quote-argument query)
+                         ".")
+                   " ")))
+    (compilation-start command 'grep-mode
+                       (lambda (_) "*org-roam search*"))))
 
 (global-set-key (kbd "C-c rr") 'ab/org-roam-rg-search)
 (map! :leader "r r" #'ab/org-roam-rg-search)
