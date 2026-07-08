@@ -286,7 +286,7 @@
 (setq org-fold-core-style 'overlays)
 
 (after! org
-  (setq +org-roam-auto-backlinks-buffer t        ;; show backlinks (why is this not default on??)
+  (setq +org-roam-auto-backlinks-buffer nil      ;; avoid auto-opening the heavy backlinks side buffer
         org-hide-emphasis-markers t              ;; still not sure if I like them or not
         org-return-follows-link t
         ;; the follow two do not work for some reason and others seem to have the same problem
@@ -771,8 +771,10 @@ SCHEDULED: %^t
   :config
   (require 'org-ref)) ; optional: if Org Ref is not loaded anywhere else, load it here
 
-(after! org-roam
-  (org-roam-bibtex-mode))
+;; Keep ORB available, but don't enable its global mode while opening ordinary
+;; Org files. Enabling it initializes bibtex-completion and scans the notes
+;; cache, which is too much work for plain file visits.
+;; Run M-x org-roam-bibtex-mode when you need the integration.
 
 (setq orb-preformat-keywords
       '("citekey" "title" "url" "author-or-editor" "keywords" "file")
@@ -810,7 +812,7 @@ SCHEDULED: %^t
   (setq org-roam-ui-sync-theme t
           org-roam-ui-follow t
           org-roam-ui-update-on-save t
-          org-roam-ui-open-on-start t)
+          org-roam-ui-open-on-start nil)
   )
 
 ;; (after! magit
