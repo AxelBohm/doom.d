@@ -1148,14 +1148,13 @@ synced folder. The location is chosen arbitrary
 
 deft has great formatting but is too slow!!
 
-**** ripgrep
+**** counsel-rg
 
-Use ripgrep in a normal grep buffer. The live ~counsel-rg~ minibuffer UI is nice
-when it works, but it has repeatedly triggered native macOS Emacs hangs in this
-setup.
+Use ~counsel-rg~ for live partial completion while searching notes. A plain grep
+fallback remains available on ~SPC r R~ if the live UI starts acting up again.
 
 #+BEGIN_SRC emacs-lisp
-(defun ab/org-roam-rg-search (query)
+(defun ab/org-roam-grep-search (query)
   "Search Org-roam notes with ripgrep in a stable grep buffer."
   (interactive
    (list (read-string "Search org-roam: " (thing-at-point 'symbol t))))
@@ -1181,8 +1180,14 @@ setup.
     (compilation-start command 'grep-mode
                        (lambda (_) "*org-roam search*"))))
 
-(global-set-key (kbd "C-c rr") 'ab/org-roam-rg-search)
+(defun ab/org-roam-rg-search ()
+  "Search Org-roam notes with live counsel-rg completion."
+  (interactive)
+  (counsel-rg nil org-roam-directory))
+
+(global-set-key (kbd "C-c rr") #'ab/org-roam-rg-search)
 (map! :leader "r r" #'ab/org-roam-rg-search)
+(map! :leader "r R" #'ab/org-roam-grep-search)
 (map! :leader "n d" #'ab/org-roam-rg-search)
 #+END_SRC
 

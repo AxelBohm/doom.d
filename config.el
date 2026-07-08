@@ -674,7 +674,7 @@ SCHEDULED: %^t
 
 (setq org-roam-db-location "~/.cache/oarg-roam.db")
 
-(defun ab/org-roam-rg-search (query)
+(defun ab/org-roam-grep-search (query)
   "Search Org-roam notes with ripgrep in a stable grep buffer."
   (interactive
    (list (read-string "Search org-roam: " (thing-at-point 'symbol t))))
@@ -700,8 +700,14 @@ SCHEDULED: %^t
     (compilation-start command 'grep-mode
                        (lambda (_) "*org-roam search*"))))
 
-(global-set-key (kbd "C-c rr") 'ab/org-roam-rg-search)
+(defun ab/org-roam-rg-search ()
+  "Search Org-roam notes with live counsel-rg completion."
+  (interactive)
+  (counsel-rg nil org-roam-directory))
+
+(global-set-key (kbd "C-c rr") #'ab/org-roam-rg-search)
 (map! :leader "r r" #'ab/org-roam-rg-search)
+(map! :leader "r R" #'ab/org-roam-grep-search)
 (map! :leader "n d" #'ab/org-roam-rg-search)
 
 ;; (defun org-roam-buffer-setup ()
