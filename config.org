@@ -1372,6 +1372,25 @@ Start with backlink headings folded:
 ;; (after! magit
 ;; (add-to-list 'magit-section-initial-visibility-alist (cons 'org-roam-node-section 'hide)))
 #+END_SRC
+
+Open the backlinks buffer as soon as an Org-roam file is visited. Doom already
+adds a switch-buffer hook for this, but running the manager here restores the
+old immediate behavior.
+
+#+BEGIN_SRC emacs-lisp
+(defun ab/org-roam-open-backlinks-buffer-h ()
+  "Open the persistent Org-roam backlinks buffer for visited notes."
+  (when (and +org-roam-auto-backlinks-buffer
+             (not org-roam-capture--node)
+             (not org-capture-mode)
+             (not (bound-and-true-p +popup-buffer-mode))
+             (not (eq (org-roam-buffer--visibility) 'visible)))
+    (org-roam-buffer-toggle)))
+
+(after! org-roam
+  (add-hook 'org-roam-find-file-hook #'ab/org-roam-open-backlinks-buffer-h t))
+#+END_SRC
+
 I no longer need this as I was able to reduce the amount of text shown per
 heading via the next code chunk:
 

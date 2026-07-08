@@ -849,6 +849,18 @@ SCHEDULED: %^t
 ;; (after! magit
 ;; (add-to-list 'magit-section-initial-visibility-alist (cons 'org-roam-node-section 'hide)))
 
+(defun ab/org-roam-open-backlinks-buffer-h ()
+  "Open the persistent Org-roam backlinks buffer for visited notes."
+  (when (and +org-roam-auto-backlinks-buffer
+             (not org-roam-capture--node)
+             (not org-capture-mode)
+             (not (bound-and-true-p +popup-buffer-mode))
+             (not (eq (org-roam-buffer--visibility) 'visible)))
+    (org-roam-buffer-toggle)))
+
+(after! org-roam
+  (add-hook 'org-roam-find-file-hook #'ab/org-roam-open-backlinks-buffer-h t))
+
 (defun my/preview-fetcher ()
   (let* ((elem (org-element-context))
          (parent (org-element-property :parent elem)))
