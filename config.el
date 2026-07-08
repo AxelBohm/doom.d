@@ -326,8 +326,10 @@
 
 (add-hook 'org-mode-hook #'ab/disable-line-numbers)
 
-(after! org
-  (setq-hook! 'org-mode-hook +flyspell-immediately nil))
+;; Doom's +flyspell flag enables flyspell-mode for org-mode by default.
+;; Keep it off for Org files; Hunspell currently has no usable dictionaries,
+;; and spellchecking large Org buffers is too slow/noisy.
+(remove-hook 'org-mode-hook #'flyspell-mode)
 
 (setq org-agenda-show-future-repeats 'next)
 

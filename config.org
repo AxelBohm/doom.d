@@ -569,10 +569,13 @@ Line numbers in org mode are useless.
 (add-hook 'org-mode-hook #'ab/disable-line-numbers)
 #+END_SRC
 
-No instant spell checking.. Takes too long.
+No automatic spell checking in Org. It takes too long on larger files, and it
+errors when Hunspell dictionaries are missing.
 #+BEGIN_SRC emacs-lisp
-(after! org
-  (setq-hook! 'org-mode-hook +flyspell-immediately nil))
+;; Doom's +flyspell flag enables flyspell-mode for org-mode by default.
+;; Keep it off for Org files; Hunspell currently has no usable dictionaries,
+;; and spellchecking large Org buffers is too slow/noisy.
+(remove-hook 'org-mode-hook #'flyspell-mode)
 #+END_SRC
 
 I have some reoccurring tasks/chores. These will be shown in the agenda multiple times. This is supposed to show them only once.
