@@ -898,8 +898,11 @@ SCHEDULED: %^t
         ;; don't show ^ or _ for scripts
         font-latex-fontify-script t)
 
-  ;; use Zathura as pdf viewer
-  (setq TeX-view-program-selection '((output-pdf "Zathura"))
+  ;; Use the macOS default PDF app; keep Zathura on Linux.
+  (setq TeX-view-program-selection
+        (if (eq system-type 'darwin)
+            '((output-pdf "open"))
+          '((output-pdf "Zathura")))
         TeX-source-correlate-start-server t))
 
 ;; Ensure that synctex works and the pdf is updated.
