@@ -728,10 +728,10 @@ This takes some getting used to. but in combination with different org-level siz
 by default they're too small
 
 #+BEGIN_SRC emacs-lisp
-(after! org
-  (setq org-format-latex-options (plist-put org-format-latex-options :scale 2.5))
-  (add-hook 'org-mode-hook 'org-fragtog-mode)
-  )
+;; (after! org
+;;   (setq org-format-latex-options (plist-put org-format-latex-options :scale 2.5))
+;;   (add-hook 'org-mode-hook 'org-fragtog-mode)
+;;   )
 #+END_SRC
 
 *** custom faces
@@ -2527,17 +2527,17 @@ Run the ~bibtex-tidy~ script, see [[https://github.com/FlamingTempura/bibtex-tid
     (gptel-send (concat text "\n\n" extra))))
 
 ;; new AI/GPT prefix under SPC a
-(map! :leader
-      (:prefix ("a" . "AI / GPT")
-       :desc "Region → prompt" "g" #'my/gptel-region-plus-prompt
-       :desc "Chat"           "c" #'gptel
-       :desc "Send region"    "r" #'gptel-send))
+;(map! :leader
+;      (:prefix ("a" . "AI / GPT")
+;      :desc "Region → prompt" "g" #'my/gptel-region-plus-prompt
+;      :desc "Chat"           "c" #'gptel
+;       :desc "Send region"    "r" #'gptel-send))
 #+END_SRC
 
 
 #+BEGIN_SRC emacs-lisp
 ;; Make RET send in gptel-menu buffers, regardless of Doom/Evil org bindings
-(after! gptel
+;;(after! gptel
 ;;   (define-key gptel-menu-mode-map (kbd "RET") #'gptel-menu-send)
 ;;   (define-key gptel-menu-mode-map (kbd "C-m") #'gptel-menu-send)
 ;;   (define-key gptel-menu-mode-map (kbd "C-c C-c") #'gptel-menu-send))

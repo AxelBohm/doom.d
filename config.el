@@ -424,10 +424,10 @@
 
 ;; (add-hook! 'org-mode-hook #'org-mode-remove-stars)
 
-(after! org
-  (setq org-format-latex-options (plist-put org-format-latex-options :scale 2.5))
-  (add-hook 'org-mode-hook 'org-fragtog-mode)
-  )
+;; (after! org
+;;   (setq org-format-latex-options (plist-put org-format-latex-options :scale 2.5))
+;;   (add-hook 'org-mode-hook 'org-fragtog-mode)
+;;   )
 
 (after! org
 (setq org-emphasis-alist
@@ -1559,14 +1559,14 @@ Returns a formatted BibTeX entry."
     (gptel-send (concat text "\n\n" extra))))
 
 ;; new AI/GPT prefix under SPC a
-(map! :leader
-      (:prefix ("a" . "AI / GPT")
-       :desc "Region → prompt" "g" #'my/gptel-region-plus-prompt
-       :desc "Chat"           "c" #'gptel
-       :desc "Send region"    "r" #'gptel-send))
+;(map! :leader
+;      (:prefix ("a" . "AI / GPT")
+;      :desc "Region → prompt" "g" #'my/gptel-region-plus-prompt
+;      :desc "Chat"           "c" #'gptel
+;       :desc "Send region"    "r" #'gptel-send))
 
 ;; Make RET send in gptel-menu buffers, regardless of Doom/Evil org bindings
-(after! gptel
+;;(after! gptel
 ;;   (define-key gptel-menu-mode-map (kbd "RET") #'gptel-menu-send)
 ;;   (define-key gptel-menu-mode-map (kbd "C-m") #'gptel-menu-send)
 ;;   (define-key gptel-menu-mode-map (kbd "C-c C-c") #'gptel-menu-send))

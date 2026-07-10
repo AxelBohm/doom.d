@@ -68,16 +68,16 @@
        ;;word-wrap         ; soft wrapping with language-aware indent
 
        :emacs
-       (dired +ranger)             ; making dired pretty [functional]
+       ;; (dired +ranger)             ; making dired pretty [functional]
        electric          ; smarter, keyword-based electric-indent
        undo              ; persistent, smarter undo for your inevitable mistakes
        vc                ; version-control and Emacs, sitting in a tree
 
        :term
-       eshell            ; a consistent, cross-platform shell (WIP)
+       ;; eshell            ; a consistent, cross-platform shell (WIP)
        ;;shell             ; a terminal REPL for Emacs
        ;;term              ; terminals in Emacs
-       vterm             ; another terminals in Emacs
+       ;; vterm             ; another terminals in Emacs
 
        :tools
        debugger          ; FIXME stepping through code, to help you add bugs
@@ -102,12 +102,12 @@
        ;;cc                ; C/C++/Obj-C madness
        data              ; config/data formats
        emacs-lisp          ; drown in parentheses
-       ess                 ; emacs speaks statistics
+       ;; ess                 ; emacs speaks statistics
        ;;(go +lsp)         ; the hipster dialect
        ;;(haskell +intero) ; a language that's lazier than I am
        ;;(java +meghanada) ; the poster child for carpal tunnel syndrome
        ;;javascript        ; all(hope(abandon(ye(who(enter(here))))))
-       (julia +lsp)        ; a better, faster MATLAB
+       ;; (julia +lsp)        ; a better, faster MATLAB
        (latex              ; writing papers in Emacs has never been so fun
         +ref
         ;; +lsp            ; currently doesn't let me use reftex
@@ -120,7 +120,7 @@
         ; +present         ; using org-mode for presentations
         +journal
         +roam2
-        +noter             ; annotate pdfs
+        ;; +noter             ; annotate pdfs
         +pretty)
        (python             ; beautiful is better than ugly
         +lsp

@@ -37,9 +37,9 @@
   :recipe (:host github :repo "cute-jumper/gscholar-bibtex"))
 
 ;; inline latex
-(package! org-fragtog)
+;; (package! org-fragtog)
 
 ;; LLM in emacs
-(package! gptel :recipe (:nonrecursive t))
+;; (package! gptel :recipe (:nonrecursive t))
 
 (package! visual-fill-column)
